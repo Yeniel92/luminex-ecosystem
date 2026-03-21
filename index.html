@@ -1,357 +1,755 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luminex Ecosystem — Software para tu negocio · Uruguay</title>
-  <meta name="description" content="Portal oficial de Luminex Ecosystem. Gestiona tus ventas, stock y rutas desde tu celular con nuestras PWAs diseñadas para pequeños negocios." />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luminex Ecosystem — Software para tu negocio · Uruguay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1a14;
+            --navbar-bg: rgba(11, 26, 20, 0.92);
+            --primary-green: #22c55e;
+            --secondary-blue: #38bdf8;
+            --stock-gold: #c9a84c;
+            --text-white: #ffffff;
+            --text-gray: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
 
-    :root {
-      --bg:         #0b1a14;
-      --bg2:        #0f1f19;
-      --bg3:        #15261f;
-      --green:      #22c55e;
-      --green-glow: rgba(34,197,94,0.18);
-      --green-dim:  rgba(34,197,94,0.08);
-      --blue:       #38bdf8;
-      --gold:       #c9a84c;
-      --white:      #f0faf4;
-      --text2:      #8fb89f;
-      --text3:      #4d7a5e;
-      --border:     rgba(34,197,94,0.12);
-      --border2:    rgba(255,255,255,0.06);
-      --font-h:     'Syne', sans-serif;
-      --font-b:     'DM Sans', sans-serif;
-      --r:          16px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: var(--font-b);
-      font-size: 15px;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
+        h1, h2, h3 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            line-height: 1.1;
+        }
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--text3); border-radius: 4px; }
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
 
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 64px;
-      display: flex; align-items: center;
-      padding: 0 20px;
-      background: rgba(11,26,20,0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      transition: box-shadow .3s;
-    }
-    nav.scrolled { box-shadow: 0 4px 40px rgba(0,0,0,.6); }
-    .nav-inner {
-      width: 100%; max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo img { height: 32px; }
-    .nav-logo-text {
-      font-family: var(--font-h); font-size: 16px; font-weight: 800;
-      color: var(--white); letter-spacing: -.2px; line-height: 1;
-    }
-    .nav-logo-text span {
-      display: block; font-family: var(--font-b); font-size: 10px;
-      font-weight: 400; color: var(--text3); letter-spacing: .8px; text-transform: uppercase;
-    }
-    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
-    .nav-links a {
-      text-decoration: none; font-size: 14px; font-weight: 500; color: var(--text2);
-      padding: 6px 12px; border-radius: 8px; transition: color .2s, background .2s;
-    }
-    .nav-links a:hover { color: var(--white); background: var(--green-dim); }
-    .nav-links a.active { color: var(--green); }
-    
-    .nav-ham {
-      display: none; flex-direction: column; gap: 5px; justify-content: center;
-      width: 40px; height: 40px; background: none; border: none;
-      cursor: pointer; padding: 8px; border-radius: 8px;
-    }
-    .nav-ham span {
-      display: block; height: 2px; background: var(--white); border-radius: 2px;
-      transition: transform .3s, opacity .3s;
-    }
-    .nav-ham span:nth-child(1) { width: 100%; }
-    .nav-ham span:nth-child(2) { width: 70%; }
-    .nav-ham span:nth-child(3) { width: 100%; }
-    .nav-ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-ham.open span:nth-child(2) { opacity: 0; }
-    .nav-ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        ul {
+            list-style: none;
+        }
 
-    .nav-mob {
-      display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
-      background: rgba(11,26,20,0.98); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border); padding: 20px;
-      flex-direction: column; gap: 8px;
-    }
-    .nav-mob.open { display: flex; }
-    .nav-mob a {
-      text-decoration: none; font-size: 16px; font-weight: 500; color: var(--white);
-      padding: 12px 16px; border-radius: 12px; transition: background .2s, color .2s;
-    }
-    .nav-mob a:hover { background: var(--green-dim); color: var(--green); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-ham { display: flex; }
-    }
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent;
+            transition: 0.4s;
+            padding: 20px 0;
+        }
 
-    /* ── HERO ── */
-    .hero {
-      padding: 140px 20px 80px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-glow {
-      position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 600px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 70%);
-      pointer-events: none; z-index: -1;
-    }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-      color: var(--green); background: var(--green-dim);
-      border: 1px solid rgba(34,197,94,0.2); border-radius: 20px;
-      padding: 6px 16px; margin-bottom: 32px;
-    }
-    .hero h1 {
-      font-family: var(--font-h); font-size: clamp(40px, 10vw, 72px);
-      font-weight: 800; line-height: 1; letter-spacing: -2px;
-      margin-bottom: 24px; max-width: 900px; margin-left: auto; margin-right: auto;
-    }
-    .hero h1 span { color: var(--green); }
-    .hero p {
-      font-size: 18px; color: var(--text2); max-width: 600px;
-      margin: 0 auto 40px; line-height: 1.6;
-    }
+        nav.scrolled {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
 
-    /* ── CATALOG ── */
-    .catalog {
-      padding: 40px 20px 100px;
-      max-width: 1100px; margin: 0 auto;
-    }
-    .catalog-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-    }
-    .card {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 40px 32px;
-      transition: transform .3s, border-color .3s, box-shadow .3s;
-      display: flex; flex-direction: column;
-      position: relative; overflow: hidden;
-    }
-    .card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(34,197,94,0.3);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-    .card-icon {
-      font-size: 40px; margin-bottom: 24px;
-      width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
-      background: var(--bg3); border-radius: 16px;
-    }
-    .card h3 {
-      font-family: var(--font-h); font-size: 28px; font-weight: 800;
-      margin-bottom: 12px; color: var(--white);
-    }
-    .card p {
-      color: var(--text2); font-size: 15px; line-height: 1.6;
-      margin-bottom: 32px; flex-grow: 1;
-    }
-    .card-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      padding-top: 24px; border-top: 1px solid var(--border2);
-    }
-    .card-price { font-weight: 700; font-size: 18px; color: var(--white); }
-    .card-price span { font-size: 13px; color: var(--text3); font-weight: 400; }
-    
-    .btn-card {
-      text-decoration: none; font-family: var(--font-h); font-size: 14px; font-weight: 700;
-      padding: 10px 20px; border-radius: 10px; transition: all .2s;
-    }
-    .btn-sales { background: var(--green); color: #0b1a14; }
-    .btn-sales:hover { background: #4ade80; }
-    .btn-stock { background: var(--gold); color: #0b1a14; }
-    .btn-stock:hover { background: #eab308; }
-    .btn-disabled { background: var(--bg3); color: var(--text3); cursor: not-allowed; }
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    /* ── HOW IT WORKS ── */
-    .how {
-      background: var(--bg2); padding: 100px 20px;
-    }
-    .section-header {
-      text-align: center; max-width: 700px; margin: 0 auto 64px;
-    }
-    .section-header h2 {
-      font-family: var(--font-h); font-size: 40px; font-weight: 800;
-      margin-bottom: 16px;
-    }
-    .steps {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 40px; max-width: 1100px; margin: 0 auto;
-    }
-    .step { text-align: center; }
-    .step-num {
-      font-family: var(--font-h); font-size: 48px; font-weight: 800;
-      color: var(--green); opacity: 0.2; margin-bottom: -20px;
-    }
-    .step h4 { font-family: var(--font-h); font-size: 20px; margin-bottom: 12px; }
-    .step p { color: var(--text2); font-size: 14px; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
 
-    /* ── FOOTER ── */
-    footer {
-      padding: 60px 20px; border-top: 1px solid var(--border);
-      text-align: center;
-    }
-    .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; text-decoration: none; }
-    .footer-logo img { height: 32px; }
-    .footer-text { color: var(--text3); font-size: 13px; }
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
 
-    @media (max-width: 480px) {
-      .hero { padding-top: 100px; }
-      .catalog-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+        .logo span {
+            color: var(--primary-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-white);
+        }
+
+        .nav-cta {
+            background: var(--primary-green);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 2px;
+            background: var(--text-white);
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 160px 0 100px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50px;
+            color: var(--primary-green);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            max-width: 900px;
+            margin: 0 auto 24px;
+        }
+
+        .hero h1 span.green { color: var(--primary-green); }
+        .hero h1 span.blue { color: var(--secondary-blue); }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: #000;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-white);
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .hero-note {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        /* Catalog Section */
+        .catalog {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            transition: 0.4s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 24px;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .card .tagline {
+            color: var(--text-gray);
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .card p {
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .card-price {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .card-btn {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .card.sales:hover { border-color: var(--primary-green); }
+        .card.stock:hover { border-color: var(--stock-gold); }
+        .card.stock .card-btn { color: var(--stock-gold); }
+
+        .card.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Why Luminex */
+        .why {
+            padding: 100px 0;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 40px;
+        }
+
+        .why-item {
+            text-align: center;
+        }
+
+        .why-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 24px;
+            color: var(--primary-green);
+        }
+
+        .why-item h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .why-item p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* How it works */
+        .how {
+            padding: 100px 0;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            position: relative;
+        }
+
+        .step {
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .step-num {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-green);
+            opacity: 0.3;
+        }
+
+        .step h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: var(--text-gray);
+        }
+
+        /* CTA Final */
+        .cta-final {
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+            border: 1px solid var(--card-border);
+            padding: 80px 40px;
+            border-radius: 40px;
+        }
+
+        .cta-box h2 {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .cta-box p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+        }
+
+        .whatsapp-link {
+            display: block;
+            margin-top: 24px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 40px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            height: 100vh;
+            background: var(--bg-color);
+            z-index: 999;
+            padding: 100px 40px;
+            transition: 0.5s;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu a {
+            font-size: 1.5rem;
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+            }
+
+            .cta-box h2 {
+                font-size: 2.2rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Hamburger Animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+    </style>
 </head>
 <body>
 
-  <nav id="navbar">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <img src="/logo-luminex.png" alt="Luminex Logo" onerror="this.src='https://framerusercontent.com/images/8fb89f_logo.png'">
-        <div class="nav-logo-text">Luminex<span>Ecosystem</span></div>
-      </a>
-      <ul class="nav-links">
-        <li><a href="/" class="active">Inicio</a></li>
-        <li><a href="/sales/">Sales</a></li>
-        <li><a href="/stock/">Stock</a></li>
-        <li><a href="https://wa.me/5355855804" target="_blank">Soporte</a></li>
-      </ul>
-      <button class="nav-ham" id="nav-ham">
-        <span></span><span></span><span></span>
-      </button>
+    <nav id="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo">
+                <img src="/logo-luminex.png" alt="Luminex Logo" onerror="this.style.display='none'">
+                Luminex <span>ECOSYSTEM</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="active">Inicio</a>
+                <a href="/sales/">Sales</a>
+                <a href="/stock/">Stock</a>
+                <a href="#">Ruta Neta</a>
+                <a href="/sales/" class="nav-cta">Explorar herramientas</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="/">Inicio</a>
+        <a href="/sales/">Sales</a>
+        <a href="/stock/">Stock</a>
+        <a href="#">Ruta Neta</a>
+        <a href="/sales/" style="color: var(--primary-green)">Probar gratis</a>
     </div>
-  </nav>
 
-  <div class="nav-mob" id="nav-mob">
-    <a href="/">Inicio</a>
-    <a href="/sales/">Luminex Sales</a>
-    <a href="/stock/">Luminex Stock</a>
-    <a href="https://wa.me/5355855804" target="_blank">WhatsApp Soporte</a>
-  </div>
-
-  <main>
     <section class="hero">
-      <div class="hero-glow"></div>
-      <div class="hero-tag">Software para Uruguay</div>
-      <h1>Tu negocio bajo <span>control total</span></h1>
-      <p>Una suite de herramientas diseñadas para funcionar desde tu celular, sin internet obligatorio y sin pagos mensuales abusivos.</p>
+        <div class="container">
+            <div class="badge">Software para pequeños negocios · Uruguay</div>
+            <h1>Tu negocio bajo <span class="green">control total</span> desde tu <span class="blue">celular</span></h1>
+            <p>Vendé, controlá tu stock y conocé tus números — sin internet obligatorio, sin hardware extra y sin pagar todos los meses.</p>
+            <div class="hero-btns">
+                <a href="/sales/" class="btn-primary">🚀 Probar 7 días gratis</a>
+                <a href="#catalog" class="btn-secondary">Ver herramientas ↓</a>
+            </div>
+            <div class="hero-note">Desde USD 24/año · Sin renovación automática</div>
+        </div>
     </section>
 
-    <section class="catalog">
-      <div class="catalog-grid">
-        <!-- Sales Card -->
-        <div class="card">
-          <div class="card-icon">🛒</div>
-          <h3>Luminex Sales</h3>
-          <p>Punto de venta completo en tu bolsillo. Registrá ventas, emití recibos y controlá tus ganancias en tiempo real.</p>
-          <div class="card-footer">
-            <div class="card-price">USD 29<span>/año</span></div>
-            <a href="/sales/" class="btn-card btn-sales">Ver más →</a>
-          </div>
+    <section class="catalog" id="catalog">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Nuestras herramientas</h2>
+                <p style="color: var(--text-gray)">Soluciones específicas para cada necesidad de tu comercio.</p>
+            </div>
+            <div class="catalog-grid">
+                <!-- Sales -->
+                <div class="card sales reveal">
+                    <div class="card-icon">🛒</div>
+                    <h3>Luminex Sales</h3>
+                    <span class="tagline">Punto de Venta</span>
+                    <p>Registrá ventas, gestioná tu catálogo y generá reportes desde el celular. Ideal para comercios y emprendedores.</p>
+                    <div class="card-footer">
+                        <span class="card-price">USD 29/año</span>
+                        <a href="/sales/" class="card-btn">Ver Sales →</a>
+                    </div>
+                </div>
+                <!-- Stock -->
+                <div class="card stock reveal">
+                    <div class="card-icon">📦</div>
+                    <h3>Luminex Stock</h3>
+                    <span class="tagline">Control de Inventario</span>
+                    <p>Controlá tu stock, registrá movimientos y recibí alertas de productos bajos. Todo bajo control.</p>
+                    <div class="card-footer">
+                        <span class="card-price">USD 24/año</span>
+                        <a href="/stock/" class="card-btn">Ver Stock →</a>
+                    </div>
+                </div>
+                <!-- Ruta Neta -->
+                <div class="card disabled reveal">
+                    <span class="card-badge">Próximamente</span>
+                    <div class="card-icon">🛵</div>
+                    <h3>Ruta Neta</h3>
+                    <span class="tagline">Para Repartidores</span>
+                    <p>Registrá tus entregas, calculá tus ganancias y conocé tus números reales al final del día.</p>
+                    <div class="card-footer">
+                        <span class="card-price">Próximamente</span>
+                        <span class="card-btn" style="color: var(--text-gray)">Muy pronto</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- Stock Card -->
-        <div class="card">
-          <div class="card-icon" style="background: rgba(201,168,76,0.1); color: var(--gold);">📦</div>
-          <h3>Luminex Stock</h3>
-          <p>Control de inventario inteligente. Alertas de stock bajo, movimientos y reportes detallados de tu mercadería.</p>
-          <div class="card-footer">
-            <div class="card-price">USD 24<span>/año</span></div>
-            <a href="/stock/" class="btn-card btn-stock">Ver más →</a>
-          </div>
+    <section class="why">
+        <div class="container">
+            <div class="why-grid">
+                <div class="why-item reveal">
+                    <div class="why-icon">📱</div>
+                    <h4>PWA instalable</h4>
+                    <p>Funciona como una app nativa en tu celular sin ocupar espacio innecesario.</p>
+                </div>
+                <div class="why-item reveal">
+                    <div class="why-icon">🔌</div>
+                    <h4>Sin internet obligatorio</h4>
+                    <p>Seguí trabajando aunque te quedes sin señal. Tus datos se sincronizan luego.</p>
+                </div>
+                <div class="why-item reveal">
+                    <div class="why-icon">🔒</div>
+                    <h4>Tus datos son tuyos</h4>
+                    <p>Privacidad total. Nadie más tiene acceso a la información de tu negocio.</p>
+                </div>
+                <div class="why-item reveal">
+                    <div class="why-icon">🇺🇾</div>
+                    <h4>Hecho para Uruguay</h4>
+                    <p>Precios en USD, pensado para la realidad del comercio local.</p>
+                </div>
+            </div>
         </div>
-
-        <!-- Ruta Neta Card -->
-        <div class="card">
-          <div class="card-icon" style="background: rgba(56,189,248,0.1); color: var(--blue);">🚚</div>
-          <h3>Ruta Neta</h3>
-          <p>Optimización de rutas y entregas. Gestioná tus pedidos y clientes en el mapa de forma eficiente.</p>
-          <div class="card-footer">
-            <div class="card-price">Próximamente</div>
-            <span class="btn-card btn-disabled">Muy pronto</span>
-          </div>
-        </div>
-      </div>
     </section>
 
     <section class="how">
-      <div class="section-header">
-        <h2>Cómo funciona</h2>
-        <p>Luminex está diseñado para ser simple, rápido y 100% funcional desde el primer minuto.</p>
-      </div>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">01</div>
-          <h4>Elegí tu app</h4>
-          <p>Seleccioná la herramienta que mejor se adapte a tu negocio actual.</p>
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Cómo empezar</h2>
+            </div>
+            <div class="steps">
+                <div class="step reveal">
+                    <span class="step-num">01</span>
+                    <h4>Elegí tu herramienta</h4>
+                    <p>Seleccioná la solución que mejor se adapte a tu negocio: Sales o Stock.</p>
+                </div>
+                <div class="step reveal">
+                    <span class="step-num">02</span>
+                    <h4>Probá 7 días gratis</h4>
+                    <p>Accedé a todas las funciones sin compromiso y sin tarjeta de crédito.</p>
+                </div>
+                <div class="step reveal">
+                    <span class="step-num">03</span>
+                    <h4>Activá tu licencia</h4>
+                    <p>Si te gusta, activá tu acceso anual por un único pago honesto.</p>
+                </div>
+            </div>
         </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <h4>Instalá en 1 clic</h4>
-          <p>Agregala a tu pantalla de inicio como una app nativa desde tu navegador.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <h4>7 días gratis</h4>
-          <p>Probá todas las funciones sin compromiso. Si te sirve, activás tu licencia.</p>
-        </div>
-      </div>
     </section>
-  </main>
 
-  <footer>
-    <a href="/" class="footer-logo">
-      <img src="/logo-luminex.png" alt="Luminex Logo" onerror="this.src='https://framerusercontent.com/images/8fb89f_logo.png'">
-      <div class="nav-logo-text">Luminex<span>Ecosystem</span></div>
-    </a>
-    <p class="footer-text">© 2026 Luminex Ecosystem · Uruguay</p>
-  </footer>
+    <section class="cta-final">
+        <div class="container">
+            <div class="cta-box reveal">
+                <h2>Empezá hoy con Luminex</h2>
+                <p>7 días gratis, sin tarjeta de crédito y sin complicaciones.</p>
+                <a href="/sales/" class="btn-primary">🚀 Probar Sales gratis</a>
+                <a href="#" class="whatsapp-link">💬 Hablar por WhatsApp</a>
+            </div>
+        </div>
+    </section>
 
-  <script>
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
-      if (window.scrollY > 20) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    });
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="/" class="logo">
+                    Luminex <span>ECOSYSTEM</span>
+                </a>
+                <div class="footer-links">
+                    <a href="/">Inicio</a>
+                    <a href="/sales/">Sales</a>
+                    <a href="/stock/">Stock</a>
+                    <a href="#">Ruta Neta</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 Luminex Ecosystem · Uruguay
+            </div>
+        </div>
+    </footer>
 
-    // Mobile menu toggle
-    const ham = document.getElementById('nav-ham');
-    const mob = document.getElementById('nav-mob');
-    ham.addEventListener('click', () => {
-      ham.classList.toggle('open');
-      mob.classList.toggle('open');
-    });
-  </script>
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+        });
+
+        // Reveal animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
