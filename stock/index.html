@@ -355,7 +355,181 @@
     /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
-  </style>
+  
+/* Demo Styles */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#demo-0f0e09;--surface:#demo-141208;--surface2:#demo-1a1810;--surface3:#demo-201e14;
+  --gold:#demo-c9a84c;--green:#demo-4caf6e;--red:#demo-e05252;--orange:#demo-f59e0b;
+  --text:#demo-faf8f0;--text2:#demo-b8a87a;--text3:#demo-7a6a3e;
+  --border:rgba(201,168,76,0.demo-1);
+  --font-h:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
+}
+
+
+.demo-demo-wrapper{width:100%;max-width:900px;}
+.demo-demo-label{
+  font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:1.demo-5px;
+  text-transform:uppercase;color:#demo-c9a84c;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.demo-demo-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#demo-c9a84c;animation:blink 1.demo-5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.demo-3}}
+
+.demo-phone{
+  width:320px;margin:0 auto;
+  background:var(--bg);border-radius:32px;
+  border:2px solid rgba(201,168,76,0.demo-15);
+  box-shadow:0 40px 80px rgba(0,0,0,.demo-8),0 0 0 1px rgba(201,168,76,0.demo-05);
+  overflow:hidden;position:relative;
+}
+.demo-phone-notch{height:28px;background:var(--bg);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);}
+.demo-phone-notch-pill{width:80px;height:8px;background:#demo-1a1810;border-radius:4px;}
+.demo-phone-screen{height:580px;overflow:hidden;position:relative;background:var(--bg);}
+
+.demo-screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateX(20px);transition:opacity .demo-4s ease,transform .demo-4s ease;pointer-events:none;}
+.demo-screen.demo-active{opacity:1;transform:translateX(0);pointer-events:all;}
+.demo-screen.demo-exit{opacity:0;transform:translateX(-20px);}
+
+.demo-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.demo-topbar-title{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--text);}
+.demo-topbar-sub{font-size:10px;color:var(--text3);margin-top:1px;}
+.demo-topbar-badge{font-size:9px;font-weight:700;background:var(--gold);color:#demo-000;padding:2px 7px;border-radius:10px;letter-spacing:.demo-5px;}
+
+.demo-bottom-nav{background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 0 4px;flex-shrink:0;}
+.demo-nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;color:var(--text3);}
+.demo-nav-tab.demo-active{color:var(--gold);}
+.demo-nav-tab .demo-ico{font-size:16px;}
+
+/* ── DASHBOARD ── */
+.demo-dash-content{flex:1;overflow-y:auto;padding:10px;}
+.demo-dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.demo-dash-stat{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.demo-dash-stat.demo-alert{border-color:rgba(224,82,82,0.demo-3);background:rgba(224,82,82,0.demo-05);}
+.demo-dash-stat.demo-warn{border-color:rgba(245,158,11,0.demo-3);background:rgba(245,158,11,0.demo-05);}
+.demo-dash-val{font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--gold);}
+.demo-dash-val.demo-red{color:var(--red);}
+.demo-dash-val.demo-orange{color:var(--orange);}
+.demo-dash-lbl{font-size:9px;color:var(--text3);margin-top:2px;}
+.demo-alert-box{
+  background:rgba(245,158,11,0.demo-08);border:1px solid rgba(245,158,11,0.demo-25);
+  border-radius:10px;padding:10px 12px;margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+  opacity:0;transform:translateY(4px);transition:all .demo-4s ease;
+}
+.demo-alert-box.demo-visible{opacity:1;transform:none;}
+.demo-alert-ico{font-size:18px;flex-shrink:0;}
+.demo-alert-text{}
+.demo-alert-title{font-size:11px;font-weight:700;color:var(--orange);}
+.demo-alert-sub{font-size:10px;color:var(--text2);margin-top:1px;}
+
+/* ── INVENTARIO ── */
+.demo-inv-list{flex:1;overflow-y:auto;padding:10px;}
+.demo-inv-item{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;margin-bottom:6px;
+  display:flex;justify-content:space-between;align-items:center;
+  opacity:0;transform:translateY(6px);
+  animation:fadeItem .demo-3s ease forwards;
+}
+@keyframes fadeItem{to{opacity:1;transform:none}}
+.demo-inv-item.demo-low{border-color:rgba(245,158,11,0.demo-3);}
+.demo-inv-item.demo-out{border-color:rgba(224,82,82,0.demo-3);opacity:.demo-6!important;}
+.demo-inv-left{display:flex;align-items:center;gap:8px;}
+.demo-inv-emoji{font-size:20px;}
+.demo-inv-name{font-size:11px;font-weight:500;color:var(--text);}
+.demo-inv-sku{font-size:9px;color:var(--text3);}
+.demo-inv-right{text-align:right;}
+.demo-inv-stock{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--gold);}
+.demo-inv-stock.demo-low{color:var(--orange);}
+.demo-inv-stock.demo-out{color:var(--red);}
+.demo-inv-min{font-size:9px;color:var(--text3);}
+
+/* ── MOVIMIENTOS ── */
+.demo-mov-content{flex:1;overflow-y:auto;padding:10px;}
+.demo-mov-form{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;}
+.demo-mov-form-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.demo-mov-tabs{display:flex;gap:4px;margin-bottom:10px;}
+.demo-mov-tab{
+  flex:1;padding:6px;border-radius:8px;font-size:10px;font-weight:700;
+  text-align:center;border:1px solid var(--border);color:var(--text3);
+  transition:all .demo-2s;
+}
+.demo-mov-tab.demo-entrada{border-color:rgba(76,175,110,0.demo-4);color:var(--green);background:rgba(76,175,110,0.demo-08);}
+.demo-mov-tab.demo-salida{border-color:rgba(224,82,82,0.demo-4);color:var(--red);background:rgba(224,82,82,0.demo-08);}
+.demo-mov-field{margin-bottom:8px;}
+.demo-mov-field label{font-size:9px;color:var(--text3);display:block;margin-bottom:3px;}
+.demo-mov-field-val{
+  background:var(--surface3);border:1px solid var(--border);border-radius:8px;
+  padding:7px 10px;font-size:11px;color:var(--text);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.demo-mov-qty{
+  font-family:var(--font-h);font-size:20px;font-weight:800;
+  text-align:center;color:var(--green);margin:8px 0;
+  opacity:0;transition:opacity .demo-3s;
+}
+.demo-mov-qty.demo-visible{opacity:1;}
+.demo-btn-mov{
+  width:100%;padding:9px;border:none;border-radius:10px;
+  font-family:var(--font-h);font-size:11px;font-weight:700;cursor:pointer;
+  opacity:0;transition:opacity .demo-3s;
+}
+.demo-btn-mov.demo-entrada{background:var(--green);color:#demo-000;}
+.demo-btn-mov.demo-salida{background:var(--red);color:#demo-fff;}
+.demo-btn-mov.demo-visible{opacity:1;}
+
+.demo-mov-list{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px;}
+.demo-mov-list-title{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.demo-mov-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.demo-04);
+  font-size:10px;
+  opacity:0;animation:fadeItem .demo-3s ease forwards;
+}
+.demo-mov-row:last-child{border-bottom:none;}
+.demo-mov-tipo{display:flex;align-items:center;gap:5px;}
+.demo-mov-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.demo-mov-dot.demo-e{background:var(--green);}
+.demo-mov-dot.demo-s{background:var(--red);}
+.demo-mov-prod{color:var(--text2);}
+.demo-mov-cant-e{color:var(--green);font-weight:700;}
+.demo-mov-cant-s{color:var(--red);font-weight:700;}
+.demo-mov-date{color:var(--text3);font-size:9px;}
+
+/* ── REPORTE ── */
+.demo-rep-content{flex:1;overflow-y:auto;padding:10px;}
+.demo-rep-header{background:linear-gradient(135deg,var(--surface2),var(--surface3));border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;text-align:center;}
+.demo-rep-biz{font-family:var(--font-h);font-size:14px;font-weight:800;color:var(--gold);}
+.demo-rep-period{font-size:10px;color:var(--text3);margin-top:2px;}
+.demo-rep-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.demo-rep-stat{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.demo-rep-val{font-family:var(--font-h);font-size:18px;font-weight:800;color:var(--gold);}
+.demo-rep-val.demo-red{color:var(--red);}
+.demo-rep-val.demo-orange{color:var(--orange);}
+.demo-rep-lbl{font-size:9px;color:var(--text3);margin-top:2px;}
+.demo-rep-top{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;}
+.demo-rep-top-title{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.demo-rep-top-item{
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
+  opacity:0;animation:fadeItem .demo-3s ease forwards;
+}
+.demo-rep-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.demo-06);border-radius:3px;overflow:hidden;}
+.demo-rep-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),rgba(201,168,76,0.demo-4));width:0%;transition:width .demo-8s ease;}
+.demo-rep-top-name{font-size:10px;color:var(--text2);min-width:60px;}
+.demo-rep-top-val{font-size:10px;color:var(--gold);font-weight:700;min-width:30px;text-align:right;}
+
+.demo-progress-bar{display:flex;gap:4px;justify-content:center;padding:12px;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(15,14,9,1),transparent);pointer-events:none;}
+.demo-progress-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.demo-15);transition:background .demo-3s,transform .demo-3s;}
+.demo-progress-dot.demo-active{background:var(--gold);transform:scale(1.demo-3);}
+
+.demo-step-label{text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,0.demo-5);min-height:20px;transition:opacity .demo-3s;}
+.demo-step-label strong{color:#demo-c9a84c;}
+
+.demo-section { padding: 60px 20px; }
+.demo-container { display: flex; justify-content: center; margin-top: 40px; }
+</style>
 </head>
 <body>
 
@@ -486,6 +660,412 @@
 </section>
 
 <!-- PRICING -->
+
+<section class="demo-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="badge">Demo en vivo</div>
+      <h2 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; margin-bottom: 16px; text-align: center;">Mirá cómo funciona</h2>
+      <p style="color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 40px;">Una simulación real del flujo de trabajo — sin instalar nada.</p>
+    </div>
+    <div class="demo-container reveal">
+      
+<div class="demo-demo-wrapper">
+  <div class="demo-demo-label">Demo interactiva — Luminex Stock</div>
+
+  <div class="demo-phone">
+    <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
+    <div class="demo-phone-screen" id="demo-screen-container">
+
+      <!-- SCREEN 1: DASHBOARD -->
+      <div class="demo-screen active" id="demo-s1">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">📊 Dashboard</div><div class="demo-topbar-sub">Mi Negocio · Admin</div></div>
+          <div class="demo-topbar-badge">HOY</div>
+        </div>
+        <div class="demo-dash-content">
+          <div class="demo-dash-stats">
+            <div class="demo-dash-stat"><div class="demo-dash-val" id="demo-d-total">0</div><div class="demo-dash-lbl">Productos</div></div>
+            <div class="demo-dash-stat"><div class="demo-dash-val" id="demo-d-mov">0</div><div class="demo-dash-lbl">Movimientos hoy</div></div>
+            <div class="demo-dash-stat warn"><div class="demo-dash-val orange" id="demo-d-low">0</div><div class="demo-dash-lbl">Stock bajo</div></div>
+            <div class="demo-dash-stat alert"><div class="demo-dash-val red" id="demo-d-out">0</div><div class="demo-dash-lbl">Sin stock</div></div>
+          </div>
+          <div class="demo-alert-box" id="demo-alert1">
+            <div class="demo-alert-ico">⚠️</div>
+            <div class="demo-alert-text"><div class="demo-alert-title">Stock bajo — Harina 000</div><div class="demo-alert-sub">Quedan 3 kg · Mínimo: 5 kg</div></div>
+          </div>
+          <div class="demo-alert-box" id="demo-alert2">
+            <div class="demo-alert-ico">🚫</div>
+            <div class="demo-alert-text"><div class="demo-alert-title">Sin stock — Aceite girasol</div><div class="demo-alert-sub">0 unidades · Requiere reposición</div></div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab active"><div class="demo-ico">📊</div><span>Dashboard</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📦</div><span>Inventario</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">🔄</div><span>Movimientos</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Reportes</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: INVENTARIO -->
+      <div class="demo-screen" id="demo-s2">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">📦 Inventario</div><div class="demo-topbar-sub">8 productos</div></div>
+          <div class="demo-topbar-badge">+</div>
+        </div>
+        <div class="demo-inv-list">
+          <div class="demo-inv-item" style="animation-delay:.05s">
+            <div class="demo-inv-left"><div class="demo-inv-emoji">🍅</div><div><div class="demo-inv-name">Tomates</div><div class="demo-inv-sku">Verduras · kg</div></div></div>
+            <div class="demo-inv-right"><div class="demo-inv-stock">24 kg</div><div class="demo-inv-min">Mín: 5 kg</div></div>
+          </div>
+          <div class="demo-inv-item low" style="animation-delay:.12s">
+            <div class="demo-inv-left"><div class="demo-inv-emoji">🌾</div><div><div class="demo-inv-name">Harina 000</div><div class="demo-inv-sku">Panadería · kg</div></div></div>
+            <div class="demo-inv-right"><div class="demo-inv-stock orange">3 kg</div><div class="demo-inv-min" style="color:#f59e0b">⚠️ Stock bajo</div></div>
+          </div>
+          <div class="demo-inv-item" style="animation-delay:.19s">
+            <div class="demo-inv-left"><div class="demo-inv-emoji">🥚</div><div><div class="demo-inv-name">Huevos</div><div class="demo-inv-sku">Lácteos · unid</div></div></div>
+            <div class="demo-inv-right"><div class="demo-inv-stock">120 u</div><div class="demo-inv-min">Mín: 30 u</div></div>
+          </div>
+          <div class="demo-inv-item out" style="animation-delay:.26s">
+            <div class="demo-inv-left"><div class="demo-inv-emoji">🫒</div><div><div class="demo-inv-name">Aceite girasol</div><div class="demo-inv-sku">Aceites · lt</div></div></div>
+            <div class="demo-inv-right"><div class="demo-inv-stock out">0 lt</div><div class="demo-inv-min" style="color:#e05252">🚫 Sin stock</div></div>
+          </div>
+          <div class="demo-inv-item" style="animation-delay:.33s">
+            <div class="demo-inv-left"><div class="demo-inv-emoji">🧂</div><div><div class="demo-inv-name">Sal fina</div><div class="demo-inv-sku">Condimentos · kg</div></div></div>
+            <div class="demo-inv-right"><div class="demo-inv-stock">8 kg</div><div class="demo-inv-min">Mín: 2 kg</div></div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Dashboard</span></div>
+          <div class="demo-nav-tab active"><div class="demo-ico">📦</div><span>Inventario</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">🔄</div><span>Movimientos</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Reportes</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: MOVIMIENTOS -->
+      <div class="demo-screen" id="demo-s3">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">🔄 Movimientos</div><div class="demo-topbar-sub">Registrar entrada/salida</div></div>
+        </div>
+        <div class="demo-mov-content">
+          <div class="demo-mov-form">
+            <div class="demo-mov-form-title">Nuevo movimiento</div>
+            <div class="demo-mov-tabs">
+              <div class="demo-mov-tab entrada" id="demo-tab-e">↑ Entrada</div>
+              <div class="demo-mov-tab" id="demo-tab-s">↓ Salida</div>
+            </div>
+            <div class="demo-mov-field"><label>Producto</label><div class="demo-mov-field-val" id="demo-mov-prod-val"><span>🌾 Harina 000</span><span style="font-size:9px;color:#7a6a3e">▼</span></div></div>
+            <div class="demo-mov-field"><label>Cantidad</label><div class="demo-mov-field-val"><span id="demo-mov-cant-display">—</span></div></div>
+            <div class="demo-mov-qty" id="demo-mov-qty">+20 kg</div>
+            <button class="demo-btn-mov entrada" id="demo-btn-mov">Registrar entrada</button>
+          </div>
+          <div class="demo-mov-list">
+            <div class="demo-mov-list-title">Últimos movimientos</div>
+            <div class="demo-mov-row" style="animation-delay:.05s" id="demo-mov-new" style="display:none">
+              <div class="demo-mov-tipo"><div class="demo-mov-dot e"></div><span class="demo-mov-prod">Harina 000</span></div>
+              <span class="demo-mov-cant-e">+20 kg</span>
+              <span class="demo-mov-date">Ahora</span>
+            </div>
+            <div class="demo-mov-row" style="animation-delay:.1s">
+              <div class="demo-mov-tipo"><div class="demo-mov-dot s"></div><span class="demo-mov-prod">Tomates</span></div>
+              <span class="demo-mov-cant-s">-5 kg</span>
+              <span class="demo-mov-date">14:30</span>
+            </div>
+            <div class="demo-mov-row" style="animation-delay:.17s">
+              <div class="demo-mov-tipo"><div class="demo-mov-dot e"></div><span class="demo-mov-prod">Huevos</span></div>
+              <span class="demo-mov-cant-e">+60 u</span>
+              <span class="demo-mov-date">11:15</span>
+            </div>
+            <div class="demo-mov-row" style="animation-delay:.24s">
+              <div class="demo-mov-tipo"><div class="demo-mov-dot s"></div><span class="demo-mov-prod">Aceite girasol</span></div>
+              <span class="demo-mov-cant-s">-2 lt</span>
+              <span class="demo-mov-date">09:40</span>
+            </div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Dashboard</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📦</div><span>Inventario</span></div>
+          <div class="demo-nav-tab active"><div class="demo-ico">🔄</div><span>Movimientos</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Reportes</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: REPORTE -->
+      <div class="demo-screen" id="demo-s4">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">📋 Reporte</div><div class="demo-topbar-sub">Marzo 2026</div></div>
+          <div class="demo-topbar-badge">PDF</div>
+        </div>
+        <div class="demo-rep-content">
+          <div class="demo-rep-header">
+            <div class="demo-rep-biz">Mi Negocio</div>
+            <div class="demo-rep-period">Reporte de inventario · Marzo 2026</div>
+          </div>
+          <div class="demo-rep-stats">
+            <div class="demo-rep-stat"><div class="demo-rep-val" id="demo-rp-prod">0</div><div class="demo-rep-lbl">Productos</div></div>
+            <div class="demo-rep-stat"><div class="demo-rep-val" id="demo-rp-mov">0</div><div class="demo-rep-lbl">Movimientos</div></div>
+            <div class="demo-rep-stat"><div class="demo-rep-val orange" id="demo-rp-low">0</div><div class="demo-rep-lbl">Stock bajo</div></div>
+            <div class="demo-rep-stat"><div class="demo-rep-val red" id="demo-rp-out">0</div><div class="demo-rep-lbl">Sin stock</div></div>
+          </div>
+          <div class="demo-rep-top">
+            <div class="demo-rep-top-title">Productos con más movimientos</div>
+            <div class="demo-rep-top-item" style="animation-delay:.1s" id="demo-rt1">
+              <span class="demo-rep-top-name">🌾 Harina</span>
+              <div class="demo-rep-bar-bg"><div class="demo-rep-bar-fill" id="demo-rb1"></div></div>
+              <span class="demo-rep-top-val">24</span>
+            </div>
+            <div class="demo-rep-top-item" style="animation-delay:.2s" id="demo-rt2">
+              <span class="demo-rep-top-name">🍅 Tomates</span>
+              <div class="demo-rep-bar-bg"><div class="demo-rep-bar-fill" id="demo-rb2"></div></div>
+              <span class="demo-rep-top-val">18</span>
+            </div>
+            <div class="demo-rep-top-item" style="animation-delay:.3s" id="demo-rt3">
+              <span class="demo-rep-top-name">🥚 Huevos</span>
+              <div class="demo-rep-bar-bg"><div class="demo-rep-bar-fill" id="demo-rb3"></div></div>
+              <span class="demo-rep-top-val">15</span>
+            </div>
+            <div class="demo-rep-top-item" style="animation-delay:.4s" id="demo-rt4">
+              <span class="demo-rep-top-name">🧂 Sal</span>
+              <div class="demo-rep-bar-bg"><div class="demo-rep-bar-fill" id="demo-rb4"></div></div>
+              <span class="demo-rep-top-val">8</span>
+            </div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Dashboard</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📦</div><span>Inventario</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">🔄</div><span>Movimientos</span></div>
+          <div class="demo-nav-tab active"><div class="demo-ico">📋</div><span>Reportes</span></div>
+        </div>
+      </div>
+
+      <div class="demo-progress-bar">
+        <div class="demo-progress-dot active" id="demo-d0"></div>
+        <div class="demo-progress-dot" id="demo-d1"></div>
+        <div class="demo-progress-dot" id="demo-d2"></div>
+        <div class="demo-progress-dot" id="demo-d3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-step-label" id="demo-step-label">Revisando el dashboard de inventario...</div>
+</div>
+
+<script>
+const screens=['s1','s2','s3','s4'];
+const dots=['d0','d1','d2','d3'];
+const labels=[
+  'Revisando el <strong>dashboard</strong> de inventario...',
+  'Listado de productos — alerta de <strong>stock bajo</strong>',
+  'Registrando <strong>entrada de stock</strong> — Harina 000',
+  'Generando <strong>reporte de inventario</strong>...'
+];
+
+function showScreen(idx){
+  screens.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('active','exit');
+    if(i===idx) el.classList.add('active');
+    else if(i===idx-1) el.classList.add('exit');
+  });
+  dots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===idx));
+  document.getElementById('step-label').innerHTML=labels[idx];
+}
+
+function animateDash(){
+  return new Promise(resolve=>{
+    const targets={'d-total':8,'d-mov':7,'d-low':2,'d-out':1};
+    let done=0;
+    Object.entries(targets).forEach(([id,val],i)=>{
+      setTimeout(()=>{
+        let v=0;const el=document.getElementById(id);
+        const t=setInterval(()=>{v=Math.min(v+1,val);el.textContent=v;if(v>=val){clearInterval(t);done++;if(done===4){
+          setTimeout(()=>{
+            document.getElementById('alert1').classList.add('visible');
+            setTimeout(()=>{document.getElementById('alert2').classList.add('visible');resolve();},500);
+          },400);
+        }}},60);
+      },i*150);
+    });
+  });
+}
+
+function animateMov(){
+  return new Promise(resolve=>{
+    const cantDisplay=document.getElementById('mov-cant-display');
+    const movQty=document.getElementById('mov-qty');
+    const btnMov=document.getElementById('btn-mov');
+
+    setTimeout(()=>{cantDisplay.textContent='20 kg';},600);
+    setTimeout(()=>{movQty.classList.add('visible');},900);
+    setTimeout(()=>{btnMov.classList.add('visible');},1200);
+    setTimeout(()=>{
+      // Simular click
+      btnMov.style.transform='scale(.96)';
+      setTimeout(()=>{btnMov.style.transform='';},150);
+    },2000);
+    setTimeout(resolve,2600);
+  });
+}
+
+function animateReport(){
+  const targets={'rp-prod':8,'rp-mov':48,'rp-low':2,'rp-out':1};
+  Object.entries(targets).forEach(([id,val],i)=>{
+    setTimeout(()=>{
+      let v=0;const el=document.getElementById(id);
+      const t=setInterval(()=>{v=Math.min(v+Math.ceil(val/15),val);el.textContent=v;if(v>=val)clearInterval(t);},40);
+    },i*100);
+  });
+  const barWidths=[100,75,62,33];
+  barWidths.forEach((w,i)=>{
+    setTimeout(()=>{document.getElementById('rb'+(i+1)).style.width=w+'%';},400+i*150);
+  });
+}
+
+async function runSequence(){
+  // Reset alerts
+  document.getElementById('alert1').classList.remove('visible');
+  document.getElementById('alert2').classList.remove('visible');
+  document.getElementById('mov-qty').classList.remove('visible');
+  document.getElementById('btn-mov').classList.remove('visible');
+  document.getElementById('mov-cant-display').textContent='—';
+  ['d-total','d-mov','d-low','d-out'].forEach(id=>document.getElementById(id).textContent='0');
+  ['rp-prod','rp-mov','rp-low','rp-out'].forEach(id=>document.getElementById(id).textContent='0');
+  ['rb1','rb2','rb3','rb4'].forEach(id=>document.getElementById(id).style.width='0%');
+
+  showScreen(0);
+  await animateDash();
+  await new Promise(r=>setTimeout(r,1200));
+
+  showScreen(1);
+  await new Promise(r=>setTimeout(r,3000));
+
+  showScreen(2);
+  await animateMov();
+  await new Promise(r=>setTimeout(r,400));
+
+  showScreen(3);
+  setTimeout(animateReport,400);
+  await new Promise(r=>setTimeout(r,3500));
+
+  await new Promise(r=>setTimeout(r,800));
+  runSequence();
+}
+
+runSequence();
+
+/* Demo Scripts */
+
+const screens=['s1','s2','s3','s4'];
+const dots=['d0','d1','d2','d3'];
+const labels=[
+  'Revisando el <strong>dashboard</strong> de inventario...',
+  'Listado de productos — alerta de <strong>stock bajo</strong>',
+  'Registrando <strong>entrada de stock</strong> — Harina 000',
+  'Generando <strong>reporte de inventario</strong>...'
+];
+
+function showScreen(idx){
+  screens.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('active','exit');
+    if(i===idx) el.classList.add('active');
+    else if(i===idx-1) el.classList.add('exit');
+  });
+  dots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===idx));
+  document.getElementById('demo-step-label').innerHTML=labels[idx];
+}
+
+function animateDash(){
+  return new Promise(resolve=>{
+    const targets={'d-total':8,'d-mov':7,'d-low':2,'d-out':1};
+    let done=0;
+    Object.entries(targets).forEach(([id,val],i)=>{
+      setTimeout(()=>{
+        let v=0;const el=document.getElementById(id);
+        const t=setInterval(()=>{v=Math.min(v+1,val);el.textContent=v;if(v>=val){clearInterval(t);done++;if(done===4){
+          setTimeout(()=>{
+            document.getElementById('demo-alert1').classList.add('visible');
+            setTimeout(()=>{document.getElementById('demo-alert2').classList.add('visible');resolve();},500);
+          },400);
+        }}},60);
+      },i*150);
+    });
+  });
+}
+
+function animateMov(){
+  return new Promise(resolve=>{
+    const cantDisplay=document.getElementById('demo-mov-cant-display');
+    const movQty=document.getElementById('demo-mov-qty');
+    const btnMov=document.getElementById('demo-btn-mov');
+
+    setTimeout(()=>{cantDisplay.textContent='20 kg';},600);
+    setTimeout(()=>{movQty.classList.add('visible');},900);
+    setTimeout(()=>{btnMov.classList.add('visible');},1200);
+    setTimeout(()=>{
+      // Simular click
+      btnMov.style.transform='scale(.96)';
+      setTimeout(()=>{btnMov.style.transform='';},150);
+    },2000);
+    setTimeout(resolve,2600);
+  });
+}
+
+function animateReport(){
+  const targets={'rp-prod':8,'rp-mov':48,'rp-low':2,'rp-out':1};
+  Object.entries(targets).forEach(([id,val],i)=>{
+    setTimeout(()=>{
+      let v=0;const el=document.getElementById(id);
+      const t=setInterval(()=>{v=Math.min(v+Math.ceil(val/15),val);el.textContent=v;if(v>=val)clearInterval(t);},40);
+    },i*100);
+  });
+  const barWidths=[100,75,62,33];
+  barWidths.forEach((w,i)=>{
+    setTimeout(()=>{document.getElementById('rb'+(i+1)).style.width=w+'%';},400+i*150);
+  });
+}
+
+async function runSequence(){
+  // Reset alerts
+  document.getElementById('demo-alert1').classList.remove('visible');
+  document.getElementById('demo-alert2').classList.remove('visible');
+  document.getElementById('demo-mov-qty').classList.remove('visible');
+  document.getElementById('demo-btn-mov').classList.remove('visible');
+  document.getElementById('demo-mov-cant-display').textContent='—';
+  ['d-total','d-mov','d-low','d-out'].forEach(id=>document.getElementById(id).textContent='0');
+  ['rp-prod','rp-mov','rp-low','rp-out'].forEach(id=>document.getElementById(id).textContent='0');
+  ['rb1','rb2','rb3','rb4'].forEach(id=>document.getElementById(id).style.width='0%');
+
+  showScreen(0);
+  await animateDash();
+  await new Promise(r=>setTimeout(r,1200));
+
+  showScreen(1);
+  await new Promise(r=>setTimeout(r,3000));
+
+  showScreen(2);
+  await animateMov();
+  await new Promise(r=>setTimeout(r,400));
+
+  showScreen(3);
+  setTimeout(animateReport,400);
+  await new Promise(r=>setTimeout(r,3500));
+
+  await new Promise(r=>setTimeout(r,800));
+  runSequence();
+}
+
+runSequence();
+
+</script>
+
+    </div>
+  </div>
+</section>
+
 <section class="pricing" id="pricing">
   <div class="wrap">
     <div class="reveal" style="text-align:center;">
@@ -634,6 +1214,111 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* Demo Scripts */
+
+const screens=['s1','s2','s3','s4'];
+const dots=['d0','d1','d2','d3'];
+const labels=[
+  'Revisando el <strong>dashboard</strong> de inventario...',
+  'Listado de productos — alerta de <strong>stock bajo</strong>',
+  'Registrando <strong>entrada de stock</strong> — Harina 000',
+  'Generando <strong>reporte de inventario</strong>...'
+];
+
+function showScreen(idx){
+  screens.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('active','exit');
+    if(i===idx) el.classList.add('active');
+    else if(i===idx-1) el.classList.add('exit');
+  });
+  dots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===idx));
+  document.getElementById('demo-step-label').innerHTML=labels[idx];
+}
+
+function animateDash(){
+  return new Promise(resolve=>{
+    const targets={'d-total':8,'d-mov':7,'d-low':2,'d-out':1};
+    let done=0;
+    Object.entries(targets).forEach(([id,val],i)=>{
+      setTimeout(()=>{
+        let v=0;const el=document.getElementById(id);
+        const t=setInterval(()=>{v=Math.min(v+1,val);el.textContent=v;if(v>=val){clearInterval(t);done++;if(done===4){
+          setTimeout(()=>{
+            document.getElementById('demo-alert1').classList.add('visible');
+            setTimeout(()=>{document.getElementById('demo-alert2').classList.add('visible');resolve();},500);
+          },400);
+        }}},60);
+      },i*150);
+    });
+  });
+}
+
+function animateMov(){
+  return new Promise(resolve=>{
+    const cantDisplay=document.getElementById('demo-mov-cant-display');
+    const movQty=document.getElementById('demo-mov-qty');
+    const btnMov=document.getElementById('demo-btn-mov');
+
+    setTimeout(()=>{cantDisplay.textContent='20 kg';},600);
+    setTimeout(()=>{movQty.classList.add('visible');},900);
+    setTimeout(()=>{btnMov.classList.add('visible');},1200);
+    setTimeout(()=>{
+      // Simular click
+      btnMov.style.transform='scale(.96)';
+      setTimeout(()=>{btnMov.style.transform='';},150);
+    },2000);
+    setTimeout(resolve,2600);
+  });
+}
+
+function animateReport(){
+  const targets={'rp-prod':8,'rp-mov':48,'rp-low':2,'rp-out':1};
+  Object.entries(targets).forEach(([id,val],i)=>{
+    setTimeout(()=>{
+      let v=0;const el=document.getElementById(id);
+      const t=setInterval(()=>{v=Math.min(v+Math.ceil(val/15),val);el.textContent=v;if(v>=val)clearInterval(t);},40);
+    },i*100);
+  });
+  const barWidths=[100,75,62,33];
+  barWidths.forEach((w,i)=>{
+    setTimeout(()=>{document.getElementById('rb'+(i+1)).style.width=w+'%';},400+i*150);
+  });
+}
+
+async function runSequence(){
+  // Reset alerts
+  document.getElementById('demo-alert1').classList.remove('visible');
+  document.getElementById('demo-alert2').classList.remove('visible');
+  document.getElementById('demo-mov-qty').classList.remove('visible');
+  document.getElementById('demo-btn-mov').classList.remove('visible');
+  document.getElementById('demo-mov-cant-display').textContent='—';
+  ['d-total','d-mov','d-low','d-out'].forEach(id=>document.getElementById(id).textContent='0');
+  ['rp-prod','rp-mov','rp-low','rp-out'].forEach(id=>document.getElementById(id).textContent='0');
+  ['rb1','rb2','rb3','rb4'].forEach(id=>document.getElementById(id).style.width='0%');
+
+  showScreen(0);
+  await animateDash();
+  await new Promise(r=>setTimeout(r,1200));
+
+  showScreen(1);
+  await new Promise(r=>setTimeout(r,3000));
+
+  showScreen(2);
+  await animateMov();
+  await new Promise(r=>setTimeout(r,400));
+
+  showScreen(3);
+  setTimeout(animateReport,400);
+  await new Promise(r=>setTimeout(r,3500));
+
+  await new Promise(r=>setTimeout(r,800));
+  runSequence();
+}
+
+runSequence();
+
 </script>
 </body>
 </html>
