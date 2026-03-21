@@ -386,7 +386,235 @@
     /* ── SCROLL REVEAL ── */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
-  </style>
+  
+/* Demo Styles */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#demo-0d0d0d;--surface:#demo-111;--surface2:#demo-1a1a1a;--surface3:#demo-222;
+  --gold:#demo-c9a84c;--green:#demo-4caf6e;--red:#demo-e05252;--text:#demo-f0f0f0;
+  --text2:#demo-aaa;--text3:#demo-666;--border:rgba(255,255,255,0.demo-08);
+  --font-h:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
+}
+
+
+/* ── WRAPPER ── */
+.demo-demo-wrapper{width:100%;max-width:900px;}
+.demo-demo-label{
+  font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:1.demo-5px;
+  text-transform:uppercase;color:#demo-22c55e;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.demo-demo-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#demo-22c55e;animation:blink 1.demo-5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.demo-3}}
+
+/* ── PHONE FRAME ── */
+.demo-phone{
+  width:320px;margin:0 auto;
+  background:var(--bg);border-radius:32px;
+  border:2px solid rgba(255,255,255,0.demo-1);
+  box-shadow:0 40px 80px rgba(0,0,0,.demo-8),0 0 0 1px rgba(255,255,255,0.demo-05);
+  overflow:hidden;position:relative;
+}
+.demo-phone-notch{
+  height:28px;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  border-bottom:1px solid var(--border);
+}
+.demo-phone-notch-pill{width:80px;height:8px;background:#demo-222;border-radius:4px;}
+.demo-phone-screen{height:580px;overflow:hidden;position:relative;background:var(--bg);}
+
+/* ── SCREENS ── */
+.demo-screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;transform:translateX(20px);
+  transition:opacity .demo-4s ease,transform .demo-4s ease;
+  pointer-events:none;
+}
+.demo-screen.demo-active{opacity:1;transform:translateX(0);pointer-events:all;}
+.demo-screen.demo-exit{opacity:0;transform:translateX(-20px);}
+
+/* ── TOP BAR ── */
+.demo-topbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.demo-topbar-title{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--text);}
+.demo-topbar-sub{font-size:10px;color:var(--text3);margin-top:1px;}
+.demo-topbar-badge{
+  font-size:9px;font-weight:700;background:var(--gold);color:#demo-000;
+  padding:2px 7px;border-radius:10px;letter-spacing:.demo-5px;
+}
+.demo-topbar-user{display:flex;align-items:center;gap:6px;}
+.demo-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#demo-e8c96a);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#demo-000;}
+
+/* ── BOTTOM NAV ── */
+.demo-bottom-nav{
+  background:var(--surface);border-top:1px solid var(--border);
+  display:flex;padding:8px 0 4px;flex-shrink:0;
+}
+.demo-nav-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:9px;color:var(--text3);cursor:pointer;
+}
+.demo-nav-tab.demo-active{color:var(--gold);}
+.demo-nav-tab .demo-ico{font-size:16px;}
+
+/* ── CAJA SCREEN ── */
+.demo-products-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+  padding:10px;overflow-y:auto;flex:1;
+}
+.demo-prod-card{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;transition:border-color .demo-2s,transform .demo-15s;
+}
+.demo-prod-card.demo-selected{border-color:var(--gold);background:rgba(201,168,76,0.demo-08);}
+.demo-prod-card.demo-adding{animation:addPop .demo-3s ease;}
+@keyframes addPop{0%{transform:scale(1)}50%{transform:scale(.demo-92)}100%{transform:scale(1)}}
+.demo-prod-emoji{font-size:24px;}
+.demo-prod-name{font-size:9px;color:var(--text2);text-align:center;line-height:1.demo-2;}
+.demo-prod-price{font-size:10px;font-weight:700;color:var(--gold);}
+
+/* ── CARRITO ── */
+.demo-cart-bar{
+  background:var(--surface2);border-top:1px solid var(--border);
+  padding:8px 12px;flex-shrink:0;
+}
+.demo-cart-items{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;min-height:40px;}
+.demo-cart-item{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:10px;color:var(--text2);
+  opacity:0;transform:translateY(4px);
+  transition:opacity .demo-3s,transform .demo-3s;
+}
+.demo-cart-item.demo-visible{opacity:1;transform:none;}
+.demo-cart-item-name{display:flex;align-items:center;gap:5px;}
+.demo-cart-item-qty{
+  background:rgba(201,168,76,0.demo-15);color:var(--gold);
+  font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;
+}
+.demo-cart-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:6px;border-top:1px solid var(--border);
+}
+.demo-cart-total-label{font-size:11px;color:var(--text2);}
+.demo-cart-total-amount{font-family:var(--font-h);font-size:16px;font-weight:800;color:var(--gold);}
+.demo-btn-cobrar{
+  width:100%;background:linear-gradient(135deg,var(--gold),#demo-e8c96a);
+  color:#demo-000;font-family:var(--font-h);font-size:12px;font-weight:700;
+  border:none;border-radius:10px;padding:10px;cursor:pointer;
+  margin-top:8px;transition:transform .demo-15s,box-shadow .demo-2s;
+  opacity:0;
+}
+.demo-btn-cobrar.demo-visible{opacity:1;animation:slideUp .demo-3s ease;}
+@keyframes slideUp{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+
+/* ── CONFIRMACION ── */
+.demo-confirm-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1;padding:20px;gap:12px;
+}
+.demo-confirm-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(76,175,110,0.demo-2),rgba(76,175,110,0.demo-05));
+  border:2px solid var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  animation:checkPop .demo-5s ease;
+}
+@keyframes checkPop{0%{transform:scale(0)}70%{transform:scale(1.demo-1)}100%{transform:scale(1)}}
+.demo-confirm-title{font-family:var(--font-h);font-size:18px;font-weight:800;color:var(--text);}
+.demo-confirm-sub{font-size:12px;color:var(--text2);text-align:center;}
+.demo-confirm-amount{
+  font-family:var(--font-h);font-size:28px;font-weight:800;color:var(--green);
+  animation:countUp .demo-5s ease;
+}
+@keyframes countUp{from{transform:scale(.demo-8);opacity:0}to{transform:scale(1);opacity:1}}
+.demo-confirm-detail{
+  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  padding:12px 16px;width:100%;
+}
+.demo-confirm-row{
+  display:flex;justify-content:space-between;font-size:10px;
+  color:var(--text2);padding:3px 0;
+}
+.demo-confirm-row strong{color:var(--text);}
+
+/* ── HISTORIAL ── */
+.demo-hist-list{flex:1;overflow-y:auto;padding:10px;}
+.demo-hist-item{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;margin-bottom:6px;
+  display:flex;justify-content:space-between;align-items:center;
+  opacity:0;transform:translateY(8px);
+  animation:fadeItem .demo-3s ease forwards;
+}
+@keyframes fadeItem{to{opacity:1;transform:none}}
+.demo-hist-left{}
+.demo-hist-num{font-size:9px;color:var(--text3);margin-bottom:2px;}
+.demo-hist-items-text{font-size:11px;color:var(--text2);}
+.demo-hist-time{font-size:9px;color:var(--text3);margin-top:2px;}
+.demo-hist-amount{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--gold);}
+.demo-hist-new{border-color:rgba(201,168,76,0.demo-4);background:rgba(201,168,76,0.demo-05);}
+
+/* ── REPORTES ── */
+.demo-report-content{flex:1;overflow-y:auto;padding:10px;}
+.demo-report-header{
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;
+  text-align:center;
+}
+.demo-report-biz{font-family:var(--font-h);font-size:14px;font-weight:800;color:var(--gold);}
+.demo-report-period{font-size:10px;color:var(--text3);margin-top:2px;}
+.demo-report-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.demo-stat-box{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:10px;text-align:center;
+}
+.demo-stat-val{font-family:var(--font-h);font-size:18px;font-weight:800;color:var(--gold);}
+.demo-stat-lbl{font-size:9px;color:var(--text3);margin-top:2px;}
+.demo-report-chart{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:10px;margin-bottom:10px;
+}
+.demo-chart-title{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.demo-bars{display:flex;align-items:flex-end;gap:4px;height:50px;}
+.demo-bar{
+  flex:1;border-radius:4px 4px 0 0;
+  background:linear-gradient(to top,var(--gold),rgba(201,168,76,0.demo-4));
+  transition:height .demo-6s ease;
+}
+.demo-bar-labels{display:flex;gap:4px;margin-top:4px;}
+.demo-bar-label{flex:1;text-align:center;font-size:8px;color:var(--text3);}
+
+/* ── PROGRESS INDICATOR ── */
+.demo-progress-bar{
+  display:flex;gap:4px;justify-content:center;padding:12px;
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(13,13,13,1),transparent);
+  pointer-events:none;
+}
+.demo-progress-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,0.demo-2);transition:background .demo-3s,transform .demo-3s;
+}
+.demo-progress-dot.demo-active{background:var(--gold);transform:scale(1.demo-3);}
+
+/* ── STEP LABEL ── */
+.demo-step-label{
+  text-align:center;margin-top:12px;
+  font-size:12px;color:rgba(255,255,255,0.demo-5);
+  min-height:20px;transition:opacity .demo-3s;
+}
+.demo-step-label strong{color:#demo-22c55e;}
+
+.demo-section { padding: 60px 20px; }
+.demo-container { display: flex; justify-content: center; margin-top: 40px; }
+</style>
 </head>
 <body>
 
@@ -520,6 +748,444 @@
 </section>
 
 <!-- PRICING -->
+
+<section class="demo-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="badge">Demo en vivo</div>
+      <h2 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; margin-bottom: 16px; text-align: center;">Mirá cómo funciona</h2>
+      <p style="color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 40px;">Una simulación real del flujo de trabajo — sin instalar nada.</p>
+    </div>
+    <div class="demo-container reveal">
+      
+<div class="demo-demo-wrapper">
+  <div class="demo-demo-label">Demo interactiva — Luminex Sales</div>
+
+  <div class="demo-phone">
+    <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
+    <div class="demo-phone-screen" id="demo-screen-container">
+
+      <!-- SCREEN 1: CAJA CON PRODUCTOS -->
+      <div class="demo-screen active" id="demo-s1">
+        <div class="demo-topbar">
+          <div>
+            <div class="demo-topbar-title">🛒 Caja / POS</div>
+            <div class="demo-topbar-sub">Mi Negocio · Admin</div>
+          </div>
+          <div class="demo-topbar-user">
+            <div class="demo-avatar">A</div>
+          </div>
+        </div>
+        <div class="demo-products-grid" id="demo-prod-grid">
+          <div class="demo-prod-card" id="demo-p1"><div class="demo-prod-emoji">☕</div><div class="demo-prod-name">Café</div><div class="demo-prod-price">$85</div></div>
+          <div class="demo-prod-card" id="demo-p2"><div class="demo-prod-emoji">🥐</div><div class="demo-prod-name">Medialuna</div><div class="demo-prod-price">$45</div></div>
+          <div class="demo-prod-card" id="demo-p3"><div class="demo-prod-emoji">🥤</div><div class="demo-prod-name">Jugo</div><div class="demo-prod-price">$95</div></div>
+          <div class="demo-prod-card" id="demo-p4"><div class="demo-prod-emoji">🍞</div><div class="demo-prod-name">Tostada</div><div class="demo-prod-price">$60</div></div>
+          <div class="demo-prod-card" id="demo-p5"><div class="demo-prod-emoji">🧁</div><div class="demo-prod-name">Muffin</div><div class="demo-prod-price">$55</div></div>
+          <div class="demo-prod-card" id="demo-p6"><div class="demo-prod-emoji">🍫</div><div class="demo-prod-name">Alfajor</div><div class="demo-prod-price">$40</div></div>
+        </div>
+        <div class="demo-cart-bar">
+          <div class="demo-cart-items" id="demo-cart-items"></div>
+          <div class="demo-cart-total">
+            <span class="demo-cart-total-label">Total</span>
+            <span class="demo-cart-total-amount" id="demo-cart-total">$0</span>
+          </div>
+          <button class="demo-btn-cobrar" id="demo-btn-cobrar">Cobrar →</button>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab active"><div class="demo-ico">🛒</div><span>Caja</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Historial</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: CONFIRMACION -->
+      <div class="demo-screen" id="demo-s2">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">✅ Venta Registrada</div></div>
+          <div class="demo-topbar-badge">PAGADO</div>
+        </div>
+        <div class="demo-confirm-screen">
+          <div class="demo-confirm-icon">✓</div>
+          <div class="demo-confirm-title">¡Venta exitosa!</div>
+          <div class="demo-confirm-amount" id="demo-conf-amount">$225</div>
+          <div class="demo-confirm-sub">Venta registrada correctamente</div>
+          <div class="demo-confirm-detail">
+            <div class="demo-confirm-row"><span>☕ Café x1</span><strong>$85</strong></div>
+            <div class="demo-confirm-row"><span>🥐 Medialuna x1</span><strong>$45</strong></div>
+            <div class="demo-confirm-row"><span>🥤 Jugo x1</span><strong>$95</strong></div>
+            <div class="demo-confirm-row" style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06)"><span style="font-weight:700;color:#f0f0f0">Total</span><strong style="color:#c9a84c;font-size:13px">$225</strong></div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab active"><div class="demo-ico">🛒</div><span>Caja</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Historial</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: HISTORIAL -->
+      <div class="demo-screen" id="demo-s3">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">📋 Historial</div><div class="demo-topbar-sub">Hoy — 4 ventas</div></div>
+          <div class="demo-topbar-badge">HOY</div>
+        </div>
+        <div class="demo-hist-list">
+          <div class="demo-hist-item hist-new" style="animation-delay:.05s">
+            <div class="demo-hist-left">
+              <div class="demo-hist-num">#004 · Nueva</div>
+              <div class="demo-hist-items-text">☕ Café · 🥐 Medialuna · 🥤 Jugo</div>
+              <div class="demo-hist-time">Hace un momento · Admin</div>
+            </div>
+            <div class="demo-hist-amount">$225</div>
+          </div>
+          <div class="demo-hist-item" style="animation-delay:.15s">
+            <div class="demo-hist-left">
+              <div class="demo-hist-num">#003</div>
+              <div class="demo-hist-items-text">🧁 Muffin · ☕ Café x2</div>
+              <div class="demo-hist-time">14:32 · Admin</div>
+            </div>
+            <div class="demo-hist-amount">$225</div>
+          </div>
+          <div class="demo-hist-item" style="animation-delay:.25s">
+            <div class="demo-hist-left">
+              <div class="demo-hist-num">#002</div>
+              <div class="demo-hist-items-text">🍞 Tostada · 🥤 Jugo</div>
+              <div class="demo-hist-time">13:15 · Cajero</div>
+            </div>
+            <div class="demo-hist-amount">$155</div>
+          </div>
+          <div class="demo-hist-item" style="animation-delay:.35s">
+            <div class="demo-hist-left">
+              <div class="demo-hist-num">#001</div>
+              <div class="demo-hist-items-text">☕ Café · 🍫 Alfajor</div>
+              <div class="demo-hist-time">10:08 · Admin</div>
+            </div>
+            <div class="demo-hist-amount">$125</div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab"><div class="demo-ico">🛒</div><span>Caja</span></div>
+          <div class="demo-nav-tab active"><div class="demo-ico">📋</div><span>Historial</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: REPORTES -->
+      <div class="demo-screen" id="demo-s4">
+        <div class="demo-topbar">
+          <div><div class="demo-topbar-title">📊 Reportes</div><div class="demo-topbar-sub">Marzo 2026</div></div>
+          <div class="demo-topbar-badge">PDF</div>
+        </div>
+        <div class="demo-report-content">
+          <div class="demo-report-header">
+            <div class="demo-report-biz">Mi Negocio</div>
+            <div class="demo-report-period">Reporte de ventas · Marzo 2026</div>
+          </div>
+          <div class="demo-report-stats">
+            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-ventas">0</div><div class="demo-stat-lbl">Ventas hoy</div></div>
+            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-total">$0</div><div class="demo-stat-lbl">Total del día</div></div>
+            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-prod">0</div><div class="demo-stat-lbl">Productos vendidos</div></div>
+            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-prom">$0</div><div class="demo-stat-lbl">Ticket promedio</div></div>
+          </div>
+          <div class="demo-report-chart">
+            <div class="demo-chart-title">Ventas por día (esta semana)</div>
+            <div class="demo-bars">
+              <div class="demo-bar" id="demo-b1" style="height:0%"></div>
+              <div class="demo-bar" id="demo-b2" style="height:0%"></div>
+              <div class="demo-bar" id="demo-b3" style="height:0%"></div>
+              <div class="demo-bar" id="demo-b4" style="height:0%"></div>
+              <div class="demo-bar" id="demo-b5" style="height:0%"></div>
+              <div class="demo-bar" id="demo-b6" style="height:0%"></div>
+              <div class="demo-bar" id="demo-b7" style="height:0%"></div>
+            </div>
+            <div class="demo-bar-labels">
+              <div class="demo-bar-label">L</div><div class="demo-bar-label">M</div>
+              <div class="demo-bar-label">X</div><div class="demo-bar-label">J</div>
+              <div class="demo-bar-label">V</div><div class="demo-bar-label">S</div>
+              <div class="demo-bar-label" style="color:#c9a84c">H</div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-bottom-nav">
+          <div class="demo-nav-tab"><div class="demo-ico">🛒</div><span>Caja</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Historial</span></div>
+          <div class="demo-nav-tab active"><div class="demo-ico">📊</div><span>Reportes</span></div>
+          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+        </div>
+      </div>
+
+      <!-- PROGRESS DOTS -->
+      <div class="demo-progress-bar">
+        <div class="demo-progress-dot active" id="demo-d0"></div>
+        <div class="demo-progress-dot" id="demo-d1"></div>
+        <div class="demo-progress-dot" id="demo-d2"></div>
+        <div class="demo-progress-dot" id="demo-d3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-step-label" id="demo-step-label">Seleccionando productos para la venta...</div>
+</div>
+
+<script>
+const screens = ['s1','s2','s3','s4'];
+const dots = ['d0','d1','d2','d3'];
+const labels = [
+  'Seleccionando productos para la venta...',
+  '<strong>¡Venta registrada!</strong> — $225 cobrados',
+  'Revisando el <strong>historial de ventas</strong> del día...',
+  'Consultando <strong>reportes</strong> y estadísticas...'
+];
+
+let current = 0;
+let running = true;
+
+function showScreen(idx){
+  screens.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    el.classList.remove('active','exit');
+    if(i===idx) el.classList.add('active');
+    else if(i===idx-1) el.classList.add('exit');
+  });
+  dots.forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('active',i===idx);
+  });
+  document.getElementById('step-label').innerHTML = labels[idx];
+}
+
+// ── STEP 1: Animación de caja ──
+function runStep1(){
+  return new Promise(resolve=>{
+    const items = [
+      {id:'p1',name:'☕ Café',price:85},
+      {id:'p2',name:'🥐 Medialuna',price:45},
+      {id:'p3',name:'🥤 Jugo',price:95},
+    ];
+    let total = 0;
+    let step = 0;
+    const cartEl = document.getElementById('cart-items');
+    const totalEl = document.getElementById('cart-total');
+    const btnCobrar = document.getElementById('btn-cobrar');
+    cartEl.innerHTML = '';
+
+    function addItem(){
+      if(step >= items.length){
+        btnCobrar.classList.add('visible');
+        setTimeout(()=>{ btnCobrar.classList.remove('visible'); resolve(); }, 1400);
+        return;
+      }
+      const item = items[step];
+      const card = document.getElementById(item.id);
+      card.classList.add('adding','selected');
+      setTimeout(()=>card.classList.remove('adding'), 300);
+
+      total += item.price;
+      totalEl.textContent = '$'+total;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `<span class="demo-cart-item-name"><span class="demo-cart-item-qty">x1</span>${item.name}</span><span style="color:#c9a84c;font-weight:700;font-size:10px">$${item.price}</span>`;
+      cartEl.appendChild(div);
+      setTimeout(()=>div.classList.add('visible'),50);
+
+      step++;
+      setTimeout(addItem, 900);
+    }
+    setTimeout(addItem, 600);
+  });
+}
+
+// ── STEP 4: Animación reportes ──
+function animateReports(){
+  const targets = {
+    'r-ventas': {val:4, prefix:'', suffix:''},
+    'r-total':  {val:730, prefix:'$', suffix:''},
+    'r-prod':   {val:12, prefix:'', suffix:''},
+    'r-prom':   {val:182, prefix:'$', suffix:''},
+  };
+  const barHeights = [45,60,35,70,55,80,100];
+
+  Object.entries(targets).forEach(([id,cfg])=>{
+    let start = 0;
+    const el = document.getElementById(id);
+    const inc = Math.ceil(cfg.val/20);
+    const timer = setInterval(()=>{
+      start = Math.min(start+inc, cfg.val);
+      el.textContent = cfg.prefix + start + cfg.suffix;
+      if(start >= cfg.val) clearInterval(timer);
+    },40);
+  });
+
+  barHeights.forEach((h,i)=>{
+    setTimeout(()=>{
+      document.getElementById('b'+(i+1)).style.height = h+'%';
+    }, i*80);
+  });
+}
+
+async function runSequence(){
+  // Reset
+  document.querySelectorAll('.prod-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('cart-items').innerHTML='';
+  document.getElementById('cart-total').textContent='$0';
+  document.getElementById('btn-cobrar').classList.remove('visible');
+
+  showScreen(0);
+  await runStep1();
+  await new Promise(r=>setTimeout(r,200));
+
+  showScreen(1);
+  await new Promise(r=>setTimeout(r,2800));
+
+  showScreen(2);
+  await new Promise(r=>setTimeout(r,2500));
+
+  showScreen(3);
+  setTimeout(animateReports, 400);
+  await new Promise(r=>setTimeout(r,3500));
+
+  // Loop
+  await new Promise(r=>setTimeout(r,1000));
+  runSequence();
+}
+
+runSequence();
+
+/* Demo Scripts */
+
+const screens = ['s1','s2','s3','s4'];
+const dots = ['d0','d1','d2','d3'];
+const labels = [
+  'Seleccionando productos para la venta...',
+  '<strong>¡Venta registrada!</strong> — $225 cobrados',
+  'Revisando el <strong>historial de ventas</strong> del día...',
+  'Consultando <strong>reportes</strong> y estadísticas...'
+];
+
+let current = 0;
+let running = true;
+
+function showScreen(idx){
+  screens.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    el.classList.remove('active','exit');
+    if(i===idx) el.classList.add('active');
+    else if(i===idx-1) el.classList.add('exit');
+  });
+  dots.forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('active',i===idx);
+  });
+  document.getElementById('demo-step-label').innerHTML = labels[idx];
+}
+
+// ── STEP 1: Animación de caja ──
+function runStep1(){
+  return new Promise(resolve=>{
+    const items = [
+      {id:'p1',name:'☕ Café',price:85},
+      {id:'p2',name:'🥐 Medialuna',price:45},
+      {id:'p3',name:'🥤 Jugo',price:95},
+    ];
+    let total = 0;
+    let step = 0;
+    const cartEl = document.getElementById('demo-cart-items');
+    const totalEl = document.getElementById('demo-cart-total');
+    const btnCobrar = document.getElementById('demo-btn-cobrar');
+    cartEl.innerHTML = '';
+
+    function addItem(){
+      if(step >= items.length){
+        btnCobrar.classList.add('visible');
+        setTimeout(()=>{ btnCobrar.classList.remove('visible'); resolve(); }, 1400);
+        return;
+      }
+      const item = items[step];
+      const card = document.getElementById(item.id);
+      card.classList.add('adding','selected');
+      setTimeout(()=>card.classList.remove('adding'), 300);
+
+      total += item.price;
+      totalEl.textContent = '$'+total;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `<span class="cart-item-name"><span class="cart-item-qty">x1</span>${item.name}</span><span style="color:#c9a84c;font-weight:700;font-size:10px">$${item.price}</span>`;
+      cartEl.appendChild(div);
+      setTimeout(()=>div.classList.add('visible'),50);
+
+      step++;
+      setTimeout(addItem, 900);
+    }
+    setTimeout(addItem, 600);
+  });
+}
+
+// ── STEP 4: Animación reportes ──
+function animateReports(){
+  const targets = {
+    'r-ventas': {val:4, prefix:'', suffix:''},
+    'r-total':  {val:730, prefix:'$', suffix:''},
+    'r-prod':   {val:12, prefix:'', suffix:''},
+    'r-prom':   {val:182, prefix:'$', suffix:''},
+  };
+  const barHeights = [45,60,35,70,55,80,100];
+
+  Object.entries(targets).forEach(([id,cfg])=>{
+    let start = 0;
+    const el = document.getElementById(id);
+    const inc = Math.ceil(cfg.val/20);
+    const timer = setInterval(()=>{
+      start = Math.min(start+inc, cfg.val);
+      el.textContent = cfg.prefix + start + cfg.suffix;
+      if(start >= cfg.val) clearInterval(timer);
+    },40);
+  });
+
+  barHeights.forEach((h,i)=>{
+    setTimeout(()=>{
+      document.getElementById('b'+(i+1)).style.height = h+'%';
+    }, i*80);
+  });
+}
+
+async function runSequence(){
+  // Reset
+  document.querySelectorAll('.demo-prod-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('demo-cart-items').innerHTML='';
+  document.getElementById('demo-cart-total').textContent='$0';
+  document.getElementById('demo-btn-cobrar').classList.remove('visible');
+
+  showScreen(0);
+  await runStep1();
+  await new Promise(r=>setTimeout(r,200));
+
+  showScreen(1);
+  await new Promise(r=>setTimeout(r,2800));
+
+  showScreen(2);
+  await new Promise(r=>setTimeout(r,2500));
+
+  showScreen(3);
+  setTimeout(animateReports, 400);
+  await new Promise(r=>setTimeout(r,3500));
+
+  // Loop
+  await new Promise(r=>setTimeout(r,1000));
+  runSequence();
+}
+
+runSequence();
+
+</script>
+
+    </div>
+  </div>
+</section>
+
 <section class="pricing" id="pricing">
   <div class="wrap">
     <div class="reveal" style="text-align:center;">
@@ -672,6 +1338,132 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* Demo Scripts */
+
+const screens = ['s1','s2','s3','s4'];
+const dots = ['d0','d1','d2','d3'];
+const labels = [
+  'Seleccionando productos para la venta...',
+  '<strong>¡Venta registrada!</strong> — $225 cobrados',
+  'Revisando el <strong>historial de ventas</strong> del día...',
+  'Consultando <strong>reportes</strong> y estadísticas...'
+];
+
+let current = 0;
+let running = true;
+
+function showScreen(idx){
+  screens.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    el.classList.remove('active','exit');
+    if(i===idx) el.classList.add('active');
+    else if(i===idx-1) el.classList.add('exit');
+  });
+  dots.forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('active',i===idx);
+  });
+  document.getElementById('demo-step-label').innerHTML = labels[idx];
+}
+
+// ── STEP 1: Animación de caja ──
+function runStep1(){
+  return new Promise(resolve=>{
+    const items = [
+      {id:'p1',name:'☕ Café',price:85},
+      {id:'p2',name:'🥐 Medialuna',price:45},
+      {id:'p3',name:'🥤 Jugo',price:95},
+    ];
+    let total = 0;
+    let step = 0;
+    const cartEl = document.getElementById('demo-cart-items');
+    const totalEl = document.getElementById('demo-cart-total');
+    const btnCobrar = document.getElementById('demo-btn-cobrar');
+    cartEl.innerHTML = '';
+
+    function addItem(){
+      if(step >= items.length){
+        btnCobrar.classList.add('visible');
+        setTimeout(()=>{ btnCobrar.classList.remove('visible'); resolve(); }, 1400);
+        return;
+      }
+      const item = items[step];
+      const card = document.getElementById(item.id);
+      card.classList.add('adding','selected');
+      setTimeout(()=>card.classList.remove('adding'), 300);
+
+      total += item.price;
+      totalEl.textContent = '$'+total;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `<span class="cart-item-name"><span class="cart-item-qty">x1</span>${item.name}</span><span style="color:#c9a84c;font-weight:700;font-size:10px">$${item.price}</span>`;
+      cartEl.appendChild(div);
+      setTimeout(()=>div.classList.add('visible'),50);
+
+      step++;
+      setTimeout(addItem, 900);
+    }
+    setTimeout(addItem, 600);
+  });
+}
+
+// ── STEP 4: Animación reportes ──
+function animateReports(){
+  const targets = {
+    'r-ventas': {val:4, prefix:'', suffix:''},
+    'r-total':  {val:730, prefix:'$', suffix:''},
+    'r-prod':   {val:12, prefix:'', suffix:''},
+    'r-prom':   {val:182, prefix:'$', suffix:''},
+  };
+  const barHeights = [45,60,35,70,55,80,100];
+
+  Object.entries(targets).forEach(([id,cfg])=>{
+    let start = 0;
+    const el = document.getElementById(id);
+    const inc = Math.ceil(cfg.val/20);
+    const timer = setInterval(()=>{
+      start = Math.min(start+inc, cfg.val);
+      el.textContent = cfg.prefix + start + cfg.suffix;
+      if(start >= cfg.val) clearInterval(timer);
+    },40);
+  });
+
+  barHeights.forEach((h,i)=>{
+    setTimeout(()=>{
+      document.getElementById('b'+(i+1)).style.height = h+'%';
+    }, i*80);
+  });
+}
+
+async function runSequence(){
+  // Reset
+  document.querySelectorAll('.demo-prod-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('demo-cart-items').innerHTML='';
+  document.getElementById('demo-cart-total').textContent='$0';
+  document.getElementById('demo-btn-cobrar').classList.remove('visible');
+
+  showScreen(0);
+  await runStep1();
+  await new Promise(r=>setTimeout(r,200));
+
+  showScreen(1);
+  await new Promise(r=>setTimeout(r,2800));
+
+  showScreen(2);
+  await new Promise(r=>setTimeout(r,2500));
+
+  showScreen(3);
+  setTimeout(animateReports, 400);
+  await new Promise(r=>setTimeout(r,3500));
+
+  // Loop
+  await new Promise(r=>setTimeout(r,1000));
+  runSequence();
+}
+
+runSequence();
+
 </script>
 </body>
 </html>
