@@ -371,6 +371,7 @@ if ('serviceWorker' in navigator) {
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Luminex Sales">
   <link rel="manifest" id="pwa-manifest">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 <script>
@@ -1661,7 +1662,8 @@ function buildReceiptHTML(sale){
 
 function printReceipt(){
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;font-size:12px;max-width:280px;margin:0 auto;padding:16px;}</style></head><body>${document.getElementById('receipt-content').innerText.replace(/\n/g,'<br>')}
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;font-size:12px;max-width:280px;margin:0 auto;padding:16px;}</style>  <link rel="manifest" href="manifest.json">
+</head><body>${document.getElementById('receipt-content').innerText.replace(/\n/g,'<br>')}
 <!-- Botón soporte WhatsApp -->
 <a id="whatsapp-support-btn"
    href="https://wa.me/5355855804?text=Hola%2C%20necesito%20ayuda%20con%20Luminex Sales%20POS"
