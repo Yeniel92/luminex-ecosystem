@@ -6,7 +6,7 @@
   <title>Luminex Sales — Punto de Venta para tu Negocio · Uruguay</title>
   <meta name="description" content="Sistema de punto de venta (POS) para pequeños negocios en Uruguay. Vendé, gestioná tu catálogo y controlá tus reportes desde el celular. USD 29/año." />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="demo-sales.css">
+  <link rel="stylesheet" href="/sales/demo-sales.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -47,12 +47,14 @@
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
       padding: 20px 5%;
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(10,15,13,0.9);
+      background: rgba(10,15,13,0.95);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      isolation: isolate;
     }
     .logo {
       font-family: var(--font-h);
@@ -81,6 +83,8 @@
       width: 100%; height: 600px;
       background: radial-gradient(circle at center, var(--green-dim) 0%, transparent 70%);
       z-index: -1;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
     .badge {
       background: var(--green-dim); color: var(--green);
@@ -220,41 +224,26 @@
     }
 
     /* ── FIX ANDROID CHROME ── */
-    nav {
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-      background: rgba(11, 26, 20, 0.97) !important;
-      z-index: 9999 !important;
-      isolation: isolate;
-    }
-
-    .reveal {
-      will-change: opacity, transform;
-    }
-
-    .hero::before {
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-
     @media (max-width: 768px) {
       body {
-        background-color: #0b1a14;
+        background-color: #0a0f0d !important;
         -webkit-font-smoothing: antialiased;
       }
       nav {
-        background: rgba(11, 26, 20, 0.98) !important;
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
+        background: rgba(10, 15, 13, 0.98) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
       .hero::before {
-        display: none;
+        display: none !important;
       }
-      .f-card,
-      .step,
-      .price-card,
-      .faq-item {
+      .f-card, .step, .price-card, .faq-item {
         background-color: #152019 !important;
+      }
+      .demo-phone {
+        width: 300px !important;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
       }
     }
 
@@ -315,33 +304,33 @@
   <div class="features-grid">
     <div class="f-card reveal">
       <div class="f-icon">🛒</div>
-      <h3>Caja / POS</h3>
-      <p>Agregá productos al carrito con un toque, aplicá descuentos y registrá el cobro en segundos. Interfaz pensada para operar rápido.</p>
+      <h3>Ventas Rápidas</h3>
+      <p>Registrá ventas en segundos. Compatible con lectores de códigos de barras y pantallas táctiles.</p>
     </div>
     <div class="f-card reveal">
-      <div class="f-icon">🏷</div>
+      <div class="f-icon">📦</div>
       <h3>Catálogo de Productos</h3>
-      <p>Creá tu catálogo con nombre, precio, ícono y control de stock. Los productos sin existencia se deshabilitan automáticamente.</p>
-    </div>
-    <div class="f-card reveal">
-      <div class="f-icon">📋</div>
-      <h3>Historial de Ventas</h3>
-      <p>Revisá todas las ventas registradas con detalle de productos, montos y usuario. Filtrá por fecha o vendedor.</p>
+      <p>Organizá tus productos por categorías, precios y stock. Buscá por nombre o código SKU.</p>
     </div>
     <div class="f-card reveal">
       <div class="f-icon">📊</div>
-      <h3>Reportes con tu Marca</h3>
-      <p>Generá reportes de ventas con el nombre y logo de tu negocio. Exportalos en PDF para compartir o archivar.</p>
+      <h3>Reportes de Ventas</h3>
+      <p>Conocé tus ingresos diarios, semanales y mensuales. Exportá reportes en PDF para tu contabilidad.</p>
     </div>
     <div class="f-card reveal">
       <div class="f-icon">👥</div>
-      <h3>Múltiples Usuarios</h3>
-      <p>Creá cuentas para cada cajero. El rol Admin gestiona todo; el Cajero solo ve sus ventas y el catálogo.</p>
+      <h3>Gestión de Usuarios</h3>
+      <p>Asigná roles a tus empleados. Controlá quién puede realizar ventas, editar precios o ver reportes.</p>
+    </div>
+    <div class="f-card reveal">
+      <div class="f-icon">🔄</div>
+      <h3>Sincronización</h3>
+      <p>Tus datos se guardan localmente y se sincronizan cuando hay internet. Nunca perdés una venta.</p>
     </div>
     <div class="f-card reveal">
       <div class="f-icon">🏪</div>
       <h3>Mi Negocio</h3>
-      <p>Configurá el nombre, moneda y datos de tu negocio. Realizá respaldos y restauraciones con un toque para proteger tu información.</p>
+      <p>Configurá el nombre, moneda y datos de tu negocio. Realizá respaldos y restauraciones con un toque.</p>
     </div>
   </div>
 
@@ -358,13 +347,13 @@
       </div>
       <div class="step reveal">
         <div class="step-num">02</div>
-        <h3>Cargá tu catálogo</h3>
-        <p>Agregá los productos de tu negocio con nombre, precio e ícono. Luego creá las cuentas para tu equipo.</p>
+        <h3>Cargá tus productos</h3>
+        <p>Agregá los productos de tu negocio con su precio de venta y stock inicial. Podés usar la cámara para escanear códigos.</p>
       </div>
       <div class="step reveal">
         <div class="step-num">03</div>
-        <h3>Empezá a vender</h3>
-        <p>Desde la Caja, seleccioná productos, aplicá descuentos y registrá cada venta. Consultá reportes cuando quieras.</p>
+        <h3>¡Empezá a vender!</h3>
+        <p>Seleccioná los productos, elegí el método de pago y registrá la venta. Así de simple, así de rápido.</p>
       </div>
     </div>
   </section>
@@ -384,156 +373,123 @@
     <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
     <div class="demo-phone-screen" id="demo-screen-container">
 
-      <!-- SCREEN 1: CAJA CON PRODUCTOS -->
+      <!-- SCREEN 1: CATALOGO -->
       <div class="demo-screen active" id="demo-s1">
         <div class="demo-topbar">
           <div>
-            <div class="demo-topbar-title">🛒 Caja / POS</div>
-            <div class="demo-topbar-sub">Mi Negocio · Admin</div>
+            <div class="demo-topbar-title">🛒 Nueva Venta</div>
+            <div class="demo-topbar-sub">Mi Negocio · Uruguay</div>
           </div>
           <div class="demo-topbar-user">
             <div class="demo-avatar">A</div>
           </div>
         </div>
-        <div class="demo-products-grid" id="demo-prod-grid">
-          <div class="demo-prod-card" id="demo-p1"><div class="demo-prod-emoji">☕</div><div class="demo-prod-name">Café</div><div class="demo-prod-price">$85</div></div>
-          <div class="demo-prod-card" id="demo-p2"><div class="demo-prod-emoji">🥐</div><div class="demo-prod-name">Medialuna</div><div class="demo-prod-price">$45</div></div>
-          <div class="demo-prod-card" id="demo-p3"><div class="demo-prod-emoji">🥤</div><div class="demo-prod-name">Jugo</div><div class="demo-prod-price">$95</div></div>
-          <div class="demo-prod-card" id="demo-p4"><div class="demo-prod-emoji">🍞</div><div class="demo-prod-name">Tostada</div><div class="demo-prod-price">$60</div></div>
-          <div class="demo-prod-card" id="demo-p5"><div class="demo-prod-emoji">🧁</div><div class="demo-prod-name">Muffin</div><div class="demo-prod-price">$55</div></div>
-          <div class="demo-prod-card" id="demo-p6"><div class="demo-prod-emoji">🍫</div><div class="demo-prod-name">Alfajor</div><div class="demo-prod-price">$40</div></div>
+        <div class="demo-search-bar">
+          <div class="demo-search-ico">🔍</div>
+          <div class="demo-search-txt">Buscar producto...</div>
+        </div>
+        <div class="demo-cat-grid">
+          <div class="demo-cat-item" id="demo-p1">
+            <div class="demo-cat-img">☕</div>
+            <div class="demo-cat-name">Café Molido</div>
+            <div class="demo-cat-price">$240</div>
+          </div>
+          <div class="demo-cat-item" id="demo-p2">
+            <div class="demo-cat-img">🍪</div>
+            <div class="demo-cat-name">Galletas Avena</div>
+            <div class="demo-cat-price">$85</div>
+          </div>
+          <div class="demo-cat-item" id="demo-p3">
+            <div class="demo-cat-img">🍫</div>
+            <div class="demo-cat-name">Chocolate 70%</div>
+            <div class="demo-cat-price">$120</div>
+          </div>
+          <div class="demo-cat-item" id="demo-p4">
+            <div class="demo-cat-img">🥤</div>
+            <div class="demo-cat-name">Jugo Naranja</div>
+            <div class="demo-cat-price">$95</div>
+          </div>
         </div>
         <div class="demo-cart-bar">
-          <div class="demo-cart-items" id="demo-cart-items"></div>
-          <div class="demo-cart-total">
-            <span class="demo-cart-total-label">Total</span>
-            <span class="demo-cart-total-amount" id="demo-cart-total">$0</span>
+          <div class="demo-cart-info">
+            <div class="demo-cart-count" id="demo-cart-count">0 items</div>
+            <div class="demo-cart-total" id="demo-cart-total">$0</div>
           </div>
-          <button class="demo-btn-cobrar" id="demo-btn-cobrar">Cobrar →</button>
-        </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab active"><div class="demo-ico">🛒</div><span>Caja</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Historial</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+          <div class="demo-cart-btn">Ver Carrito</div>
         </div>
       </div>
 
-      <!-- SCREEN 2: CONFIRMACION -->
+      <!-- SCREEN 2: CARRITO / PAGO -->
       <div class="demo-screen" id="demo-s2">
         <div class="demo-topbar">
-          <div><div class="demo-topbar-title">✅ Venta Registrada</div></div>
-          <div class="demo-topbar-badge">PAGADO</div>
+          <div><div class="demo-topbar-title">💳 Finalizar Venta</div></div>
+          <div class="demo-topbar-badge">CARRITO</div>
         </div>
-        <div class="demo-confirm-screen">
-          <div class="demo-confirm-icon">✓</div>
-          <div class="demo-confirm-title">¡Venta exitosa!</div>
-          <div class="demo-confirm-amount" id="demo-conf-amount">$225</div>
-          <div class="demo-confirm-sub">Venta registrada correctamente</div>
-          <div class="demo-confirm-detail">
-            <div class="demo-confirm-row"><span>☕ Café x1</span><strong>$85</strong></div>
-            <div class="demo-confirm-row"><span>🥐 Medialuna x1</span><strong>$45</strong></div>
-            <div class="demo-confirm-row"><span>🥤 Jugo x1</span><strong>$95</strong></div>
-            <div class="demo-confirm-row" style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06)"><span style="font-weight:700;color:#f0f0f0">Total</span><strong style="color:#c9a84c;font-size:13px">$225</strong></div>
+        <div class="demo-cart-list">
+          <div class="demo-cart-item-row">
+            <div class="demo-cart-item-name">Café Molido x1</div>
+            <div class="demo-cart-item-price">$240</div>
+          </div>
+          <div class="demo-cart-item-row">
+            <div class="demo-cart-item-name">Chocolate 70% x2</div>
+            <div class="demo-cart-item-price">$240</div>
+          </div>
+          <div class="demo-cart-divider"></div>
+          <div class="demo-cart-total-row">
+            <div>Total a cobrar</div>
+            <div id="demo-final-total">$480</div>
           </div>
         </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab active"><div class="demo-ico">🛒</div><span>Caja</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Historial</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+        <div class="demo-payment-methods">
+          <div class="demo-pay-btn active">💵 Efectivo</div>
+          <div class="demo-pay-btn">💳 Tarjeta</div>
+          <div class="demo-pay-btn">📱 Transferencia</div>
         </div>
+        <button class="demo-btn-confirm" id="demo-btn-confirm">Registrar Venta</button>
       </div>
 
-      <!-- SCREEN 3: HISTORIAL -->
+      <!-- SCREEN 3: EXITO -->
       <div class="demo-screen" id="demo-s3">
         <div class="demo-topbar">
-          <div><div class="demo-topbar-title">📋 Historial</div><div class="demo-topbar-sub">Hoy — 4 ventas</div></div>
-          <div class="demo-topbar-badge">HOY</div>
+          <div><div class="demo-topbar-title">✅ Venta Exitosa</div></div>
+          <div class="demo-topbar-badge">ÉXITO</div>
         </div>
-        <div class="demo-hist-list">
-          <div class="demo-hist-item hist-new" style="animation-delay:.05s">
-            <div class="demo-hist-left">
-              <div class="demo-hist-num">#004 · Nueva</div>
-              <div class="demo-hist-items-text">☕ Café · 🥐 Medialuna · 🥤 Jugo</div>
-              <div class="demo-hist-time">Hace un momento · Admin</div>
-            </div>
-            <div class="demo-hist-amount">$225</div>
+        <div class="demo-success-screen">
+          <div class="demo-success-icon">✓</div>
+          <div class="demo-success-title">¡Venta Registrada!</div>
+          <div class="demo-success-sub">El stock se ha actualizado correctamente.</div>
+          <div class="demo-success-btns">
+            <div class="demo-s-btn">📄 Ver Ticket</div>
+            <div class="demo-s-btn primary" id="demo-btn-restart">Nueva Venta</div>
           </div>
-          <div class="demo-hist-item" style="animation-delay:.15s">
-            <div class="demo-hist-left">
-              <div class="demo-hist-num">#003</div>
-              <div class="demo-hist-items-text">🧁 Muffin · ☕ Café x2</div>
-              <div class="demo-hist-time">14:32 · Admin</div>
-            </div>
-            <div class="demo-hist-amount">$225</div>
-          </div>
-          <div class="demo-hist-item" style="animation-delay:.25s">
-            <div class="demo-hist-left">
-              <div class="demo-hist-num">#002</div>
-              <div class="demo-hist-items-text">🍞 Tostada · 🥤 Jugo</div>
-              <div class="demo-hist-time">13:15 · Cajero</div>
-            </div>
-            <div class="demo-hist-amount">$155</div>
-          </div>
-          <div class="demo-hist-item" style="animation-delay:.35s">
-            <div class="demo-hist-left">
-              <div class="demo-hist-num">#001</div>
-              <div class="demo-hist-items-text">☕ Café · 🍫 Alfajor</div>
-              <div class="demo-hist-time">10:08 · Admin</div>
-            </div>
-            <div class="demo-hist-amount">$125</div>
-          </div>
-        </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab"><div class="demo-ico">🛒</div><span>Caja</span></div>
-          <div class="demo-nav-tab active"><div class="demo-ico">📋</div><span>Historial</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
         </div>
       </div>
 
       <!-- SCREEN 4: REPORTES -->
       <div class="demo-screen" id="demo-s4">
         <div class="demo-topbar">
-          <div><div class="demo-topbar-title">📊 Reportes</div><div class="demo-topbar-sub">Marzo 2026</div></div>
-          <div class="demo-topbar-badge">PDF</div>
+          <div><div class="demo-topbar-title">📊 Reportes</div><div class="demo-topbar-sub">Ventas del día</div></div>
+          <div class="demo-topbar-badge">HOY</div>
         </div>
-        <div class="demo-report-content">
-          <div class="demo-report-header">
-            <div class="demo-report-biz">Mi Negocio</div>
-            <div class="demo-report-period">Reporte de ventas · Marzo 2026</div>
-          </div>
-          <div class="demo-report-stats">
-            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-ventas">0</div><div class="demo-stat-lbl">Ventas hoy</div></div>
-            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-total">$0</div><div class="demo-stat-lbl">Total del día</div></div>
-            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-prod">0</div><div class="demo-stat-lbl">Productos vendidos</div></div>
-            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-prom">$0</div><div class="demo-stat-lbl">Ticket promedio</div></div>
-          </div>
-          <div class="demo-report-chart">
-            <div class="demo-chart-title">Ventas por día (esta semana)</div>
-            <div class="demo-bars">
-              <div class="demo-bar" id="demo-b1" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b2" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b3" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b4" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b5" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b6" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b7" style="height:0%"></div>
-            </div>
-            <div class="demo-bar-labels">
-              <div class="demo-bar-label">L</div><div class="demo-bar-label">M</div>
-              <div class="demo-bar-label">X</div><div class="demo-bar-label">J</div>
-              <div class="demo-bar-label">V</div><div class="demo-bar-label">S</div>
-              <div class="demo-bar-label" style="color:#c9a84c">H</div>
-            </div>
-          </div>
+        <div class="demo-report-stats">
+          <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-total">$0</div><div class="demo-stat-lbl">Total Ventas</div></div>
+          <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-count">0</div><div class="demo-stat-lbl">Transacciones</div></div>
         </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab"><div class="demo-ico">🛒</div><span>Caja</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📋</div><span>Historial</span></div>
-          <div class="demo-nav-tab active"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
+        <div class="demo-report-chart">
+          <div class="demo-chart-title">Ventas por hora</div>
+          <div class="demo-bars">
+            <div class="demo-bar" id="demo-b1" style="height:0%"></div>
+            <div class="demo-bar" id="demo-b2" style="height:0%"></div>
+            <div class="demo-bar" id="demo-b3" style="height:0%"></div>
+            <div class="demo-bar" id="demo-b4" style="height:0%"></div>
+            <div class="demo-bar" id="demo-b5" style="height:0%"></div>
+            <div class="demo-bar" id="demo-b6" style="height:0%"></div>
+          </div>
+          <div class="demo-bar-labels">
+            <div class="demo-bar-label">09h</div><div class="demo-bar-label">11h</div>
+            <div class="demo-bar-label">13h</div><div class="demo-bar-label">15h</div>
+            <div class="demo-bar-label">17h</div><div class="demo-bar-label">19h</div>
+          </div>
         </div>
       </div>
 
@@ -549,7 +505,7 @@
 
   <div class="demo-step-label" id="demo-step-label">Seleccionando productos para la venta...</div>
 </div>
-<script src="demo-sales.js"></script>
+<script src="/sales/demo-sales.js"></script>
     </div>
   </section>
 
@@ -639,6 +595,17 @@
     }, observerOptions);
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Asset verification script
+    window.onload = function() {
+      const assets = ['/sales/demo-sales.css', '/sales/demo-sales.js'];
+      assets.forEach(asset => {
+        fetch(asset).then(r => {
+          if(!r.ok) console.error('FALLO CARGA:', asset);
+          else console.log('CARGADO:', asset);
+        }).catch(e => console.error('ERROR RED:', asset));
+      });
+    };
   </script>
 
 </body>
