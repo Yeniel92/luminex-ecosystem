@@ -12,17 +12,17 @@
 
     :root {
       --bg:         #0f0e09;
-      --bg2:        #181508;
-      --bg3:        #1f1a0a;
-      --gold:       #c9a84c;
-      --gold-glow:  rgba(201,168,76,0.18);
-      --gold-dim:   rgba(201,168,76,0.08);
-      --green:      #22c55e;
+      --bg2:        #1a180f;
+      --bg3:        #242115;
+      --yellow:     #f59e0b;
+      --yellow-glow: rgba(245,158,11,0.18);
+      --yellow-dim:  rgba(245,158,11,0.08);
       --blue:       #38bdf8;
-      --white:      #faf8f0;
-      --text2:      #b8a87a;
-      --text3:      #7a6a3e;
-      --border:     rgba(201,168,76,0.12);
+      --gold:       #c9a84c;
+      --white:      #fafaf0;
+      --text2:      #b8b28f;
+      --text3:      #7a744d;
+      --border:     rgba(245,158,11,0.12);
       --border2:    rgba(255,255,255,0.06);
       --font-h:     'Syne', sans-serif;
       --font-b:     'DM Sans', sans-serif;
@@ -40,6 +40,7 @@
       overflow-x: hidden;
     }
 
+    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--text3); border-radius: 4px; }
@@ -47,630 +48,300 @@
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 58px; display: flex; align-items: center; padding: 0 20px;
-      background: rgba(15,14,9,0.88); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border); transition: box-shadow .3s;
+      padding: 20px 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(15,14,9,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    nav.scrolled { box-shadow: 0 4px 40px rgba(0,0,0,.6); }
-    .nav-inner {
-      width: 100%; max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    .logo {
+      font-family: var(--font-h);
+      font-weight: 800; font-size: 22px;
+      letter-spacing: -0.5px; line-height: 1;
     }
-    .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-    .nav-logo img { height: 28px; }
-    .nav-logo-text {
-      font-family: var(--font-h); font-size: 15px; font-weight: 800;
-      color: var(--white); letter-spacing: -.2px; line-height: 1;
-    }
-    .nav-logo-text span {
-      display: block; font-family: var(--font-b); font-size: 9.5px;
-      font-weight: 400; color: var(--text3); letter-spacing: .8px; text-transform: uppercase;
-    }
-    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
-    .nav-links a {
-      text-decoration: none; font-size: 13px; font-weight: 500; color: var(--text2);
-      padding: 5px 11px; border-radius: 8px; transition: color .2s, background .2s;
-    }
-    .nav-links a:hover { color: var(--white); background: var(--gold-dim); }
-    .nav-links a.active { color: var(--gold); }
-    .nav-cta {
-      display: flex; align-items: center; gap: 7px; text-decoration: none;
-      background: var(--gold); color: #0f0e09;
-      font-family: var(--font-h); font-size: 13px; font-weight: 700;
-      padding: 7px 15px; border-radius: 10px; white-space: nowrap;
-      transition: background .2s, transform .15s;
-    }
-    .nav-cta:hover { background: #e0be6a; transform: translateY(-1px); }
-    .nav-ham {
-      display: none; flex-direction: column; gap: 5px; justify-content: center;
-      width: 36px; height: 36px; background: none; border: none;
-      cursor: pointer; padding: 4px; border-radius: 8px;
-    }
-    .nav-ham span {
-      display: block; height: 2px; background: var(--white); border-radius: 2px;
-      transition: transform .3s, opacity .3s;
-    }
-    .nav-ham span:nth-child(2) { width: 70%; }
-    .nav-ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-ham.open span:nth-child(2) { opacity: 0; }
-    .nav-ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    .nav-mob {
-      display: none; position: fixed; top: 58px; left: 0; right: 0; z-index: 99;
-      background: rgba(15,14,9,.97); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border); padding: 12px 20px 20px;
-      flex-direction: column; gap: 4px;
-    }
-    .nav-mob.open { display: flex; }
-    .nav-mob a {
-      text-decoration: none; font-size: 15px; font-weight: 500; color: var(--white);
-      padding: 10px 12px; border-radius: 10px; transition: background .2s, color .2s;
-    }
-    .nav-mob a:hover, .nav-mob a.active { background: var(--gold-dim); color: var(--gold); }
-    .nav-mob-cta {
-      margin-top: 8px; display: block; text-align: center; text-decoration: none;
-      background: var(--gold); color: #0f0e09; font-family: var(--font-h);
-      font-size: 14px; font-weight: 700; padding: 13px; border-radius: 12px;
-    }
-    @media (max-width: 700px) {
-      .nav-links, .nav-cta { display: none; }
-      .nav-ham { display: flex; }
-    }
+    .logo span { display: block; font-size: 10px; color: var(--text2); font-weight: 400; letter-spacing: 1px; margin-top: 2px; }
 
-    /* ── LAYOUT ── */
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text2); font-size: 14px; transition: 0.3s; }
+    .nav-links a:hover { color: var(--yellow); }
+    .btn-nav {
+      background: var(--yellow); color: var(--bg);
+      padding: 10px 20px; border-radius: 8px;
+      font-weight: 700; font-size: 13px;
+    }
 
     /* ── HERO ── */
     .hero {
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-      padding: 100px 20px 60px; position: relative; overflow: hidden;
+      padding: 160px 5% 100px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      position: relative;
     }
-    .hero-glow {
-      position: absolute; top: -120px; right: -80px; width: 500px; height: 500px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(201,168,76,.1) 0%, transparent 70%);
-      pointer-events: none;
+    .hero::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; height: 600px;
+      background: radial-gradient(circle at center, var(--yellow-dim) 0%, transparent 70%);
+      z-index: -1;
     }
-    .hero-glow2 {
-      position: absolute; bottom: -60px; left: -100px; width: 400px; height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(56,189,248,.05) 0%, transparent 70%);
-      pointer-events: none;
+    .badge {
+      background: var(--yellow-dim); color: var(--yellow);
+      padding: 6px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
     }
-    .hero-inner { max-width: 680px; position: relative; }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-      color: var(--gold); background: var(--gold-dim);
-      border: 1px solid rgba(201,168,76,.2); border-radius: 20px;
-      padding: 5px 14px; margin-bottom: 28px;
-      animation: fadeUp .6s ease both;
+    h1 {
+      font-family: var(--font-h); font-size: clamp(40px, 8vw, 72px);
+      line-height: 1; letter-spacing: -2px; margin-bottom: 24px;
+      max-width: 900px;
     }
-    .hero-tag::before { content: '●'; font-size: 7px; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-    .hero h1 {
-      font-family: var(--font-h); font-size: clamp(38px, 9vw, 64px);
-      font-weight: 800; line-height: 1.02; letter-spacing: -2px;
-      color: var(--white); margin-bottom: 24px;
-      animation: fadeUp .6s .1s ease both;
+    h1 span { color: var(--text3); }
+    .hero p {
+      font-size: clamp(16px, 2vw, 19px); color: var(--text2);
+      max-width: 650px; margin-bottom: 40px;
     }
-    .hero h1 .g { color: var(--gold); }
-    .hero h1 .b { color: var(--blue); }
-    .hero-desc {
-      font-size: 16px; color: var(--text2); line-height: 1.7; margin-bottom: 36px;
-      max-width: 500px; animation: fadeUp .6s .2s ease both;
-    }
-    .hero-actions {
-      display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
-      animation: fadeUp .6s .3s ease both;
-    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
     .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--gold); color: #0f0e09;
-      font-family: var(--font-h); font-size: 15px; font-weight: 700;
-      padding: 14px 24px; border-radius: 12px; text-decoration: none;
-      transition: background .2s, transform .15s, box-shadow .2s;
+      background: var(--yellow); color: var(--bg);
+      padding: 18px 36px; border-radius: 12px;
+      font-weight: 800; font-size: 16px; text-decoration: none;
+      box-shadow: 0 10px 30px var(--yellow-glow);
+      transition: 0.3s;
+      display: inline-flex; align-items: center; gap: 10px;
     }
-    .btn-primary:hover {
-      background: #e0be6a; transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(201,168,76,.25);
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px var(--yellow-glow); }
+    .btn-secondary {
+      background: var(--bg2); color: var(--white);
+      padding: 18px 36px; border-radius: 12px;
+      font-weight: 700; font-size: 16px; text-decoration: none;
+      border: 1px solid var(--border);
+      transition: 0.3s;
     }
-    .btn-ghost {
-      display: inline-flex; align-items: center; gap: 8px;
-      color: var(--text2); font-size: 14px; font-weight: 500;
-      padding: 13px 20px; border-radius: 12px; text-decoration: none;
-      border: 1px solid var(--border2); transition: color .2s, border-color .2s, background .2s;
-    }
-    .btn-ghost:hover { color: var(--white); border-color: var(--border); background: var(--gold-dim); }
-    .hero-price-note {
-      margin-top: 20px; font-size: 12.5px; color: var(--text3);
-      animation: fadeUp .6s .4s ease both;
-    }
-    .hero-price-note strong { color: var(--text2); }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .btn-secondary:hover { background: var(--bg3); }
 
-    /* ── PROOF BAR ── */
-    .proof-bar {
-      background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      padding: 18px 20px;
+    .hero-footer {
+      margin-top: 60px; display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;
+      color: var(--text3); font-size: 13px; font-weight: 500;
     }
-    .proof-bar-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px;
-    }
-    .proof-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text2); white-space: nowrap; }
-    .proof-item .icon { font-size: 16px; }
-    .proof-item strong { color: var(--white); }
-
-    /* ── SECTION ── */
-    section { padding: 80px 20px; }
-    .section-tag {
-      display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
-    }
-    .section-title {
-      font-family: var(--font-h); font-size: clamp(26px, 5vw, 40px);
-      font-weight: 800; letter-spacing: -1px; line-height: 1.1;
-      color: var(--white); margin-bottom: 16px;
-    }
-    .section-sub { font-size: 15px; color: var(--text2); max-width: 520px; line-height: 1.7; }
+    .hero-footer span { display: flex; align-items: center; gap: 8px; }
+    .hero-footer b { color: var(--text2); }
 
     /* ── FEATURES ── */
-    .features { background: var(--bg2); }
+    .section-header { padding: 100px 5% 40px; text-align: center; }
+    .section-header h2 { font-family: var(--font-h); font-size: clamp(32px, 5vw, 48px); letter-spacing: -1px; line-height: 1.1; }
+    .section-header h2 span { color: var(--text3); }
+
     .features-grid {
-      display: grid; gap: 2px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      margin-top: 48px;
+      padding: 0 5% 100px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px; max-width: 1200px; margin: 0 auto;
     }
-    .feat-card {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 28px 24px;
-      transition: border-color .2s, transform .2s, box-shadow .2s;
-      position: relative; overflow: hidden;
+    .f-card {
+      background: var(--bg2); padding: 40px; border-radius: 24px;
+      border: 1px solid var(--border2);
+      transition: 0.3s;
     }
-    .feat-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      opacity: 0; transition: opacity .3s;
+    .f-card:hover { border-color: var(--border); transform: translateY(-5px); }
+    .f-icon {
+      font-size: 32px; margin-bottom: 24px;
+      width: 64px; height: 64px; background: var(--bg3);
+      display: flex; align-items: center; justify-content: center; border-radius: 16px;
     }
-    .feat-card:hover { border-color: rgba(201,168,76,.3); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
-    .feat-card:hover::before { opacity: 1; }
-    .feat-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      background: var(--gold-dim); border: 1px solid rgba(201,168,76,.15);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; margin-bottom: 16px;
-    }
-    .feat-title { font-family: var(--font-h); font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-    .feat-desc { font-size: 13.5px; color: var(--text2); line-height: 1.6; }
+    .f-card h3 { font-family: var(--font-h); font-size: 20px; margin-bottom: 12px; }
+    .f-card p { color: var(--text2); font-size: 15px; line-height: 1.5; }
 
     /* ── STEPS ── */
+    .steps { background: var(--bg2); padding: 100px 5%; }
     .steps-grid {
-      display: grid; gap: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      margin-top: 48px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px; max-width: 1100px; margin: 0 auto;
     }
-    .step-card {
-      padding: 28px 24px; background: var(--bg3);
-      border: 1px solid var(--border2); border-radius: var(--r);
-    }
+    .step-card { position: relative; }
     .step-num {
-      font-family: var(--font-h); font-size: 40px; font-weight: 800; line-height: 1;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, rgba(201,168,76,.3), rgba(201,168,76,.08));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      font-family: var(--font-h); font-size: 64px; font-weight: 800;
+      color: transparent; -webkit-text-stroke: 1px var(--text3);
+      line-height: 1; margin-bottom: 10px; opacity: 0.3;
     }
-    .step-title { font-family: var(--font-h); font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-    .step-desc { font-size: 13.5px; color: var(--text2); line-height: 1.6; }
+    .step-title { font-family: var(--font-h); font-size: 22px; margin-bottom: 12px; }
+    .step-desc { color: var(--text2); }
+
+    /* ── DEMO SECTION ── */
+    .demo-section { padding: 100px 5%; position: relative; }
+    .demo-container {
+      max-width: 1000px; margin: 0 auto;
+      background: var(--bg2); border-radius: 32px;
+      border: 1px solid var(--border);
+      padding: 60px 40px;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; overflow: hidden;
+    }
 
     /* ── PRICING ── */
-    .pricing { background: var(--bg2); }
+    .pricing { padding: 100px 5%; }
+    .wrap { max-width: 1200px; margin: 0 auto; }
+    .section-tag { color: var(--yellow); font-weight: 800; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .section-title { font-family: var(--font-h); font-size: clamp(32px, 5vw, 48px); margin-bottom: 16px; }
+    .section-sub { color: var(--text2); max-width: 600px; margin-bottom: 40px; }
+
     .pricing-card {
-      max-width: 440px; margin: 48px auto 0;
-      background: var(--bg3); border: 1px solid rgba(201,168,76,.3);
-      border-radius: 20px; padding: 36px 32px; position: relative; overflow: hidden;
-      box-shadow: 0 0 60px rgba(201,168,76,.06);
+      max-width: 450px; margin: 40px auto;
+      background: linear-gradient(145deg, var(--bg2), var(--bg));
+      padding: 60px 40px; border-radius: 32px;
+      border: 2px solid var(--yellow);
+      position: relative; text-align: center;
     }
     .pricing-badge {
-      position: absolute; top: 20px; right: 20px;
-      background: var(--gold); color: #0f0e09;
-      font-family: var(--font-h); font-size: 11px; font-weight: 700;
-      letter-spacing: .5px; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 6px;
+      position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+      background: var(--yellow); color: var(--bg);
+      padding: 6px 20px; border-radius: 20px; font-weight: 800; font-size: 12px;
     }
-    .pricing-name {
-      font-family: var(--font-h); font-size: 13px; font-weight: 700;
-      letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
-    }
-    .pricing-amount { display: flex; align-items: flex-end; gap: 6px; margin-bottom: 6px; }
-    .pricing-amount .amount {
-      font-family: var(--font-h); font-size: 56px; font-weight: 800;
-      line-height: 1; color: var(--white); letter-spacing: -2px;
-    }
-    .pricing-amount .currency { font-size: 22px; color: var(--text2); padding-bottom: 6px; }
-    .pricing-amount .period { font-size: 14px; color: var(--text3); padding-bottom: 8px; }
-    .pricing-monthly { font-size: 13px; color: var(--text3); margin-bottom: 28px; }
-    .pricing-monthly strong { color: var(--gold); }
-    .pricing-divider { height: 1px; background: var(--border2); margin-bottom: 24px; }
-    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
-    .pricing-features li {
-      display: flex; align-items: flex-start; gap: 10px;
-      font-size: 14px; color: var(--text2); line-height: 1.5;
-    }
-    .pricing-features li::before { content: '✓'; color: var(--gold); font-weight: 700; font-size: 13px; margin-top: 1px; flex-shrink: 0; }
-    .pricing-trial { margin-top: 16px; text-align: center; font-size: 12.5px; color: var(--text3); }
-    .pricing-trial strong { color: var(--text2); }
+    .pricing-name { color: var(--text3); font-weight: 700; font-size: 14px; text-transform: uppercase; }
+    .pricing-amount { font-family: var(--font-h); font-size: 56px; font-weight: 800; margin: 20px 0 5px; }
+    .pricing-amount .currency { font-size: 24px; vertical-align: super; margin-right: 4px; }
+    .pricing-amount .period { font-size: 18px; color: var(--text3); font-weight: 400; }
+    .pricing-monthly { color: var(--text3); font-size: 14px; margin-bottom: 30px; }
+    .pricing-divider { height: 1px; background: var(--border); margin: 30px 0; }
+    .pricing-features { text-align: left; margin-bottom: 40px; list-style: none; }
+    .pricing-features li { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--text2); font-size: 14px; }
+    .pricing-features li::before { content: '✓'; color: var(--yellow); font-weight: 900; }
+    .pricing-trial { font-size: 12px; color: var(--text3); margin-top: 20px; }
 
     /* ── FAQ ── */
-    .faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 2px; max-width: 700px; }
-    .faq-item { border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; }
+    .faq-list { max-width: 800px; margin: 40px auto; }
+    .faq-item { background: var(--bg2); border: 1px solid var(--border2); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
     .faq-q {
-      width: 100%; background: var(--bg3); border: none; cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      padding: 18px 20px; text-align: left;
-      font-family: var(--font-b); font-size: 14.5px; font-weight: 500; color: var(--white);
-      transition: background .2s;
+      width: 100%; padding: 24px; background: none; border: none;
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--white); font-family: var(--font-h); font-size: 18px; font-weight: 700;
+      text-align: left; cursor: pointer;
     }
-    .faq-q:hover { background: rgba(201,168,76,.05); }
-    .faq-q .arrow {
-      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
-      background: var(--gold-dim); display: flex; align-items: center; justify-content: center;
-      font-size: 11px; transition: transform .3s; color: var(--gold);
-    }
-    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
-    .faq-a {
-      display: none; padding: 0 20px 18px;
-      font-size: 13.5px; color: var(--text2); line-height: 1.7; background: var(--bg3);
-    }
-    .faq-item.open .faq-a { display: block; }
-
-    /* ── CTA FINAL ── */
-    .cta-section {
-      text-align: center; padding: 80px 20px;
-      background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,.05) 0%, transparent 70%);
-    }
-    .cta-section .section-title { margin: 0 auto 16px; }
-    .cta-section .section-sub { margin: 0 auto 36px; text-align: center; }
-    .cta-section .hero-actions { justify-content: center; }
-    .cta-section .hero-price-note { text-align: center; }
+    .faq-a { padding: 0 24px 24px; color: var(--text2); font-size: 15px; display: none; }
+    .faq-item.active .faq-a { display: block; }
+    .faq-item.active .arrow { transform: rotate(180deg); }
+    .arrow { transition: 0.3s; color: var(--text3); }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--bg2); border-top: 1px solid var(--border);
-      padding: 28px 20px; text-align: center;
+      padding: 80px 5% 40px; border-top: 1px solid var(--border2);
+      text-align: center; color: var(--text3); font-size: 13px;
     }
-    .footer-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+    .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; }
+    .footer-links a { color: var(--text2); text-decoration: none; }
+
+    /* ── ANIMATIONS ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      h1 { font-size: 48px; }
+      .hero { padding-top: 120px; }
+      .demo-container { padding: 40px 20px; }
     }
-    .footer-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .footer-brand img { height: 24px; }
-    .footer-brand span { font-family: var(--font-h); font-size: 13px; font-weight: 700; color: var(--text2); }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
-    .footer-links a { font-size: 13px; color: var(--text3); text-decoration: none; transition: color .2s; }
-    .footer-links a:hover { color: var(--gold); }
-    .footer-copy { font-size: 12px; color: var(--text3); }
-
-    /* ── REVEAL ── */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-  
-/* Demo Styles */
-
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#demo-0f0e09;--surface:#demo-141208;--surface2:#demo-1a1810;--surface3:#demo-201e14;
-  --gold:#demo-c9a84c;--green:#demo-4caf6e;--red:#demo-e05252;--orange:#demo-f59e0b;
-  --text:#demo-faf8f0;--text2:#demo-b8a87a;--text3:#demo-7a6a3e;
-  --border:rgba(201,168,76,0.demo-1);
-  --font-h:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
-}
-
-
-.demo-demo-wrapper{width:100%;max-width:900px;}
-.demo-demo-label{
-  font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:1.demo-5px;
-  text-transform:uppercase;color:#demo-c9a84c;margin-bottom:12px;
-  display:flex;align-items:center;gap:8px;
-}
-.demo-demo-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#demo-c9a84c;animation:blink 1.demo-5s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.demo-3}}
-
-.demo-phone{
-  width:320px;margin:0 auto;
-  background:var(--bg);border-radius:32px;
-  border:2px solid rgba(201,168,76,0.demo-15);
-  box-shadow:0 40px 80px rgba(0,0,0,.demo-8),0 0 0 1px rgba(201,168,76,0.demo-05);
-  overflow:hidden;position:relative;
-}
-.demo-phone-notch{height:28px;background:var(--bg);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);}
-.demo-phone-notch-pill{width:80px;height:8px;background:#demo-1a1810;border-radius:4px;}
-.demo-phone-screen{height:580px;overflow:hidden;position:relative;background:var(--bg);}
-
-.demo-screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateX(20px);transition:opacity .demo-4s ease,transform .demo-4s ease;pointer-events:none;}
-.demo-screen.demo-active{opacity:1;transform:translateX(0);pointer-events:all;}
-.demo-screen.demo-exit{opacity:0;transform:translateX(-20px);}
-
-.demo-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.demo-topbar-title{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--text);}
-.demo-topbar-sub{font-size:10px;color:var(--text3);margin-top:1px;}
-.demo-topbar-badge{font-size:9px;font-weight:700;background:var(--gold);color:#demo-000;padding:2px 7px;border-radius:10px;letter-spacing:.demo-5px;}
-
-.demo-bottom-nav{background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 0 4px;flex-shrink:0;}
-.demo-nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;color:var(--text3);}
-.demo-nav-tab.demo-active{color:var(--gold);}
-.demo-nav-tab .demo-ico{font-size:16px;}
-
-/* ── DASHBOARD ── */
-.demo-dash-content{flex:1;overflow-y:auto;padding:10px;}
-.demo-dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
-.demo-dash-stat{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
-.demo-dash-stat.demo-alert{border-color:rgba(224,82,82,0.demo-3);background:rgba(224,82,82,0.demo-05);}
-.demo-dash-stat.demo-warn{border-color:rgba(245,158,11,0.demo-3);background:rgba(245,158,11,0.demo-05);}
-.demo-dash-val{font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--gold);}
-.demo-dash-val.demo-red{color:var(--red);}
-.demo-dash-val.demo-orange{color:var(--orange);}
-.demo-dash-lbl{font-size:9px;color:var(--text3);margin-top:2px;}
-.demo-alert-box{
-  background:rgba(245,158,11,0.demo-08);border:1px solid rgba(245,158,11,0.demo-25);
-  border-radius:10px;padding:10px 12px;margin-bottom:8px;
-  display:flex;align-items:center;gap:8px;
-  opacity:0;transform:translateY(4px);transition:all .demo-4s ease;
-}
-.demo-alert-box.demo-visible{opacity:1;transform:none;}
-.demo-alert-ico{font-size:18px;flex-shrink:0;}
-.demo-alert-text{}
-.demo-alert-title{font-size:11px;font-weight:700;color:var(--orange);}
-.demo-alert-sub{font-size:10px;color:var(--text2);margin-top:1px;}
-
-/* ── INVENTARIO ── */
-.demo-inv-list{flex:1;overflow-y:auto;padding:10px;}
-.demo-inv-item{
-  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
-  padding:10px 12px;margin-bottom:6px;
-  display:flex;justify-content:space-between;align-items:center;
-  opacity:0;transform:translateY(6px);
-  animation:fadeItem .demo-3s ease forwards;
-}
-@keyframes fadeItem{to{opacity:1;transform:none}}
-.demo-inv-item.demo-low{border-color:rgba(245,158,11,0.demo-3);}
-.demo-inv-item.demo-out{border-color:rgba(224,82,82,0.demo-3);opacity:.demo-6!important;}
-.demo-inv-left{display:flex;align-items:center;gap:8px;}
-.demo-inv-emoji{font-size:20px;}
-.demo-inv-name{font-size:11px;font-weight:500;color:var(--text);}
-.demo-inv-sku{font-size:9px;color:var(--text3);}
-.demo-inv-right{text-align:right;}
-.demo-inv-stock{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--gold);}
-.demo-inv-stock.demo-low{color:var(--orange);}
-.demo-inv-stock.demo-out{color:var(--red);}
-.demo-inv-min{font-size:9px;color:var(--text3);}
-
-/* ── MOVIMIENTOS ── */
-.demo-mov-content{flex:1;overflow-y:auto;padding:10px;}
-.demo-mov-form{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;}
-.demo-mov-form-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.demo-mov-tabs{display:flex;gap:4px;margin-bottom:10px;}
-.demo-mov-tab{
-  flex:1;padding:6px;border-radius:8px;font-size:10px;font-weight:700;
-  text-align:center;border:1px solid var(--border);color:var(--text3);
-  transition:all .demo-2s;
-}
-.demo-mov-tab.demo-entrada{border-color:rgba(76,175,110,0.demo-4);color:var(--green);background:rgba(76,175,110,0.demo-08);}
-.demo-mov-tab.demo-salida{border-color:rgba(224,82,82,0.demo-4);color:var(--red);background:rgba(224,82,82,0.demo-08);}
-.demo-mov-field{margin-bottom:8px;}
-.demo-mov-field label{font-size:9px;color:var(--text3);display:block;margin-bottom:3px;}
-.demo-mov-field-val{
-  background:var(--surface3);border:1px solid var(--border);border-radius:8px;
-  padding:7px 10px;font-size:11px;color:var(--text);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.demo-mov-qty{
-  font-family:var(--font-h);font-size:20px;font-weight:800;
-  text-align:center;color:var(--green);margin:8px 0;
-  opacity:0;transition:opacity .demo-3s;
-}
-.demo-mov-qty.demo-visible{opacity:1;}
-.demo-btn-mov{
-  width:100%;padding:9px;border:none;border-radius:10px;
-  font-family:var(--font-h);font-size:11px;font-weight:700;cursor:pointer;
-  opacity:0;transition:opacity .demo-3s;
-}
-.demo-btn-mov.demo-entrada{background:var(--green);color:#demo-000;}
-.demo-btn-mov.demo-salida{background:var(--red);color:#demo-fff;}
-.demo-btn-mov.demo-visible{opacity:1;}
-
-.demo-mov-list{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px;}
-.demo-mov-list-title{font-size:10px;color:var(--text3);margin-bottom:8px;}
-.demo-mov-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.demo-04);
-  font-size:10px;
-  opacity:0;animation:fadeItem .demo-3s ease forwards;
-}
-.demo-mov-row:last-child{border-bottom:none;}
-.demo-mov-tipo{display:flex;align-items:center;gap:5px;}
-.demo-mov-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.demo-mov-dot.demo-e{background:var(--green);}
-.demo-mov-dot.demo-s{background:var(--red);}
-.demo-mov-prod{color:var(--text2);}
-.demo-mov-cant-e{color:var(--green);font-weight:700;}
-.demo-mov-cant-s{color:var(--red);font-weight:700;}
-.demo-mov-date{color:var(--text3);font-size:9px;}
-
-/* ── REPORTE ── */
-.demo-rep-content{flex:1;overflow-y:auto;padding:10px;}
-.demo-rep-header{background:linear-gradient(135deg,var(--surface2),var(--surface3));border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;text-align:center;}
-.demo-rep-biz{font-family:var(--font-h);font-size:14px;font-weight:800;color:var(--gold);}
-.demo-rep-period{font-size:10px;color:var(--text3);margin-top:2px;}
-.demo-rep-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
-.demo-rep-stat{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
-.demo-rep-val{font-family:var(--font-h);font-size:18px;font-weight:800;color:var(--gold);}
-.demo-rep-val.demo-red{color:var(--red);}
-.demo-rep-val.demo-orange{color:var(--orange);}
-.demo-rep-lbl{font-size:9px;color:var(--text3);margin-top:2px;}
-.demo-rep-top{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;}
-.demo-rep-top-title{font-size:10px;color:var(--text3);margin-bottom:8px;}
-.demo-rep-top-item{
-  display:flex;align-items:center;gap:8px;margin-bottom:6px;
-  opacity:0;animation:fadeItem .demo-3s ease forwards;
-}
-.demo-rep-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.demo-06);border-radius:3px;overflow:hidden;}
-.demo-rep-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),rgba(201,168,76,0.demo-4));width:0%;transition:width .demo-8s ease;}
-.demo-rep-top-name{font-size:10px;color:var(--text2);min-width:60px;}
-.demo-rep-top-val{font-size:10px;color:var(--gold);font-weight:700;min-width:30px;text-align:right;}
-
-.demo-progress-bar{display:flex;gap:4px;justify-content:center;padding:12px;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(15,14,9,1),transparent);pointer-events:none;}
-.demo-progress-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.demo-15);transition:background .demo-3s,transform .demo-3s;}
-.demo-progress-dot.demo-active{background:var(--gold);transform:scale(1.demo-3);}
-
-.demo-step-label{text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,0.demo-5);min-height:20px;transition:opacity .demo-3s;}
-.demo-step-label strong{color:#demo-c9a84c;}
-
-.demo-section { padding: 60px 20px; }
-.demo-container { display: flex; justify-content: center; margin-top: 40px; }
-</style>
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav id="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="../logo-luminex.png" alt="Luminex" onerror="this.style.display='none'" />
-      <div class="nav-logo-text">Luminex <span>Ecosystem</span></div>
-    </a>
-    <ul class="nav-links">
-      <li><a href="/">Inicio</a></li>
-      <li><a href="/sales">Sales</a></li>
-      <li><a href="/stock" class="active">Stock</a></li>
-      <li><a href="/ruta-neta">Ruta Neta</a></li>
-    </ul>
-    <a href="/stock/app" class="nav-cta">Abrir app →</a>
-    <button class="nav-ham" id="ham" aria-label="Menú">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-<div class="nav-mob" id="mob">
-  <a href="/">← Ecosistema</a>
-  <a href="/sales">Luminex Sales</a>
-  <a href="/stock" class="active">Luminex Stock</a>
-  <a href="/ruta-neta">Ruta Neta</a>
-  <a href="/stock/app" class="nav-mob-cta">Abrir Luminex Stock →</a>
-</div>
+  <nav>
+    <div class="logo">Luminex<span>ECOSYSTEM</span></div>
+    <div class="nav-links">
+      <a href="#features">Funcionalidades</a>
+      <a href="#demo">Demo</a>
+      <a href="#pricing">Precio</a>
+      <a href="/stock/app" class="btn-nav">Probar Gratis</a>
+    </div>
+  </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-  <div class="hero-inner">
-    <div class="hero-tag">📦 Control de Inventario · Uruguay</div>
-    <h1>Tu stock bajo <span class="g">control total</span>,<br>sin <span class="b">sorpresas</span></h1>
-    <p class="hero-desc">
-      Sistema de gestión de inventario para tu negocio. Controlá productos, registrá movimientos, generá reportes y gestioná usuarios — todo desde tu celular, sin internet obligatorio.
-    </p>
-    <div class="hero-actions">
+  <section class="hero">
+    <div class="badge">📦 CONTROL DE INVENTARIO · URUGUAY</div>
+    <h1>Gestioná tu stock <span>sin complicaciones</span> ni mensualidades</h1>
+    <p>Sistema de inventario completo para tu negocio. Controlá existencias, registrá movimientos y generá reportes — todo desde tu celular, sin internet obligatorio.</p>
+    <div class="hero-btns">
       <a href="/stock/app" class="btn-primary">📦 Probar 7 días gratis</a>
-      <a href="#features" class="btn-ghost">Ver funciones ↓</a>
+      <a href="#demo" class="btn-secondary">Ver demo en vivo</a>
     </div>
-    <p class="hero-price-note">Sin tarjeta de crédito · <strong>USD 24/año</strong> para continuar · Sin renovación automática</p>
-  </div>
-</section>
-
-<!-- PROOF BAR -->
-<div class="proof-bar">
-  <div class="proof-bar-inner">
-    <div class="proof-item"><span class="icon">📱</span><span><strong>PWA instalable</strong> en tu celular</span></div>
-    <div class="proof-item"><span class="icon">🔌</span><span>Funciona <strong>sin internet</strong></span></div>
-    <div class="proof-item"><span class="icon">🔒</span><span><strong>Tus datos</strong> son solo tuyos</span></div>
-    <div class="proof-item"><span class="icon">🇺🇾</span><span>Hecho para <strong>Uruguay</strong></span></div>
-    <div class="proof-item"><span class="icon">💰</span><span>Solo <strong>USD 24/año</strong></span></div>
-  </div>
-</div>
-
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="section-tag">Funcionalidades</div>
-      <h2 class="section-title">Todo lo que necesitás<br>para tu inventario</h2>
-      <p class="section-sub">Sin módulos extra, sin sorpresas. Luminex Stock incluye todo desde el primer día.</p>
+    <div class="hero-footer">
+      <span>📱 <b>PWA instalable</b> en tu celular</span>
+      <span>🔌 Funciona <b>sin internet</b></span>
+      <span>🔒 <b>Tus datos</b> son solo tuyos</span>
     </div>
-    <div class="features-grid reveal">
-      <div class="feat-card">
-        <div class="feat-icon">📊</div>
-        <div class="feat-title">Dashboard</div>
-        <div class="feat-desc">Visualizá el estado de tu inventario de un vistazo: total de productos, alertas de stock bajo y productos agotados.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📦</div>
-        <div class="feat-title">Gestión de Inventario</div>
-        <div class="feat-desc">Creá y gestioná tu catálogo de productos con nombre, cantidad, stock mínimo e ícono. Recibí alertas automáticas cuando el stock baja.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🔄</div>
-        <div class="feat-title">Movimientos</div>
-        <div class="feat-desc">Registrá entradas y salidas de stock con detalle y fecha. Llevá un historial completo de cada movimiento de tu inventario.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📋</div>
-        <div class="feat-title">Reportes con tu Marca</div>
-        <div class="feat-desc">Generá reportes de inventario con el nombre y logo de tu negocio. Exportalos en PDF para compartir o archivar.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">👥</div>
-        <div class="feat-title">Múltiples Usuarios</div>
-        <div class="feat-desc">Creá cuentas para cada empleado con roles definidos. El Admin gestiona todo; el Empleado accede a su inventario y movimientos.</div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🏪</div>
-        <div class="feat-title">Mi Negocio</div>
-        <div class="feat-desc">Configurá el nombre, logo y datos de tu negocio. Realizá respaldos y restauraciones para proteger tu información en todo momento.</div>
-      </div>
+    <div class="hero-footer" style="margin-top: 15px;">
+      <span>🇺🇾 Hecho para <b>Uruguay</b></span>
+      <span>💰 Solo <b>USD 24/año</b></span>
+    </div>
+  </section>
+
+  <section class="section-header" id="features">
+    <div class="badge">FUNCIONALIDADES</div>
+    <h2>Todo lo que necesitás <span>en una sola app</span></h2>
+    <p style="color: #94a3b8; margin-top: 15px;">Sin módulos de pago extra, sin sorpresas. Luminex Stock incluye todo desde el primer día.</p>
+  </section>
+
+  <div class="features-grid">
+    <div class="f-card reveal">
+      <div class="f-icon">📊</div>
+      <h3>Dashboard de Alertas</h3>
+      <p>Visualizá el estado general de tu negocio. Recibí alertas automáticas de productos con stock bajo o agotados.</p>
+    </div>
+    <div class="f-card reveal">
+      <div class="f-icon">📦</div>
+      <h3>Control de Inventario</h3>
+      <p>Gestioná tu catálogo con nombre, SKU, categoría y unidad de medida. Controlá el stock mínimo para cada producto.</p>
+    </div>
+    <div class="f-card reveal">
+      <div class="f-icon">🔄</div>
+      <h3>Registro de Movimientos</h3>
+      <p>Registrá entradas y salidas de mercadería con detalle. Cada movimiento queda guardado con fecha y usuario.</p>
+    </div>
+    <div class="f-card reveal">
+      <div class="f-icon">📋</div>
+      <h3>Reportes de Stock</h3>
+      <p>Generá reportes detallados de existencias y movimientos. Exportalos en PDF con el logo de tu negocio.</p>
+    </div>
+    <div class="f-card reveal">
+      <div class="f-icon">👥</div>
+      <h3>Múltiples Usuarios</h3>
+      <p>Creá cuentas para tu equipo. El rol Admin gestiona todo; el Empleado solo registra movimientos e inventario.</p>
+    </div>
+    <div class="f-card reveal">
+      <div class="f-icon">🏪</div>
+      <h3>Mi Negocio</h3>
+      <p>Configurá tus datos, realizá respaldos y restauraciones con un toque. Tus datos están seguros en tu dispositivo.</p>
     </div>
   </div>
-</section>
 
-<!-- HOW IT WORKS -->
-<section>
-  <div class="wrap">
-    <div class="reveal">
-      <div class="section-tag">¿Cómo empezar?</div>
-      <h2 class="section-title">En 3 pasos controlás<br>tu inventario</h2>
+  <section class="steps">
+    <div class="section-header">
+      <div class="badge">¿CÓMO EMPEZAR?</div>
+      <h2>En 3 pasos tenés <span>el control</span></h2>
     </div>
-    <div class="steps-grid reveal">
-      <div class="step-card">
+    <div class="steps-grid">
+      <div class="step-card reveal">
         <div class="step-num">01</div>
         <div class="step-title">Abrí la app</div>
-        <div class="step-desc">Ingresá al link, instalá como PWA en tu celular y accedé con las credenciales de admin. Sin descargas en tienda de apps.</div>
+        <div class="step-desc">Ingresá al link, instalá como PWA en tu celular y accedé con las credenciales de admin. Sin descargas en tiendas.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-num">02</div>
         <div class="step-title">Cargá tus productos</div>
         <div class="step-desc">Agregá los productos de tu inventario con nombre, cantidad y stock mínimo de alerta. Luego creá las cuentas para tu equipo.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-num">03</div>
         <div class="step-title">Registrá movimientos</div>
         <div class="step-desc">Cada entrada o salida queda registrada con fecha y detalle. Consultá reportes y el estado de tu stock cuando quieras.</div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PRICING -->
-
-<section class="demo-section">
-  <div class="container">
-    <div class="reveal">
-      <div class="badge">Demo en vivo</div>
-      <h2 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; margin-bottom: 16px; text-align: center;">Mirá cómo funciona</h2>
-      <p style="color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 40px;">Una simulación real del flujo de trabajo — sin instalar nada.</p>
-    </div>
-    <div class="demo-container reveal">
-      
+  <section class="demo-section" id="demo">
+    <div class="container">
+      <div class="reveal">
+        <div class="badge">Demo en vivo</div>
+        <h2 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; margin-bottom: 16px; text-align: center;">Mirá cómo funciona</h2>
+        <p style="color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 40px;">Una simulación real del flujo de trabajo — sin instalar nada.</p>
+      </div>
+      <div class="demo-container reveal">
+        
 <div class="demo-demo-wrapper">
   <div class="demo-demo-label">Demo interactiva — Luminex Stock</div>
 
@@ -842,6 +513,7 @@
         </div>
       </div>
 
+      <!-- PROGRESS DOTS -->
       <div class="demo-progress-bar">
         <div class="demo-progress-dot active" id="demo-d0"></div>
         <div class="demo-progress-dot" id="demo-d1"></div>
@@ -854,473 +526,106 @@
   <div class="demo-step-label" id="demo-step-label">Revisando el dashboard de inventario...</div>
 </div>
 <script src="demo-stock.js"></script>
-
-<script>
-const screens=['s1','s2','s3','s4'];
-const dots=['d0','d1','d2','d3'];
-const labels=[
-  'Revisando el <strong>dashboard</strong> de inventario...',
-  'Listado de productos — alerta de <strong>stock bajo</strong>',
-  'Registrando <strong>entrada de stock</strong> — Harina 000',
-  'Generando <strong>reporte de inventario</strong>...'
-];
-
-function showScreen(idx){
-  screens.forEach((id,i)=>{
-    const el=document.getElementById(id);
-    el.classList.remove('active','exit');
-    if(i===idx) el.classList.add('active');
-    else if(i===idx-1) el.classList.add('exit');
-  });
-  dots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===idx));
-  document.getElementById('step-label').innerHTML=labels[idx];
-}
-
-function animateDash(){
-  return new Promise(resolve=>{
-    const targets={'d-total':8,'d-mov':7,'d-low':2,'d-out':1};
-    let done=0;
-    Object.entries(targets).forEach(([id,val],i)=>{
-      setTimeout(()=>{
-        let v=0;const el=document.getElementById(id);
-        const t=setInterval(()=>{v=Math.min(v+1,val);el.textContent=v;if(v>=val){clearInterval(t);done++;if(done===4){
-          setTimeout(()=>{
-            document.getElementById('alert1').classList.add('visible');
-            setTimeout(()=>{document.getElementById('alert2').classList.add('visible');resolve();},500);
-          },400);
-        }}},60);
-      },i*150);
-    });
-  });
-}
-
-function animateMov(){
-  return new Promise(resolve=>{
-    const cantDisplay=document.getElementById('mov-cant-display');
-    const movQty=document.getElementById('mov-qty');
-    const btnMov=document.getElementById('btn-mov');
-
-    setTimeout(()=>{cantDisplay.textContent='20 kg';},600);
-    setTimeout(()=>{movQty.classList.add('visible');},900);
-    setTimeout(()=>{btnMov.classList.add('visible');},1200);
-    setTimeout(()=>{
-      // Simular click
-      btnMov.style.transform='scale(.96)';
-      setTimeout(()=>{btnMov.style.transform='';},150);
-    },2000);
-    setTimeout(resolve,2600);
-  });
-}
-
-function animateReport(){
-  const targets={'rp-prod':8,'rp-mov':48,'rp-low':2,'rp-out':1};
-  Object.entries(targets).forEach(([id,val],i)=>{
-    setTimeout(()=>{
-      let v=0;const el=document.getElementById(id);
-      const t=setInterval(()=>{v=Math.min(v+Math.ceil(val/15),val);el.textContent=v;if(v>=val)clearInterval(t);},40);
-    },i*100);
-  });
-  const barWidths=[100,75,62,33];
-  barWidths.forEach((w,i)=>{
-    setTimeout(()=>{document.getElementById('rb'+(i+1)).style.width=w+'%';},400+i*150);
-  });
-}
-
-async function runSequence(){
-  // Reset alerts
-  document.getElementById('alert1').classList.remove('visible');
-  document.getElementById('alert2').classList.remove('visible');
-  document.getElementById('mov-qty').classList.remove('visible');
-  document.getElementById('btn-mov').classList.remove('visible');
-  document.getElementById('mov-cant-display').textContent='—';
-  ['d-total','d-mov','d-low','d-out'].forEach(id=>document.getElementById(id).textContent='0');
-  ['rp-prod','rp-mov','rp-low','rp-out'].forEach(id=>document.getElementById(id).textContent='0');
-  ['rb1','rb2','rb3','rb4'].forEach(id=>document.getElementById(id).style.width='0%');
-
-  showScreen(0);
-  await animateDash();
-  await new Promise(r=>setTimeout(r,1200));
-
-  showScreen(1);
-  await new Promise(r=>setTimeout(r,3000));
-
-  showScreen(2);
-  await animateMov();
-  await new Promise(r=>setTimeout(r,400));
-
-  showScreen(3);
-  setTimeout(animateReport,400);
-  await new Promise(r=>setTimeout(r,3500));
-
-  await new Promise(r=>setTimeout(r,800));
-  runSequence();
-}
-
-runSequence();
-
-/* Demo Scripts */
-
-const screens=['s1','s2','s3','s4'];
-const dots=['d0','d1','d2','d3'];
-const labels=[
-  'Revisando el <strong>dashboard</strong> de inventario...',
-  'Listado de productos — alerta de <strong>stock bajo</strong>',
-  'Registrando <strong>entrada de stock</strong> — Harina 000',
-  'Generando <strong>reporte de inventario</strong>...'
-];
-
-function showScreen(idx){
-  screens.forEach((id,i)=>{
-    const el=document.getElementById(id);
-    el.classList.remove('active','exit');
-    if(i===idx) el.classList.add('active');
-    else if(i===idx-1) el.classList.add('exit');
-  });
-  dots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===idx));
-  document.getElementById('demo-step-label').innerHTML=labels[idx];
-}
-
-function animateDash(){
-  return new Promise(resolve=>{
-    const targets={'d-total':8,'d-mov':7,'d-low':2,'d-out':1};
-    let done=0;
-    Object.entries(targets).forEach(([id,val],i)=>{
-      setTimeout(()=>{
-        let v=0;const el=document.getElementById(id);
-        const t=setInterval(()=>{v=Math.min(v+1,val);el.textContent=v;if(v>=val){clearInterval(t);done++;if(done===4){
-          setTimeout(()=>{
-            document.getElementById('demo-alert1').classList.add('visible');
-            setTimeout(()=>{document.getElementById('demo-alert2').classList.add('visible');resolve();},500);
-          },400);
-        }}},60);
-      },i*150);
-    });
-  });
-}
-
-function animateMov(){
-  return new Promise(resolve=>{
-    const cantDisplay=document.getElementById('demo-mov-cant-display');
-    const movQty=document.getElementById('demo-mov-qty');
-    const btnMov=document.getElementById('demo-btn-mov');
-
-    setTimeout(()=>{cantDisplay.textContent='20 kg';},600);
-    setTimeout(()=>{movQty.classList.add('visible');},900);
-    setTimeout(()=>{btnMov.classList.add('visible');},1200);
-    setTimeout(()=>{
-      // Simular click
-      btnMov.style.transform='scale(.96)';
-      setTimeout(()=>{btnMov.style.transform='';},150);
-    },2000);
-    setTimeout(resolve,2600);
-  });
-}
-
-function animateReport(){
-  const targets={'rp-prod':8,'rp-mov':48,'rp-low':2,'rp-out':1};
-  Object.entries(targets).forEach(([id,val],i)=>{
-    setTimeout(()=>{
-      let v=0;const el=document.getElementById(id);
-      const t=setInterval(()=>{v=Math.min(v+Math.ceil(val/15),val);el.textContent=v;if(v>=val)clearInterval(t);},40);
-    },i*100);
-  });
-  const barWidths=[100,75,62,33];
-  barWidths.forEach((w,i)=>{
-    setTimeout(()=>{document.getElementById('rb'+(i+1)).style.width=w+'%';},400+i*150);
-  });
-}
-
-async function runSequence(){
-  // Reset alerts
-  document.getElementById('demo-alert1').classList.remove('visible');
-  document.getElementById('demo-alert2').classList.remove('visible');
-  document.getElementById('demo-mov-qty').classList.remove('visible');
-  document.getElementById('demo-btn-mov').classList.remove('visible');
-  document.getElementById('demo-mov-cant-display').textContent='—';
-  ['d-total','d-mov','d-low','d-out'].forEach(id=>document.getElementById(id).textContent='0');
-  ['rp-prod','rp-mov','rp-low','rp-out'].forEach(id=>document.getElementById(id).textContent='0');
-  ['rb1','rb2','rb3','rb4'].forEach(id=>document.getElementById(id).style.width='0%');
-
-  showScreen(0);
-  await animateDash();
-  await new Promise(r=>setTimeout(r,1200));
-
-  showScreen(1);
-  await new Promise(r=>setTimeout(r,3000));
-
-  showScreen(2);
-  await animateMov();
-  await new Promise(r=>setTimeout(r,400));
-
-  showScreen(3);
-  setTimeout(animateReport,400);
-  await new Promise(r=>setTimeout(r,3500));
-
-  await new Promise(r=>setTimeout(r,800));
-  runSequence();
-}
-
-runSequence();
-
-</script>
-
-    </div>
-  </div>
-</section>
-
-<section class="pricing" id="pricing">
-  <div class="wrap">
-    <div class="reveal" style="text-align:center;">
-      <div class="section-tag">Precio</div>
-      <h2 class="section-title">Simple y honesto</h2>
-      <p class="section-sub" style="margin:0 auto;">Un solo plan. Sin costos ocultos, sin renovación automática.</p>
-    </div>
-    <div class="pricing-card reveal">
-      <div class="pricing-badge">Más popular</div>
-      <div class="pricing-name">Luminex Stock · Anual</div>
-      <div class="pricing-amount">
-        <span class="currency">USD</span>
-        <span class="amount">24</span>
-        <span class="period">/año</span>
-      </div>
-      <div class="pricing-monthly">Equivale a <strong>USD 2.00/mes</strong> · Pagás una sola vez por año</div>
-      <div class="pricing-divider"></div>
-      <ul class="pricing-features">
-        <li>Dashboard con alertas de stock</li>
-        <li>Inventario ilimitado de productos</li>
-        <li>Registro de movimientos (entradas/salidas)</li>
-        <li>Reportes exportables con tu marca</li>
-        <li>Múltiples usuarios con roles</li>
-        <li>PWA instalable · funciona sin internet</li>
-        <li>Respaldo y restauración de datos</li>
-        <li>Soporte por WhatsApp</li>
-      </ul>
-      <a href="/stock/app" class="btn-primary" style="width:100%;justify-content:center;">
-        📦 Probar 7 días gratis
-      </a>
-      <p class="pricing-trial">Los 7 días de prueba son <strong>completamente gratis</strong>.<br>Al vencer, activás tu licencia con una clave de acceso.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section>
-  <div class="wrap">
-    <div class="reveal">
-      <div class="section-tag">Preguntas frecuentes</div>
-      <h2 class="section-title">Lo que más nos preguntan</h2>
-    </div>
-    <div class="faq-list reveal">
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          ¿Funciona sin conexión a internet?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-a">Sí. Luminex Stock es una PWA que almacena todos los datos en tu dispositivo. Podés registrar movimientos aunque no tengas señal. La conexión solo se usa para la activación de licencia.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          ¿Mis datos son privados?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-a">Completamente. Los datos se guardan en el almacenamiento local de tu dispositivo. El desarrollador no tiene acceso a los datos de tu negocio. Vos sos el único dueño.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          ¿Qué diferencia hay entre Admin y Empleado?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-a">El Administrador gestiona usuarios, configura el negocio y tiene acceso completo. El Empleado puede ver y gestionar su inventario propio y registrar movimientos, sin acceso a configuración ni otros usuarios.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          ¿Cómo funciona la prueba gratuita?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-a">Al crear tu usuario tenés 7 días de acceso completo sin limitaciones y sin necesidad de tarjeta de crédito. Al vencer, el administrador activa una clave de licencia anual para continuar.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          ¿Hay renovación automática?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-a">No. La licencia es anual y vos decidís si renovarla. No se cobra nada automáticamente. Al vencer el año podés renovar contactando por WhatsApp.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          ¿Puedo combinar Stock con Sales?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-a">Sí. Luminex Sales y Luminex Stock son parte del mismo ecosistema. Sales descuenta el stock automáticamente al registrar ventas, y Stock te permite llevar un control más detallado de movimientos y alertas.</div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA FINAL -->
-<section class="cta-section">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="section-tag">Empezá hoy</div>
-      <h2 class="section-title">Tu inventario merece<br>una herramienta <span style="color:var(--gold)">real</span></h2>
-      <p class="section-sub">7 días de prueba gratuita. Sin tarjeta, sin complicaciones.</p>
-      <div class="hero-actions">
-        <a href="/stock/app" class="btn-primary">📦 Probar gratis ahora</a>
-        <a href="https://wa.me/59899999999" class="btn-ghost">💬 Hablar por WhatsApp</a>
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="reveal" style="text-align:center;">
+        <div class="section-tag">Precio</div>
+        <h2 class="section-title">Simple y honesto</h2>
+        <p class="section-sub" style="margin:0 auto;">Un solo plan. Sin costos ocultos, sin renovación automática.</p>
       </div>
-      <p class="hero-price-note" style="margin-top:16px;">¿Querés ver más del ecosistema? <a href="/" style="color:var(--gold);text-decoration:none;">Explorá todas las herramientas →</a></p>
+      <div class="pricing-card reveal">
+        <div class="pricing-badge">Más popular</div>
+        <div class="pricing-name">Luminex Stock · Anual</div>
+        <div class="pricing-amount">
+          <span class="currency">USD</span>
+          <span class="amount">24</span>
+          <span class="period">/año</span>
+        </div>
+        <div class="pricing-monthly">Equivale a <strong>USD 2.00/mes</strong> · Pagás una sola vez por año</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Dashboard con alertas de stock</li>
+          <li>Inventario ilimitado de productos</li>
+          <li>Registro de movimientos (entradas/salidas)</li>
+          <li>Reportes exportables con tu marca</li>
+          <li>Múltiples usuarios con roles</li>
+          <li>PWA instalable · funciona sin internet</li>
+          <li>Respaldo y restauración de datos</li>
+          <li>Soporte por WhatsApp</li>
+        </ul>
+        <a href="/stock/app" class="btn-primary" style="width:100%;justify-content:center;">
+          📦 Probar 7 días gratis
+        </a>
+        <p class="pricing-trial">Los 7 días de prueba son <strong>completamente gratis</strong>.<br>Al vencer, activás tu licencia con una clave de acceso.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <a href="/" class="footer-brand">
-      <img src="../logo-luminex.png" alt="Luminex" onerror="this.style.display='none'" />
-      <span>Luminex Ecosystem</span>
-    </a>
+  <section class="faq">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="section-tag">Preguntas frecuentes</div>
+        <h2 class="section-title">Lo que más nos preguntan</h2>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Funciona sin conexión a internet?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">Sí. Luminex Stock es una PWA que almacena todos los datos en tu dispositivo. Podés registrar movimientos aunque no tengas señal. La conexión solo se usa para la activación de licencia.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Mis datos son privados?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">Completamente. Los datos se guardan en el almacenamiento local de tu dispositivo. El desarrollador no tiene acceso a los datos de tu negocio. Vos sos el único dueño.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Qué diferencia hay entre Admin y Empleado?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a">El Administrador gestiona usuarios, configura el negocio y tiene acceso completo. El Empleado puede ver y gestionar su inventario propio y registrar movimientos, sin acceso a configuración ni otros usuarios.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo" style="margin-bottom: 20px;">Luminex<span>ECOSYSTEM</span></div>
     <div class="footer-links">
-      <a href="/">Inicio</a>
-      <a href="/sales">Sales</a>
-      <a href="/stock">Stock</a>
-      <a href="/ruta-neta">Ruta Neta</a>
-      <a href="/stock/app">Abrir App</a>
+      <a href="#">Términos</a>
+      <a href="#">Privacidad</a>
+      <a href="#">Soporte</a>
     </div>
-    <div class="footer-copy">© 2026 Luminex Ecosystem · Uruguay</div>
-  </div>
-</footer>
+    <p>© 2026 Luminex Ecosystem · Hecho con ❤️ en Uruguay</p>
+  </footer>
 
-<script>
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 10));
+  <script>
+    // Reveal animation
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
 
-  const ham = document.getElementById('ham');
-  const mob = document.getElementById('mob');
-  ham.addEventListener('click', () => {
-    ham.classList.toggle('open');
-    mob.classList.toggle('open');
-  });
-  mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    ham.classList.remove('open'); mob.classList.remove('open');
-  }));
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  }
+    // FAQ Toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('active');
+    }
+  </script>
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-/* Demo Scripts */
-
-const screens=['s1','s2','s3','s4'];
-const dots=['d0','d1','d2','d3'];
-const labels=[
-  'Revisando el <strong>dashboard</strong> de inventario...',
-  'Listado de productos — alerta de <strong>stock bajo</strong>',
-  'Registrando <strong>entrada de stock</strong> — Harina 000',
-  'Generando <strong>reporte de inventario</strong>...'
-];
-
-function showScreen(idx){
-  screens.forEach((id,i)=>{
-    const el=document.getElementById(id);
-    el.classList.remove('active','exit');
-    if(i===idx) el.classList.add('active');
-    else if(i===idx-1) el.classList.add('exit');
-  });
-  dots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===idx));
-  document.getElementById('demo-step-label').innerHTML=labels[idx];
-}
-
-function animateDash(){
-  return new Promise(resolve=>{
-    const targets={'d-total':8,'d-mov':7,'d-low':2,'d-out':1};
-    let done=0;
-    Object.entries(targets).forEach(([id,val],i)=>{
-      setTimeout(()=>{
-        let v=0;const el=document.getElementById(id);
-        const t=setInterval(()=>{v=Math.min(v+1,val);el.textContent=v;if(v>=val){clearInterval(t);done++;if(done===4){
-          setTimeout(()=>{
-            document.getElementById('demo-alert1').classList.add('visible');
-            setTimeout(()=>{document.getElementById('demo-alert2').classList.add('visible');resolve();},500);
-          },400);
-        }}},60);
-      },i*150);
-    });
-  });
-}
-
-function animateMov(){
-  return new Promise(resolve=>{
-    const cantDisplay=document.getElementById('demo-mov-cant-display');
-    const movQty=document.getElementById('demo-mov-qty');
-    const btnMov=document.getElementById('demo-btn-mov');
-
-    setTimeout(()=>{cantDisplay.textContent='20 kg';},600);
-    setTimeout(()=>{movQty.classList.add('visible');},900);
-    setTimeout(()=>{btnMov.classList.add('visible');},1200);
-    setTimeout(()=>{
-      // Simular click
-      btnMov.style.transform='scale(.96)';
-      setTimeout(()=>{btnMov.style.transform='';},150);
-    },2000);
-    setTimeout(resolve,2600);
-  });
-}
-
-function animateReport(){
-  const targets={'rp-prod':8,'rp-mov':48,'rp-low':2,'rp-out':1};
-  Object.entries(targets).forEach(([id,val],i)=>{
-    setTimeout(()=>{
-      let v=0;const el=document.getElementById(id);
-      const t=setInterval(()=>{v=Math.min(v+Math.ceil(val/15),val);el.textContent=v;if(v>=val)clearInterval(t);},40);
-    },i*100);
-  });
-  const barWidths=[100,75,62,33];
-  barWidths.forEach((w,i)=>{
-    setTimeout(()=>{document.getElementById('rb'+(i+1)).style.width=w+'%';},400+i*150);
-  });
-}
-
-async function runSequence(){
-  // Reset alerts
-  document.getElementById('demo-alert1').classList.remove('visible');
-  document.getElementById('demo-alert2').classList.remove('visible');
-  document.getElementById('demo-mov-qty').classList.remove('visible');
-  document.getElementById('demo-btn-mov').classList.remove('visible');
-  document.getElementById('demo-mov-cant-display').textContent='—';
-  ['d-total','d-mov','d-low','d-out'].forEach(id=>document.getElementById(id).textContent='0');
-  ['rp-prod','rp-mov','rp-low','rp-out'].forEach(id=>document.getElementById(id).textContent='0');
-  ['rb1','rb2','rb3','rb4'].forEach(id=>document.getElementById(id).style.width='0%');
-
-  showScreen(0);
-  await animateDash();
-  await new Promise(r=>setTimeout(r,1200));
-
-  showScreen(1);
-  await new Promise(r=>setTimeout(r,3000));
-
-  showScreen(2);
-  await animateMov();
-  await new Promise(r=>setTimeout(r,400));
-
-  showScreen(3);
-  setTimeout(animateReport,400);
-  await new Promise(r=>setTimeout(r,3500));
-
-  await new Promise(r=>setTimeout(r,800));
-  runSequence();
-}
-
-runSequence();
-
-</script>
 </body>
 </html>
