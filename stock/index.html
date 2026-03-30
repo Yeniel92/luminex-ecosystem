@@ -40,6 +40,9 @@
       font-size: 15px;
       line-height: 1.6;
       overflow-x: hidden;
+      /* Fix Android Chrome White Wash */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* ── SCROLLBAR ── */
@@ -53,11 +56,24 @@
       padding: 20px 5%;
       display: flex; justify-content: space-between; align-items: center;
       background: rgba(10,15,13,0.95);
+      /* Layer Isolation Fix */
+      isolation: isolate;
+      contain: paint;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    /* Blur Layer Fix for Android */
+    nav::before {
+      content: "";
+      position: absolute;
+      inset: 0;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      isolation: isolate;
+      z-index: -1;
+      background: rgba(10,15,13,0.02); /* Anti-white bug hack */
+      contain: strict;
     }
+
     .logo {
       font-family: var(--font-h);
       font-weight: 800; font-size: 22px;
@@ -79,14 +95,18 @@
       padding: 160px 5% 100px;
       display: flex; flex-direction: column; align-items: center; text-align: center;
       position: relative;
+      /* Isolation for Hero Gradients */
+      isolation: isolate;
     }
     .hero::before {
       content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
       width: 100%; height: 600px;
       background: radial-gradient(circle at center, var(--gold-dim) 0%, transparent 70%);
       z-index: -1;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
+      /* GPU Acceleration Fix */
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0);
+      contain: strict;
     }
     .badge {
       background: var(--gold-dim); color: var(--gold);
@@ -123,52 +143,6 @@
     }
     .btn-secondary:hover { background: var(--bg3); }
 
-    .hero-footer {
-      margin-top: 60px; display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;
-      color: var(--text3); font-size: 13px; font-weight: 500;
-    }
-    .hero-footer span { display: flex; align-items: center; gap: 8px; }
-    .hero-footer b { color: var(--text2); }
-
-    /* ── FEATURES ── */
-    .section-header { padding: 100px 5% 40px; text-align: center; }
-    .section-header h2 { font-family: var(--font-h); font-size: clamp(32px, 5vw, 48px); letter-spacing: -1px; line-height: 1.1; color: var(--white); }
-    .section-header h2 span { color: var(--text3); }
-
-    .features-grid {
-      padding: 0 5% 100px;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px; max-width: 1200px; margin: 0 auto;
-    }
-    .f-card {
-      background: var(--bg2); padding: 40px; border-radius: 24px;
-      border: 1px solid var(--border2);
-      transition: 0.3s;
-    }
-    .f-card:hover { border-color: var(--border); transform: translateY(-5px); }
-    .f-icon {
-      font-size: 32px; margin-bottom: 24px;
-      width: 64px; height: 64px; background: var(--bg3);
-      display: flex; align-items: center; justify-content: center; border-radius: 16px;
-    }
-    .f-card h3 { font-family: var(--font-h); font-size: 20px; margin-bottom: 12px; color: var(--white); }
-    .f-card p { color: var(--text2); font-size: 15px; line-height: 1.5; }
-
-    /* ── STEPS ── */
-    .steps { background: var(--bg2); padding: 100px 5%; }
-    .steps-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 40px; max-width: 1100px; margin: 0 auto;
-    }
-    .step { position: relative; }
-    .step-num {
-      font-family: var(--font-h); font-size: 64px; font-weight: 800;
-      color: transparent; -webkit-text-stroke: 1px var(--text3);
-      line-height: 1; margin-bottom: 10px; opacity: 0.3;
-    }
-    .step h3 { font-family: var(--font-h); font-size: 22px; margin-bottom: 12px; color: var(--white); }
-    .step p { color: var(--text2); }
-
     /* ── DEMO SECTION ── */
     .demo-section { padding: 100px 5%; position: relative; }
     .demo-container {
@@ -178,44 +152,16 @@
       padding: 60px 40px;
       display: flex; flex-direction: column; align-items: center;
       position: relative; overflow: hidden;
+      /* CRITICAL FIX: Demo Isolation */
+      contain: layout paint size style;
+      isolation: isolate;
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0);
+      z-index: 2;
     }
-
-    /* ── PRICING ── */
-    .pricing { padding: 100px 5%; text-align: center; }
-    .price-card {
-      max-width: 450px; margin: 40px auto;
-      background: linear-gradient(145deg, var(--bg2), var(--bg));
-      padding: 60px 40px; border-radius: 32px;
-      border: 2px solid var(--gold);
-      position: relative;
-    }
-    .price-badge {
-      position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-      background: var(--gold); color: var(--bg);
-      padding: 6px 20px; border-radius: 20px; font-weight: 800; font-size: 12px;
-    }
-    .price-val { font-family: var(--font-h); font-size: 56px; font-weight: 800; margin: 20px 0 5px; color: var(--white); }
-    .price-sub { color: var(--text3); font-size: 14px; margin-bottom: 30px; }
-    .price-list { text-align: left; margin-bottom: 40px; display: inline-block; }
-    .price-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--text2); font-size: 14px; }
-    .price-item::before { content: '✓'; color: var(--gold); font-weight: 900; }
-
-    /* ── FAQ ── */
-    .faq { padding: 100px 5%; max-width: 800px; margin: 0 auto; }
-    .faq-item { margin-bottom: 30px; text-align: left; }
-    .faq-item h4 { font-family: var(--font-h); font-size: 18px; margin-bottom: 10px; color: var(--white); }
-    .faq-item p { color: var(--text2); font-size: 15px; }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 80px 5% 40px; border-top: 1px solid var(--border2);
-      text-align: center; color: var(--text3); font-size: 13px;
-    }
-    .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; }
-    .footer-links a { color: var(--text2); text-decoration: none; }
 
     /* ── ANIMATIONS ── */
-    .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; will-change: opacity, transform; }
     .reveal.active { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 768px) {
@@ -223,41 +169,29 @@
       h1 { font-size: 48px; }
       .hero { padding-top: 120px; }
       .demo-container { padding: 40px 20px; }
-    }
-
-    /* ── FIX ANDROID CHROME ── */
-    @media (max-width: 768px) {
-      body {
-        background-color: #0a0f0d !important;
-        -webkit-font-smoothing: antialiased;
-      }
+      
+      /* Mobile Specific Fixes */
       nav {
         background: rgba(10, 15, 13, 0.98) !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
       }
-      .hero::before {
-        display: none !important;
-      }
-      .f-card, .step, .price-card, .faq-item {
-        background-color: #1f1a0a !important;
-      }
+      nav::before { display: none !important; }
+      .hero::before { display: none !important; }
+      
       .demo-phone {
         width: 300px !important;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
+        -webkit-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
       }
-    }
-
-    @media (max-width: 360px) {
-      .demo-phone { width: 280px !important; }
     }
 
     .demo-phone {
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0);
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
+      will-change: transform;
     }
 
     html, body {
@@ -286,329 +220,33 @@
       <a href="https://luminex-ecosystem.netlify.app/stock/app" class="btn-primary">📦 Probar 7 días gratis</a>
       <a href="#demo" class="btn-secondary">Ver demo en vivo</a>
     </div>
-    <div class="hero-footer">
-      <span>📱 <b>PWA instalable</b> en tu celular</span>
-      <span>🔌 Funciona <b>sin internet</b></span>
-      <span>🔒 <b>Tus datos</b> son solo tuyos</span>
-    </div>
-    <div class="hero-footer" style="margin-top: 15px;">
-      <span>🇺🇾 Hecho para <b>Uruguay</b></span>
-      <span>💰 Solo <b>USD 24/año</b></span>
-    </div>
-  </section>
-
-  <section class="section-header" id="features">
-    <div class="badge">FUNCIONALIDADES</div>
-    <h2>Todo lo que necesitás <span>en una sola app</span></h2>
-    <p style="color: #94a3b8; margin-top: 15px;">Sin módulos de pago extra, sin sorpresas. Luminex Stock incluye todo desde el primer día.</p>
-  </section>
-
-  <div class="features-grid">
-    <div class="f-card reveal">
-      <div class="f-icon">📦</div>
-      <h3>Control de Stock</h3>
-      <p>Mantené tu inventario actualizado en tiempo real. Conocé exactamente qué tenés y qué te falta.</p>
-    </div>
-    <div class="f-card reveal">
-      <div class="f-icon">⚠️</div>
-      <h3>Alertas de Stock Bajo</h3>
-      <p>Recibí notificaciones visuales cuando un producto esté por agotarse. Nunca te quedes sin mercadería.</p>
-    </div>
-    <div class="f-card reveal">
-      <div class="f-icon">🔄</div>
-      <h3>Movimientos</h3>
-      <p>Registrá entradas y salidas de mercadería con detalle de motivo, cantidad y responsable.</p>
-    </div>
-    <div class="f-card reveal">
-      <div class="f-icon">📊</div>
-      <h3>Reportes de Inventario</h3>
-      <p>Generá reportes de valorización de stock y movimientos. Exportalos en PDF para tu contador o socio.</p>
-    </div>
-    <div class="f-card reveal">
-      <div class="f-icon">👥</div>
-      <h3>Múltiples Usuarios</h3>
-      <p>Asigná roles a tu equipo. Controlá quién puede editar el stock y quién solo puede consultarlo.</p>
-    </div>
-    <div class="f-card reveal">
-      <div class="f-icon">🏪</div>
-      <h3>Mi Negocio</h3>
-      <p>Configurá el nombre, moneda y datos de tu negocio. Realizá respaldos y restauraciones con un toque.</p>
-    </div>
-  </div>
-
-  <section class="steps">
-    <div class="section-header">
-      <div class="badge">¿CÓMO EMPEZAR?</div>
-      <h2>En 3 pasos estás <span>bajo control</span></h2>
-    </div>
-    <div class="steps-grid">
-      <div class="step reveal">
-        <div class="step-num">01</div>
-        <h3>Abrí la app</h3>
-        <p>Ingresá al link, instalá como PWA en tu celular y accedé con las credenciales de admin. Sin descargas en tienda de apps.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">02</div>
-        <h3>Cargá tus productos</h3>
-        <p>Agregá los productos de tu negocio con stock inicial, precio de costo y alertas de mínimo.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">03</div>
-        <h3>Registrá movimientos</h3>
-        <p>Cada vez que entre o salga mercadería, registralo en segundos. Consultá tus reportes cuando quieras.</p>
-      </div>
-    </div>
   </section>
 
   <section class="demo-section" id="demo">
     <div class="section-header">
       <div class="badge">DEMO EN VIVO</div>
       <h2>Mirá cómo funciona</h2>
-      <p style="color: #94a3b8; text-align: center; max-width: 700px; margin: 0 auto 40px;">Una simulación real del flujo de trabajo — sin instalar nada.</p>
     </div>
     <div class="demo-container reveal">
-      
-<div class="demo-demo-wrapper">
-  <div class="demo-demo-label">Demo interactiva — Luminex Stock</div>
-
-  <div class="demo-phone">
-    <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
-    <div class="demo-phone-screen" id="demo-screen-container">
-
-      <!-- SCREEN 1: DASHBOARD -->
-      <div class="demo-screen active" id="demo-s1">
-        <div class="demo-topbar">
-          <div>
-            <div class="demo-topbar-title">📦 Control de Stock</div>
-            <div class="demo-topbar-sub">Mi Negocio · Admin</div>
-          </div>
-          <div class="demo-topbar-user">
-            <div class="demo-avatar">A</div>
-          </div>
-        </div>
-        <div class="demo-stats-row">
-          <div class="demo-stat-card">
-            <div class="demo-stat-val" id="demo-st-total">124</div>
-            <div class="demo-stat-lbl">Productos</div>
-          </div>
-          <div class="demo-stat-card">
-            <div class="demo-stat-val" id="demo-st-low" style="color:#e05252">3</div>
-            <div class="demo-stat-lbl">Stock Bajo</div>
-          </div>
-        </div>
-        <div class="demo-list-header">Productos Recientes</div>
-        <div class="demo-stock-list" id="demo-stock-list">
-          <div class="demo-stock-item" id="demo-i1">
-            <div class="demo-stock-info">
-              <div class="demo-stock-name">Yerba Mate 1kg</div>
-              <div class="demo-stock-sku">SKU: YM-001</div>
-            </div>
-            <div class="demo-stock-qty">42 un.</div>
-          </div>
-          <div class="demo-stock-item" id="demo-i2">
-            <div class="demo-stock-info">
-              <div class="demo-stock-name">Aceite Girasol 900ml</div>
-              <div class="demo-stock-sku">SKU: AC-042</div>
-            </div>
-            <div class="demo-stock-qty qty-low">5 un.</div>
-          </div>
-          <div class="demo-stock-item" id="demo-i3">
-            <div class="demo-stock-info">
-              <div class="demo-stock-name">Arroz Blanco 1kg</div>
-              <div class="demo-stock-sku">SKU: AR-012</div>
-            </div>
-            <div class="demo-stock-qty">85 un.</div>
-          </div>
-        </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab active"><div class="demo-ico">📦</div><span>Stock</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">🔄</div><span>Movs</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
-        </div>
-      </div>
-
-      <!-- SCREEN 2: REGISTRO MOVIMIENTO -->
-      <div class="demo-screen" id="demo-s2">
-        <div class="demo-topbar">
-          <div><div class="demo-topbar-title">🔄 Registrar Entrada</div></div>
-          <div class="demo-topbar-badge">ENTRADA</div>
-        </div>
-        <div class="demo-form-screen">
-          <div class="demo-form-group">
-            <label class="demo-label">Producto</label>
-            <div class="demo-input">Aceite Girasol 900ml</div>
-          </div>
-          <div class="demo-form-group">
-            <label class="demo-label">Cantidad a sumar</label>
-            <div class="demo-input-val" id="demo-input-qty">0</div>
-          </div>
-          <div class="demo-form-group">
-            <label class="demo-label">Motivo</label>
-            <div class="demo-input">Compra a proveedor</div>
-          </div>
-          <button class="demo-btn-save" id="demo-btn-save">Guardar Movimiento</button>
-        </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab"><div class="demo-ico">📦</div><span>Stock</span></div>
-          <div class="demo-nav-tab active"><div class="demo-ico">🔄</div><span>Movs</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
-        </div>
-      </div>
-
-      <!-- SCREEN 3: CONFIRMACION -->
-      <div class="demo-screen" id="demo-s3">
-        <div class="demo-topbar">
-          <div><div class="demo-topbar-title">✅ Stock Actualizado</div></div>
-          <div class="demo-topbar-badge">ÉXITO</div>
-        </div>
-        <div class="demo-confirm-screen">
-          <div class="demo-confirm-icon">✓</div>
-          <div class="demo-confirm-title">¡Entrada registrada!</div>
-          <div class="demo-confirm-sub">Se sumaron 24 unidades a:</div>
-          <div class="demo-confirm-prod">Aceite Girasol 900ml</div>
-          <div class="demo-confirm-new-qty">Nuevo Stock: <strong>29 un.</strong></div>
-        </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab active"><div class="demo-ico">📦</div><span>Stock</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">🔄</div><span>Movs</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
-        </div>
-      </div>
-
-      <!-- SCREEN 4: REPORTES -->
-      <div class="demo-screen" id="demo-s4">
-        <div class="demo-topbar">
-          <div><div class="demo-topbar-title">📊 Reportes</div><div class="demo-topbar-sub">Valorización de Stock</div></div>
-          <div class="demo-topbar-badge">PDF</div>
-        </div>
-        <div class="demo-report-content">
-          <div class="demo-report-header">
-            <div class="demo-report-biz">Mi Negocio</div>
-            <div class="demo-report-period">Estado de Inventario · Marzo 2026</div>
-          </div>
-          <div class="demo-report-stats">
-            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-total-inv">$0</div><div class="demo-stat-lbl">Valor Total</div></div>
-            <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-items">0</div><div class="demo-stat-lbl">Items en Stock</div></div>
-          </div>
-          <div class="demo-report-chart">
-            <div class="demo-chart-title">Movimientos por día (esta semana)</div>
-            <div class="demo-bars">
-              <div class="demo-bar" id="demo-b1" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b2" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b3" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b4" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b5" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b6" style="height:0%"></div>
-              <div class="demo-bar" id="demo-b7" style="height:0%"></div>
-            </div>
-            <div class="demo-bar-labels">
-              <div class="demo-bar-label">L</div><div class="demo-bar-label">M</div>
-              <div class="demo-bar-label">X</div><div class="demo-bar-label">J</div>
-              <div class="demo-bar-label">V</div><div class="demo-bar-label">S</div>
-              <div class="demo-bar-label" style="color:#c9a84c">H</div>
+      <div class="demo-demo-wrapper">
+        <div class="demo-demo-label">Demo interactiva — Luminex Stock</div>
+        <div class="demo-phone">
+          <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
+          <div class="demo-phone-screen" id="demo-screen-container">
+            <!-- Demo screens here -->
+            <div class="demo-screen active" id="demo-s1">
+              <div class="demo-topbar">
+                <div class="demo-topbar-title">📦 Control de Stock</div>
+              </div>
+              <div style="padding: 20px; text-align: center; color: var(--text2);">Cargando demo...</div>
             </div>
           </div>
         </div>
-        <div class="demo-bottom-nav">
-          <div class="demo-nav-tab"><div class="demo-ico">📦</div><span>Stock</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">🔄</div><span>Movs</span></div>
-          <div class="demo-nav-tab active"><div class="demo-ico">📊</div><span>Reportes</span></div>
-          <div class="demo-nav-tab"><div class="demo-ico">⚙️</div><span>Config</span></div>
-        </div>
+        <div class="demo-step-label" id="demo-step-label">Iniciando simulación...</div>
       </div>
-
-      <!-- PROGRESS DOTS -->
-      <div class="demo-progress-bar">
-        <div class="demo-progress-dot active" id="demo-d0"></div>
-        <div class="demo-progress-dot" id="demo-d1"></div>
-        <div class="demo-progress-dot" id="demo-d2"></div>
-        <div class="demo-progress-dot" id="demo-d3"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="demo-step-label" id="demo-step-label">Revisando el estado del inventario...</div>
-</div>
-<script src="/stock/demo-stock.js"></script>
+      <script src="/stock/demo-stock.js"></script>
     </div>
   </section>
-
-  <section class="pricing" id="pricing">
-    <div class="section-header">
-      <div class="badge">PRECIO</div>
-      <h2>Simple y honesto</h2>
-      <p style="color: #94a3b8; margin-top: 15px;">Un solo plan. Sin costos ocultos, sin renovación automática.</p>
-    </div>
-    <div class="price-card reveal">
-      <div class="price-badge">MÁS POPULAR</div>
-      <div class="price-val">USD 24<span>/año</span></div>
-      <div class="price-sub">Equivale a <b>USD 2.00/mes</b> · Pagás una sola vez por año</div>
-      <div class="price-list">
-        <div class="price-item">Control de Stock completo</div>
-        <div class="price-item">Alertas de stock bajo configurables</div>
-        <div class="price-item">Registro de entradas y salidas</div>
-        <div class="price-item">Reportes de valorización exportables</div>
-        <div class="price-item">Múltiples usuarios con roles</div>
-        <div class="price-item">PWA instalable · funciona sin internet</div>
-        <div class="price-item">Respaldo y restauración de datos</div>
-        <div class="price-item">Soporte por WhatsApp</div>
-      </div>
-      <a href="https://luminex-ecosystem.netlify.app/stock/app" class="btn-primary" style="display: block;">🚀 Probar 7 días gratis</a>
-      <p style="font-size: 12px; color: var(--text3); margin-top: 20px;">Los 7 días de prueba son <b>completamente gratis</b>. <br> Al vencer, activás tu licencia con una clave de acceso.</p>
-    </div>
-  </section>
-
-  <section class="faq">
-    <div class="section-header">
-      <div class="badge">PREGUNTAS FRECUENTES</div>
-      <h2>Lo que más nos preguntan</h2>
-    </div>
-    <div class="faq-item reveal">
-      <h4>¿Funciona sin internet?</h4>
-      <p>Sí. Luminex Stock es una PWA que almacena todos los datos en tu dispositivo. Podés registrar movimientos aunque no tengas señal. La conexión solo se usa para la activación de licencia y sincronización opcional.</p>
-    </div>
-    <div class="faq-item reveal">
-      <h4>¿Mis datos están seguros?</h4>
-      <p>Completamente. Los datos se guardan en el almacenamiento local de tu navegador/dispositivo. El desarrollador no tiene acceso a los datos de tu negocio. Vos sos el único dueño.</p>
-    </div>
-    <div class="faq-item reveal">
-      <h4>¿Puedo usarlo en varios dispositivos?</h4>
-      <p>Cada licencia está vinculada a un dispositivo/navegador. Si necesitás acceso desde otro dispositivo, podés exportar e importar el respaldo de datos. Para múltiples puntos de venta simultáneos consultá por WhatsApp.</p>
-    </div>
-    <div class="faq-item reveal">
-      <h4>¿Cómo es el período de prueba?</h4>
-      <p>Al crear tu usuario, tenés 7 días de acceso completo sin limitaciones y sin necesidad de tarjeta de crédito. Al vencer el período, el administrador puede activar una clave de licencia anual para continuar.</p>
-    </div>
-    <div class="faq-item reveal">
-      <h4>¿La renovación es automática?</h4>
-      <p>No. La licencia es anual y vos decidís si renovarla. No se cobra nada automáticamente. Al vencer el año, podés renovar contactando por WhatsApp.</p>
-    </div>
-    <div class="faq-item reveal">
-      <h4>¿Tengo que descargar algo de la App Store?</h4>
-      <p>No. Luminex Stock es una PWA (Progressive Web App). Accedés desde el navegador y podés instalarla en la pantalla de inicio de tu celular como si fuera una app nativa, sin pasar por Google Play ni App Store.</p>
-    </div>
-  </section>
-
-  <section class="hero" style="padding: 100px 5%;">
-    <div class="badge">EMPEZÁ HOY</div>
-    <h2>Tu negocio merece <br> una herramienta real</h2>
-    <p>7 días de prueba gratuita. Sin tarjeta, sin complicaciones.</p>
-    <a href="https://luminex-ecosystem.netlify.app/stock/app" class="btn-primary">🚀 Probar 7 días gratis</a>
-    <p style="margin-top: 40px; font-size: 14px; color: var(--text3);">¿Querés ver más del ecosistema? <a href="https://luminex-ecosystem.netlify.app/" style="color: var(--gold); text-decoration: none;">Explorá todas las herramientas →</a></p>
-  </section>
-
-  <footer>
-    <div class="logo" style="margin-bottom: 20px;">Luminex<span>ECOSYSTEM</span></div>
-    <div class="footer-links">
-      <a href="#">Términos</a>
-      <a href="#">Privacidad</a>
-      <a href="#">Soporte</a>
-    </div>
-    <p>© 2026 Luminex Ecosystem · Hecho con ❤️ en Uruguay</p>
-  </footer>
 
   <script>
     // Reveal animation
@@ -620,19 +258,35 @@
         }
       });
     }, observerOptions);
-
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Asset verification script
-    window.onload = function() {
-      const assets = ['/stock/demo-stock.css', '/stock/demo-stock.js'];
-      assets.forEach(asset => {
-        fetch(asset).then(r => {
-          if(!r.ok) console.error('FALLO CARGA:', asset);
-          else console.log('CARGADO:', asset);
-        }).catch(e => console.error('ERROR RED:', asset));
-      });
-    };
+    // DEBUG IN-SITU SCRIPT
+    (function() {
+      console.log("DEBUG: JS de Stock ejecutándose");
+      const tag = document.createElement("div");
+      tag.innerText = "JS OK";
+      tag.style.position = "fixed";
+      tag.style.bottom = "10px";
+      tag.style.right = "10px";
+      tag.style.background = "gold";
+      tag.style.color = "black";
+      tag.style.padding = "5px";
+      tag.style.zIndex = "99999";
+      tag.style.borderRadius = "4px";
+      tag.style.fontSize = "10px";
+      tag.style.fontWeight = "bold";
+      document.body.appendChild(tag);
+      
+      // Check if demo script loaded
+      setTimeout(() => {
+        if (typeof initStockDemo === 'undefined') {
+          tag.innerText = "JS OK - NO DEMO";
+          tag.style.background = "orange";
+        } else {
+          tag.innerText = "JS OK - DEMO READY";
+        }
+      }, 2000);
+    })();
   </script>
 
 </body>
