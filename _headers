@@ -6,3 +6,21 @@
 
 /*.css
   Content-Type: text/css
+
+/sales/*
+  X-Content-Type-Options: nosniff
+
+/sales/*.css
+  Content-Type: text/css; charset=UTF-8
+
+/sales/*.js
+  Content-Type: application/javascript; charset=UTF-8
+
+/stock/*
+  X-Content-Type-Options: nosniff
+
+/stock/*.css
+  Content-Type: text/css; charset=UTF-8
+
+/stock/*.js
+  Content-Type: application/javascript; charset=UTF-8
