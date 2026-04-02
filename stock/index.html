@@ -29,7 +29,7 @@
       --r:          16px;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       background: var(--bg);
@@ -38,6 +38,7 @@
       font-size: 15px;
       line-height: 1.6;
       overflow-x: hidden;
+      width: 100%;
     }
 
     /* ── SCROLLBAR ── */
@@ -108,7 +109,7 @@
     }
 
     /* ── HERO ── */
-    .hero { padding: 140px 20px 80px; text-align: center; position: relative; overflow: hidden; }
+    .hero { padding: 140px 16px 80px; text-align: center; position: relative; overflow: hidden; }
     .hero-glow {
       position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
       width: 600px; height: 600px; border-radius: 50%;
@@ -123,12 +124,12 @@
       padding: 6px 16px; margin-bottom: 32px;
     }
     .hero h1 {
-      font-family: var(--font-h); font-size: clamp(40px, 10vw, 72px);
+      font-family: var(--font-h); font-size: clamp(34px, 10vw, 72px);
       font-weight: 800; line-height: 1; letter-spacing: -2px;
       margin-bottom: 24px; max-width: 900px; margin-left: auto; margin-right: auto;
     }
     .hero h1 span { color: var(--gold); }
-    .hero p { font-size: 18px; color: var(--text2); max-width: 600px; margin: 0 auto 40px; line-height: 1.6; }
+    .hero p { font-size: 17px; color: var(--text2); max-width: 600px; margin: 0 auto 40px; line-height: 1.6; }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--gold); color: #0b1a14;
@@ -138,59 +139,73 @@
     }
     .btn-primary:hover { background: #eab308; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.3); }
 
-    /* ── DEMO SECTION ── */
-    .demo-section { padding: 80px 20px; background: var(--bg); }
-    .demo-container {
-      max-width: 1000px; margin: 48px auto 0;
-      background: var(--bg2); border-radius: 32px; border: 1px solid var(--border);
-      padding: 60px 40px; display: flex; flex-direction: column; align-items: center;
-      position: relative; overflow: hidden; isolation: isolate;
-    }
-
     /* ── FEATURES ── */
-    .features { padding: 80px 20px; max-width: 1100px; margin: 0 auto; }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-    .feat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 32px; transition: all .3s; }
+    .features { padding: 60px 16px; max-width: 1100px; margin: 0 auto; }
+    .features-grid {
+      display: grid; gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 40px;
+    }
+    @media (min-width: 768px) {
+      .features-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    }
+    .feat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 20px 16px; transition: all .3s; }
     .feat-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-    .feat-icon { font-size: 32px; margin-bottom: 20px; }
-    .feat-card h3 { font-family: var(--font-h); font-size: 22px; margin-bottom: 12px; }
-    .feat-card p { color: var(--text2); font-size: 14px; }
+    .feat-icon { font-size: 24px; margin-bottom: 12px; }
+    .feat-card h3 { font-family: var(--font-h); font-size: 16px; margin-bottom: 8px; }
+    .feat-card p { color: var(--text2); font-size: 13px; line-height: 1.5; }
 
     /* ── PRICING ── */
-    .pricing { background: var(--bg2); padding: 100px 20px; text-align: center; }
+    .pricing { background: var(--bg2); padding: 80px 16px; text-align: center; }
     .price-box {
-      max-width: 400px; margin: 0 auto; background: var(--bg); border: 2px solid var(--gold);
-      border-radius: 24px; padding: 48px 32px; position: relative;
+      max-width: 400px; margin: 0 auto; width: 95%; background: var(--bg); border: 2px solid var(--gold);
+      border-radius: 24px; padding: 40px 24px; position: relative;
     }
     .price-tag {
       position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
       background: var(--gold); color: #0b1a14; font-family: var(--font-h);
       font-size: 12px; font-weight: 800; padding: 6px 16px; border-radius: 20px;
     }
-    .price-val { font-family: var(--font-h); font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 8px; }
+    .price-val { font-family: var(--font-h); font-size: 56px; font-weight: 800; line-height: 1; margin-bottom: 8px; }
     .price-val span { font-size: 20px; color: var(--text3); font-weight: 400; }
-    .price-list { list-style: none; margin: 32px 0; text-align: left; }
-    .price-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+    .price-list { list-style: none; margin: 24px 0; text-align: left; }
+    .price-list li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
     .price-list li::before { content: '✓'; color: var(--gold); font-weight: 800; }
 
     /* ── FAQ ── */
-    .faq-list { max-width: 700px; margin: 48px auto 0; display: flex; flex-direction: column; gap: 12px; }
+    .faq-list { max-width: 700px; margin: 40px auto 0; display: flex; flex-direction: column; gap: 12px; }
     .faq-item { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; }
     .faq-q {
-      width: 100%; background: none; border: none; padding: 18px 20px;
+      width: 100%; background: none; border: none; padding: 16px 20px;
       display: flex; align-items: center; justify-content: space-between;
-      color: var(--white); font-family: var(--font-b); font-size: 15px; font-weight: 600;
+      color: var(--white); font-family: var(--font-b); font-size: 14px; font-weight: 600;
       text-align: left; cursor: pointer;
     }
     .faq-q .arrow { font-size: 10px; transition: transform .3s; }
-    .faq-a { display: none; padding: 0 20px 18px; font-size: 13.5px; color: var(--text2); line-height: 1.7; }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 13.5px; color: var(--text2); line-height: 1.6; }
     .faq-item.open .faq-a { display: block; }
     .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
 
     /* ── FOOTER ── */
-    footer { padding: 60px 20px; border-top: 1px solid var(--border); text-align: center; }
-    .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; text-decoration: none; }
-    .footer-text { color: var(--text3); font-size: 13px; }
+    footer { padding: 60px 16px; border-top: 1px solid var(--border); text-align: center; }
+    .footer-links { margin-bottom: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .footer-links a { color:var(--text3); text-decoration:none; font-size:13px; }
+    .footer-text { color: var(--text3); font-size: 12px; }
+
+    /* ── DEMO SECTION ── */
+    .demo-section {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 100vw; overflow-x: hidden; padding: 60px 16px; box-sizing: border-box; margin: 0 auto;
+    }
+    .demo-container {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 1000px; background: var(--bg2); border-radius: 32px; border: 1px solid var(--border);
+      padding: 40px 16px; position: relative; overflow: hidden; box-sizing: border-box; margin: 40px auto 0;
+    }
+    .demo-phone {
+      max-width: min(360px, 90vw); width: 100%; margin: 0 auto; overflow: hidden;
+      background: #000; border-radius: 32px; border: 2px solid rgba(255,255,255,0.1);
+    }
   </style>
 </head>
 <body>
@@ -339,9 +354,9 @@
 
   <footer>
     <div class="footer-links" style="margin-bottom: 20px; display: flex; justify-content: center; gap: 20px;">
-      <a href="/" style="color:var(--text3); text-decoration:none; font-size:13px;">Inicio</a>
-      <a href="/sales/" style="color:var(--text3); text-decoration:none; font-size:13px;">Sales</a>
-      <a href="/stock/" style="color:var(--text3); text-decoration:none; font-size:13px;">Stock</a>
+      <a href="/">Inicio</a>
+      <a href="/sales/">Sales</a>
+      <a href="/stock/">Stock</a>
     </div>
     <p class="footer-text">© 2026 Luminex Ecosystem · Uruguay</p>
   </footer>
