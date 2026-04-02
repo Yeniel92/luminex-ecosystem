@@ -62,7 +62,6 @@
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
     .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-    .nav-logo img { height: 28px; }
     .nav-logo-text {
       font-family: var(--font-h); font-size: 15px; font-weight: 800;
       color: var(--white); letter-spacing: -.2px; line-height: 1;
@@ -109,12 +108,6 @@
     .nav-mob a {
       text-decoration: none; font-size: 15px; font-weight: 500; color: var(--white);
       padding: 10px 12px; border-radius: 10px; transition: background .2s, color .2s;
-    }
-    .nav-mob a:hover, .nav-mob a.active { background: var(--green-dim); color: var(--green); }
-    .nav-mob-cta {
-      margin-top: 8px; display: block; text-align: center; text-decoration: none;
-      background: var(--green); color: #0a0f0d; font-family: var(--font-h);
-      font-size: 14px; font-weight: 700; padding: 13px; border-radius: 12px;
     }
     @media (max-width: 700px) {
       .nav-links, .nav-cta { display: none; }
@@ -276,8 +269,10 @@
       color: var(--white); font-family: var(--font-b); font-size: 15px; font-weight: 600;
       text-align: left; cursor: pointer;
     }
+    .faq-q .arrow { font-size: 10px; transition: transform .3s; }
     .faq-a { display: none; padding: 0 20px 18px; font-size: 13.5px; color: var(--text2); line-height: 1.7; }
     .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
 
     /* ── FOOTER ── */
     footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 28px 20px; text-align: center; }
@@ -304,7 +299,6 @@
 <nav id="nav">
   <div class="nav-inner">
     <a href="/" class="nav-logo">
-      <img src="../logo-luminex.png" alt="Luminex" onerror="this.style.display='none'" />
       <div class="nav-logo-text">Luminex <span>Ecosystem</span></div>
     </a>
     <ul class="nav-links">
@@ -361,7 +355,7 @@
       <p class="section-sub">Probá la interfaz de ventas ahora mismo desde esta simulación.</p>
     </div>
     <div class="demo-container reveal">
-      <div class="demo-demo-wrapper" style="width:100%;">
+      <div class="demo-demo-wrapper" style="width:100%; display: flex; flex-direction: column; align-items: center;">
         <div class="demo-demo-label">Demo interactiva — Luminex Sales</div>
         <div class="demo-phone">
           <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
@@ -479,11 +473,23 @@
     <div class="faq-list reveal">
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">¿Funciona sin conexión a internet? <span class="arrow">▼</span></button>
-        <div class="faq-a">Sí. Luminex Sales es una PWA que almacena todos los datos en tu dispositivo. Podés registrar ventas aunque no tengas señal.</div>
+        <div class="faq-a">Sí. Luminex Sales es una PWA que almacena todos los datos en tu dispositivo. Podés registrar ventas aunque no tengas señal. La conexión solo se usa para la activación de licencia y sincronización opcional.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">¿Mis datos son privados? <span class="arrow">▼</span></button>
-        <div class="faq-a">Completamente. Los datos se guardan en el almacenamiento local de tu dispositivo. El desarrollador no tiene acceso a ellos.</div>
+        <div class="faq-a">Completamente. Los datos se guardan en el almacenamiento local de tu dispositivo. El desarrollador no tiene acceso a los datos de tu negocio. Vos sos el único dueño.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Puedo usarlo en varios dispositivos? <span class="arrow">▼</span></button>
+        <div class="faq-a">Cada licencia está vinculada a un dispositivo/navegador. Si necesitás acceso desde otro dispositivo, podés exportar e importar el respaldo de datos.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cómo funciona la prueba gratuita? <span class="arrow">▼</span></button>
+        <div class="faq-a">Al crear tu usuario, tenés 7 días de acceso completo sin limitaciones y sin necesidad de tarjeta de crédito. Al vencer el período, podés activar una clave anual.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Hay renovación automática? <span class="arrow">▼</span></button>
+        <div class="faq-a">No. La licencia es anual y vos decidís si renovarla. No se cobra nada automáticamente.</div>
       </div>
     </div>
   </div>
@@ -491,7 +497,6 @@
 
 <footer>
   <div class="footer-inner">
-    <a href="/" class="footer-brand"><span>Luminex Ecosystem</span></a>
     <div class="footer-links">
       <a href="/">Inicio</a>
       <a href="/sales">Sales</a>

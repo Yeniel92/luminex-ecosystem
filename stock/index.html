@@ -62,7 +62,6 @@
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo img { height: 32px; }
     .nav-logo-text {
       font-family: var(--font-h); font-size: 16px; font-weight: 800;
       color: var(--white); letter-spacing: -.2px; line-height: 1;
@@ -174,6 +173,20 @@
     .price-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
     .price-list li::before { content: '✓'; color: var(--gold); font-weight: 800; }
 
+    /* ── FAQ ── */
+    .faq-list { max-width: 700px; margin: 48px auto 0; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; }
+    .faq-q {
+      width: 100%; background: none; border: none; padding: 18px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--white); font-family: var(--font-b); font-size: 15px; font-weight: 600;
+      text-align: left; cursor: pointer;
+    }
+    .faq-q .arrow { font-size: 10px; transition: transform .3s; }
+    .faq-a { display: none; padding: 0 20px 18px; font-size: 13.5px; color: var(--text2); line-height: 1.7; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+
     /* ── FOOTER ── */
     footer { padding: 60px 20px; border-top: 1px solid var(--border); text-align: center; }
     .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; text-decoration: none; }
@@ -185,7 +198,6 @@
   <nav id="navbar">
     <div class="nav-inner">
       <a href="/" class="nav-logo">
-        <img src="/logo-luminex.png" alt="Luminex Logo" onerror="this.src='https://framerusercontent.com/images/8fb89f_logo.png'">
         <div class="nav-logo-text">Luminex<span>Ecosystem</span></div>
       </a>
       <ul class="nav-links">
@@ -216,32 +228,61 @@
 
     <section class="demo-section" id="demo">
       <div class="demo-container">
-        <div class="demo-demo-wrapper" style="width:100%;">
+        <div class="demo-demo-wrapper" style="width:100%; display: flex; flex-direction: column; align-items: center;">
           <div class="demo-demo-label" style="text-align:center;color:var(--gold);font-family:var(--font-h);font-size:12px;margin-bottom:12px;">Demo interactiva — Luminex Stock</div>
-          <div class="demo-phone" style="width:320px;margin:0 auto;background:#000;border-radius:32px;border:2px solid rgba(255,255,255,0.1);overflow:hidden;">
-            <div class="demo-phone-notch" style="height:28px;background:#000;display:flex;align-items:center;justify-content:center;"><div style="width:80px;height:8px;background:#222;border-radius:4px;"></div></div>
-            <div class="demo-phone-screen" id="demo-screen-container" style="height:580px;position:relative;background:#0b1a14;">
-              <!-- Demo screens -->
+          <div class="demo-phone">
+            <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
+            <div class="demo-phone-screen" id="demo-screen-container">
               <div class="demo-screen active" id="demo-s1">
-                <div style="background:#0f1f19;padding:15px;border-bottom:1px solid rgba(201,168,76,0.1);"><div style="font-family:var(--font-h);font-size:14px;">📦 Inventario</div></div>
-                <div style="padding:15px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                  <div style="background:#15261f;padding:10px;border-radius:8px;text-align:center;"><div id="demo-d-total" style="font-family:var(--font-h);font-size:20px;color:var(--gold);">0</div><div style="font-size:9px;color:var(--text3);">PRODUCTOS</div></div>
-                  <div style="background:#15261f;padding:10px;border-radius:8px;text-align:center;"><div id="demo-d-low" style="font-family:var(--font-h);font-size:20px;color:var(--gold);">0</div><div style="font-size:9px;color:var(--text3);">STOCK BAJO</div></div>
+                <div class="demo-topbar">
+                  <div class="demo-topbar-title">📦 Inventario</div>
                 </div>
-                <div id="demo-alert1" style="display:none;margin:0 15px;padding:10px;background:rgba(224,82,82,0.1);border:1px solid #e05252;border-radius:8px;color:#e05252;font-size:10px;">⚠️ ALERTA: Harina 000 sin stock</div>
+                <div class="demo-dash-grid">
+                  <div class="demo-dash-card"><div class="demo-dash-val" id="demo-d-total">0</div><div class="demo-dash-lbl">PRODUCTOS</div></div>
+                  <div class="demo-dash-card"><div class="demo-dash-val" id="demo-d-mov">0</div><div class="demo-dash-lbl">MOVIMIENTOS</div></div>
+                  <div class="demo-dash-card"><div class="demo-dash-val" id="demo-d-low" style="color:#e05252;">0</div><div class="demo-dash-lbl">STOCK BAJO</div></div>
+                  <div class="demo-dash-card"><div class="demo-dash-val" id="demo-d-out" style="color:#e05252;">0</div><div class="demo-dash-lbl">SIN STOCK</div></div>
+                </div>
+                <div class="demo-alert-box" id="demo-alert1">⚠️ ALERTA: Harina 000 sin stock</div>
+                <div class="demo-alert-box" id="demo-alert2">⚠️ ALERTA: Aceite Girasol stock bajo (2)</div>
               </div>
-              <div class="demo-screen" id="demo-s2" style="display:none;"></div>
-              <div class="demo-screen" id="demo-s3" style="display:none;"></div>
-              <div class="demo-screen" id="demo-s4" style="display:none;"></div>
-              <div class="demo-progress-bar" style="position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:center;gap:8px;">
-                <div class="demo-progress-dot active" id="demo-d0" style="width:6px;height:6px;border-radius:50%;background:var(--gold);"></div>
-                <div class="demo-progress-dot" id="demo-d1" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
-                <div class="demo-progress-dot" id="demo-d2" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
-                <div class="demo-progress-dot" id="demo-d3" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+              <div class="demo-screen" id="demo-s2">
+                <div class="demo-topbar"><div class="demo-topbar-title">📋 Productos</div></div>
+                <div class="demo-prod-list">
+                  <div class="demo-prod-item"><div><strong>Harina 000</strong><br><small>Almacén</small></div><div class="demo-stock-badge out">0 kg</div></div>
+                  <div class="demo-prod-item"><div><strong>Aceite Girasol</strong><br><small>Almacén</small></div><div class="demo-stock-badge low">2 un</div></div>
+                  <div class="demo-prod-item"><div><strong>Azúcar 1kg</strong><br><small>Almacén</small></div><div class="demo-stock-badge">45 un</div></div>
+                </div>
+              </div>
+              <div class="demo-screen" id="demo-s3">
+                <div class="demo-topbar"><div class="demo-topbar-title">➕ Nuevo Movimiento</div></div>
+                <div class="demo-form">
+                  <div class="demo-field"><label>Producto</label><div class="demo-input">Harina 000</div></div>
+                  <div class="demo-field"><label>Tipo</label><div class="demo-input">Entrada (+)</div></div>
+                  <div class="demo-field"><label>Cantidad</label><div class="demo-input" id="demo-mov-cant-display">—</div><div class="demo-num-pad" id="demo-mov-qty"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>.</span><span>0</span><span>⌫</span></div></div>
+                  <button class="demo-btn-save" id="demo-btn-mov">GUARDAR MOVIMIENTO</button>
+                </div>
+              </div>
+              <div class="demo-screen" id="demo-s4">
+                <div class="demo-topbar"><div class="demo-topbar-title">📊 Reporte Mensual</div></div>
+                <div class="demo-rep-stats">
+                  <div class="demo-rep-card"><div id="demo-rp-prod">0</div><small>PRODUCTOS</small></div>
+                  <div class="demo-rep-card"><div id="demo-rp-mov">0</div><small>MOVIMIENTOS</small></div>
+                </div>
+                <div class="demo-chart">
+                  <div class="demo-chart-bar"><div class="demo-bar-fill" id="demo-rb1"></div><small>Entradas</small></div>
+                  <div class="demo-chart-bar"><div class="demo-bar-fill" id="demo-rb2"></div><small>Salidas</small></div>
+                </div>
+              </div>
+              <div class="demo-progress-bar">
+                <div class="demo-progress-dot active" id="demo-d0"></div>
+                <div class="demo-progress-dot" id="demo-d1"></div>
+                <div class="demo-progress-dot" id="demo-d2"></div>
+                <div class="demo-progress-dot" id="demo-d3"></div>
               </div>
             </div>
           </div>
-          <div class="demo-step-label" id="demo-step-label" style="text-align:center;margin-top:12px;font-size:12px;color:var(--text3);">Iniciando simulación...</div>
+          <div class="demo-step-label" id="demo-step-label">Iniciando simulación...</div>
         </div>
         <script src="/stock/demo-stock.js"></script>
       </div>
@@ -271,13 +312,37 @@
         <a href="https://wa.me/5355855804" target="_blank" class="btn-primary" style="width: 100%; justify-content: center;">Quiero Luminex Stock</a>
       </div>
     </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <div class="reveal">
+          <div class="section-tag">Preguntas frecuentes</div>
+          <h2 class="section-title">Lo que más nos preguntan</h2>
+        </div>
+        <div class="faq-list reveal">
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">¿Funciona sin conexión a internet? <span class="arrow">▼</span></button>
+            <div class="faq-a">Sí. Luminex Stock almacena todos los datos en tu dispositivo. Podés gestionar tu inventario sin señal.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">¿Puedo importar mis productos? <span class="arrow">▼</span></button>
+            <div class="faq-a">Sí, podés cargar tus productos manualmente o mediante la función de restauración si ya tenés un respaldo previo.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si pierdo mi celular? <span class="arrow">▼</span></button>
+            <div class="faq-a">Te recomendamos realizar respaldos periódicos. Si tenés un archivo de respaldo, podés restaurar toda tu información en un dispositivo nuevo al instante.</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <a href="/" class="footer-logo">
-      <img src="/logo-luminex.png" alt="Luminex Logo" onerror="this.src='https://framerusercontent.com/images/8fb89f_logo.png'">
-      <div class="nav-logo-text">Luminex<span>Ecosystem</span></div>
-    </a>
+    <div class="footer-links" style="margin-bottom: 20px; display: flex; justify-content: center; gap: 20px;">
+      <a href="/" style="color:var(--text3); text-decoration:none; font-size:13px;">Inicio</a>
+      <a href="/sales/" style="color:var(--text3); text-decoration:none; font-size:13px;">Sales</a>
+      <a href="/stock/" style="color:var(--text3); text-decoration:none; font-size:13px;">Stock</a>
+    </div>
     <p class="footer-text">© 2026 Luminex Ecosystem · Uruguay</p>
   </footer>
 
@@ -290,6 +355,12 @@
     const ham = document.getElementById('nav-ham');
     const mob = document.getElementById('nav-mob');
     ham.addEventListener('click', () => { ham.classList.toggle('open'); mob.classList.toggle('open'); });
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
 
     (function() {
       const tag = document.createElement("div");
