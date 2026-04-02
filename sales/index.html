@@ -293,13 +293,18 @@
       
       // Check if demo script loaded
       setTimeout(() => {
-        if (typeof initSalesDemo === 'undefined') {
+        // Buscamos si el contenedor de la demo tiene contenido (indicativo de que el script corrió)
+        const demoContainer = document.getElementById('demo-screen-container');
+        const hasContent = demoContainer && demoContainer.innerHTML.trim().length > 100;
+        
+        if (hasContent) {
+          tag.innerText = "JS OK - DEMO READY";
+          tag.style.background = "lime";
+        } else {
           tag.innerText = "JS OK - NO DEMO";
           tag.style.background = "orange";
-        } else {
-          tag.innerText = "JS OK - DEMO READY";
         }
-      }, 2000);
+      }, 3000);
     })();
   </script>
 
