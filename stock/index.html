@@ -234,12 +234,77 @@
         <div class="demo-phone">
           <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
           <div class="demo-phone-screen" id="demo-screen-container">
-            <!-- Demo screens here -->
+            <!-- SCREEN 1: DASHBOARD -->
             <div class="demo-screen active" id="demo-s1">
               <div class="demo-topbar">
-                <div class="demo-topbar-title">📦 Control de Stock</div>
+                <div class="demo-topbar-title">📦 Inventario</div>
               </div>
-              <div style="padding: 20px; text-align: center; color: var(--text2);">Cargando demo...</div>
+              <div class="demo-report-stats">
+                <div class="demo-stat-box"><div class="demo-stat-val" id="demo-d-total">0</div><div class="demo-stat-lbl">PRODUCTOS</div></div>
+                <div class="demo-stat-box"><div class="demo-stat-val" id="demo-d-low">0</div><div class="demo-stat-lbl">STOCK BAJO</div></div>
+              </div>
+              <div class="demo-report-content">
+                <div class="demo-alert" id="demo-alert1" style="background:rgba(224,82,82,0.15);border:1px solid #e05252;padding:10px;border-radius:8px;margin-bottom:10px;display:none;">
+                  <span style="color:#e05252;font-size:11px;font-weight:700;">⚠️ ALERTA: Harina 000 sin stock</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 2: LISTADO -->
+            <div class="demo-screen" id="demo-s2">
+              <div class="demo-topbar">
+                <div class="demo-topbar-title">📋 Lista de Stock</div>
+              </div>
+              <div class="demo-hist-list">
+                <div class="demo-hist-item">
+                  <div><div class="demo-hist-items-text">Harina 000</div><div class="demo-hist-time">0 kg disponibles</div></div>
+                  <div class="demo-hist-amount" style="color:#e05252;">OUT</div>
+                </div>
+                <div class="demo-hist-item">
+                  <div><div class="demo-hist-items-text">Azúcar 1kg</div><div class="demo-hist-time">5 unidades</div></div>
+                  <div class="demo-hist-amount" style="color:#c9a84c;">LOW</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 3: MOVIMIENTO -->
+            <div class="demo-screen" id="demo-s3">
+              <div class="demo-topbar">
+                <div class="demo-topbar-title">➕ Nueva Entrada</div>
+              </div>
+              <div style="padding:20px;">
+                <div style="background:var(--bg3);padding:15px;border-radius:12px;border:1px solid var(--border);">
+                  <div style="font-size:10px;color:var(--text3);margin-bottom:5px;">PRODUCTO</div>
+                  <div id="demo-mov-cant-display" style="font-weight:700;margin-bottom:15px;">Harina 000</div>
+                  <div style="font-size:10px;color:var(--text3);margin-bottom:5px;">CANTIDAD</div>
+                  <div id="demo-mov-qty" style="font-size:24px;font-weight:800;color:var(--gold);margin-bottom:20px;display:none;">+ 20 kg</div>
+                  <button id="demo-btn-mov" style="width:100%;background:var(--gold);border:none;padding:12px;border-radius:8px;font-weight:700;display:none;">REGISTRAR ENTRADA</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 4: REPORTE -->
+            <div class="demo-screen" id="demo-s4">
+              <div class="demo-topbar">
+                <div class="demo-topbar-title">📊 Reporte Mensual</div>
+              </div>
+              <div class="demo-report-content">
+                <div class="demo-report-stats">
+                  <div class="demo-stat-box"><div class="demo-stat-val" id="demo-rp-mov">0</div><div class="demo-stat-lbl">MOVIMIENTOS</div></div>
+                  <div class="demo-stat-box"><div class="demo-stat-val" id="demo-rp-prod">0</div><div class="demo-stat-lbl">PRODUCTOS</div></div>
+                </div>
+                <div class="demo-report-chart">
+                  <div class="demo-bar" id="demo-rb1" style="width:0%;height:10px;background:var(--gold);margin-bottom:5px;border-radius:5px;"></div>
+                  <div class="demo-bar" id="demo-rb2" style="width:0%;height:10px;background:var(--gold);margin-bottom:5px;border-radius:5px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-progress-bar">
+              <div class="demo-progress-dot active" id="demo-d0"></div>
+              <div class="demo-progress-dot" id="demo-d1"></div>
+              <div class="demo-progress-dot" id="demo-d2"></div>
+              <div class="demo-progress-dot" id="demo-d3"></div>
             </div>
           </div>
         </div>
@@ -281,7 +346,7 @@
       // Check if demo script loaded
       setTimeout(() => {
         const demoContainer = document.getElementById('demo-screen-container');
-        const hasContent = demoContainer && demoContainer.innerHTML.trim().length > 100;
+        const hasContent = document.getElementById('demo-d-total') !== null;
         
         if (hasContent) {
           tag.innerText = "JS OK - DEMO READY";

@@ -141,21 +141,6 @@
     }
     .btn-secondary:hover { background: var(--bg3); }
 
-    /* ── FEATURES ── */
-    .section-header { padding: 100px 5% 40px; text-align: center; }
-    .section-header h2 { font-family: var(--font-h); font-size: clamp(32px, 5vw, 48px); letter-spacing: -1px; line-height: 1.1; color: var(--white); }
-
-    .features-grid {
-      padding: 0 5% 100px;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px; max-width: 1200px; margin: 0 auto;
-    }
-    .f-card {
-      background: var(--bg2); padding: 40px; border-radius: 24px;
-      border: 1px solid var(--border2);
-      transition: 0.3s;
-    }
-
     /* ── DEMO SECTION ── */
     .demo-section { padding: 100px 5%; position: relative; }
     .demo-container {
@@ -165,7 +150,6 @@
       padding: 60px 40px;
       display: flex; flex-direction: column; align-items: center;
       position: relative; overflow: hidden;
-      /* CRITICAL FIX: Demo Isolation */
       contain: layout paint size style;
       isolation: isolate;
       -webkit-transform: translate3d(0,0,0);
@@ -183,7 +167,6 @@
       .hero { padding-top: 120px; }
       .demo-container { padding: 40px 20px; }
       
-      /* Mobile Specific Fixes */
       nav {
         background: rgba(10, 15, 13, 0.98) !important;
         backdrop-filter: none !important;
@@ -247,12 +230,91 @@
         <div class="demo-phone">
           <div class="demo-phone-notch"><div class="demo-phone-notch-pill"></div></div>
           <div class="demo-phone-screen" id="demo-screen-container">
-            <!-- Demo screens here -->
+            <!-- SCREEN 1: CAJA CON PRODUCTOS -->
             <div class="demo-screen active" id="demo-s1">
               <div class="demo-topbar">
-                <div class="demo-topbar-title">🛒 Nueva Venta</div>
+                <div>
+                  <div class="demo-topbar-title">🛒 Caja / POS</div>
+                </div>
+                <div class="demo-topbar-user">
+                  <div class="demo-avatar">A</div>
+                </div>
               </div>
-              <div style="padding: 20px; text-align: center; color: var(--text2);">Cargando demo...</div>
+              <div class="demo-products-grid" id="demo-prod-grid">
+                <div class="demo-prod-card" id="demo-p1"><div class="demo-prod-emoji">☕</div><div class="demo-prod-name">Café</div><div class="demo-prod-price">$85</div></div>
+                <div class="demo-prod-card" id="demo-p2"><div class="demo-prod-emoji">🥐</div><div class="demo-prod-name">Medialuna</div><div class="demo-prod-price">$45</div></div>
+                <div class="demo-prod-card" id="demo-p3"><div class="demo-prod-emoji">🥤</div><div class="demo-prod-name">Jugo</div><div class="demo-prod-price">$95</div></div>
+              </div>
+              <div class="demo-cart-bar">
+                <div class="demo-cart-items" id="demo-cart-items"></div>
+                <div class="demo-cart-total">
+                  <span class="demo-cart-total-label">Total a cobrar:</span>
+                  <span class="demo-cart-total-amount" id="demo-cart-total">$0</span>
+                </div>
+                <button class="demo-btn-cobrar" id="demo-btn-cobrar">COBRAR AHORA</button>
+              </div>
+            </div>
+
+            <!-- SCREEN 2: CONFIRMACION -->
+            <div class="demo-screen" id="demo-s2">
+              <div class="demo-confirm-screen">
+                <div class="demo-confirm-icon">✓</div>
+                <div class="demo-confirm-title">¡Venta Exitosa!</div>
+                <div class="demo-confirm-amount">$225</div>
+                <div class="demo-confirm-detail">
+                  <div class="demo-confirm-row"><span>Metodo:</span><strong>Efectivo</strong></div>
+                  <div class="demo-confirm-row"><span>Fecha:</span><strong>Hoy, 14:20</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 3: HISTORIAL -->
+            <div class="demo-screen" id="demo-s3">
+              <div class="demo-topbar">
+                <div class="demo-topbar-title">📋 Historial de Ventas</div>
+              </div>
+              <div class="demo-hist-list">
+                <div class="demo-hist-item hist-new">
+                  <div><div class="demo-hist-items-text">☕ Café, 🥐 Medialuna, 🥤 Jugo</div><div class="demo-hist-time">Hace 1 min</div></div>
+                  <div class="demo-hist-amount">$225</div>
+                </div>
+                <div class="demo-hist-item">
+                  <div><div class="demo-hist-items-text">🍞 Pan artesanal</div><div class="demo-hist-time">Hace 15 min</div></div>
+                  <div class="demo-hist-amount">$180</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 4: REPORTES -->
+            <div class="demo-screen" id="demo-s4">
+              <div class="demo-topbar">
+                <div class="demo-topbar-title">📊 Reportes del Día</div>
+              </div>
+              <div class="demo-report-content">
+                <div class="demo-report-stats">
+                  <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-ventas">0</div><div class="demo-stat-lbl">VENTAS</div></div>
+                  <div class="demo-stat-box"><div class="demo-stat-val" id="demo-r-total">$0</div><div class="demo-stat-lbl">TOTAL</div></div>
+                </div>
+                <div class="demo-report-chart">
+                  <div class="demo-chart-title">Ventas por hora</div>
+                  <div class="demo-bars">
+                    <div class="demo-bar" id="demo-b1" style="height:0%"></div>
+                    <div class="demo-bar" id="demo-b2" style="height:0%"></div>
+                    <div class="demo-bar" id="demo-b3" style="height:0%"></div>
+                    <div class="demo-bar" id="demo-b4" style="height:0%"></div>
+                    <div class="demo-bar" id="demo-b5" style="height:0%"></div>
+                    <div class="demo-bar" id="demo-b6" style="height:0%"></div>
+                    <div class="demo-bar" id="demo-b7" style="height:0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-progress-bar">
+              <div class="demo-progress-dot active" id="demo-d0"></div>
+              <div class="demo-progress-dot" id="demo-d1"></div>
+              <div class="demo-progress-dot" id="demo-d2"></div>
+              <div class="demo-progress-dot" id="demo-d3"></div>
             </div>
           </div>
         </div>
@@ -293,9 +355,9 @@
       
       // Check if demo script loaded
       setTimeout(() => {
-        // Buscamos si el contenedor de la demo tiene contenido (indicativo de que el script corrió)
         const demoContainer = document.getElementById('demo-screen-container');
-        const hasContent = demoContainer && demoContainer.innerHTML.trim().length > 100;
+        // Verificamos si hay elementos de la demo creados por el script
+        const hasContent = document.getElementById('demo-p1') !== null;
         
         if (hasContent) {
           tag.innerText = "JS OK - DEMO READY";
