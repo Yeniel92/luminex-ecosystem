@@ -1512,24 +1512,50 @@ function initApp() {
   applyBrand();
   checkOnline();
 
-  // Integración Supabase: Escucha en tiempo real
+  // Refinamiento Ecosistema: Escucha en tiempo real (Stock + Precios)
   try {
     const negocioId = currentUser.username;
-    supabaseIntegration.suscribirCambiosStock(negocioId, (payload) => {
-      console.log('Cambio detectado en Supabase:', payload);
-      const prodActualizado = payload.new;
+    
+    // Al iniciar, sincronizar el estado más reciente de la nube
+    supabaseIntegration.obtenerProductos(negocioId).then(prodsCloud => {
+      if (prodsCloud && prodsCloud.length > 0) {
+        const productos = getProducts();
+        let cambios = false;
+        prodsCloud.forEach(pc => {
+          const idx = productos.findIndex(p => p.name === pc.nombre);
+          if (idx !== -1) {
+            if (productos[idx].stock !== pc.stock_actual) {
+              productos[idx].stock = pc.stock_actual;
+              cambios = true;
+            }
+          }
+        });
+        if (cambios) {
+          saveProducts(productos);
+          renderInventory();
+          toast('Inventario sincronizado con Ecosistema ☁️', 'success');
+        }
+      }
+    });
+
+    // Suscribirse a cambios en tiempo real
+    supabaseIntegration.suscribirCambiosEcosistema(negocioId, (payload) => {
+      const pc = payload.new;
       const productos = getProducts();
-      const idx = productos.findIndex(p => p.name === prodActualizado.nombre);
+      const idx = productos.findIndex(p => p.name === pc.nombre);
       
       if (idx !== -1) {
-        productos[idx].stock = prodActualizado.stock_actual;
-        saveProducts(productos);
-        renderInventory();
-        toast(`Stock actualizado: ${prodActualizado.nombre}`, 'success');
+        // Solo actualizamos si el stock cambió (las ventas en Sales cambian el stock)
+        if (productos[idx].stock !== pc.stock_actual) {
+          productos[idx].stock = pc.stock_actual;
+          saveProducts(productos);
+          renderInventory();
+          toast(`Stock actualizado: ${pc.nombre}`, 'success');
+        }
       }
     });
   } catch (e) {
-    console.error('Error en suscripción Supabase:', e);
+    console.error('Error en integración Ecosistema:', e);
   }
 
   // Advertencia si el admin usa contraseña por defecto

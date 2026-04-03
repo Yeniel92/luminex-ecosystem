@@ -1493,6 +1493,49 @@ function initApp(){
   if(_onlineCheckInterval) clearInterval(_onlineCheckInterval);
   _onlineCheckInterval=setInterval(checkOnline,12000);
   if(getProducts().length===0) loadDemoProducts();
+
+  // Refinamiento Ecosistema: Sincronizar precios y stock al iniciar
+  try {
+    const negocioId = CU.username;
+    supabaseIntegration.obtenerProductos(negocioId).then(prodsCloud => {
+      if (prodsCloud && prodsCloud.length > 0) {
+        const productos = getProducts();
+        let cambios = false;
+        prodsCloud.forEach(pc => {
+          const idx = productos.findIndex(p => p.name === pc.nombre);
+          if (idx !== -1) {
+            // Sincronizar precio y stock si hay diferencias
+            if (productos[idx].price !== pc.precio || productos[idx].stock !== pc.stock_actual) {
+              productos[idx].price = pc.precio;
+              productos[idx].stock = pc.stock_actual;
+              cambios = true;
+            }
+          }
+        });
+        if (cambios) {
+          saveProdDB(productos);
+          renderPOS();
+          toast('Precios y Stock actualizados ☁️', 'ok');
+        }
+      }
+    });
+
+    // Escuchar cambios en tiempo real (por si el admin cambia algo en Stock mientras Sales está abierto)
+    supabaseIntegration.suscribirCambiosEcosistema(negocioId, (payload) => {
+      const pc = payload.new;
+      const productos = getProducts();
+      const idx = productos.findIndex(p => p.name === pc.nombre);
+      if (idx !== -1) {
+        productos[idx].price = pc.precio;
+        productos[idx].stock = pc.stock_actual;
+        saveProdDB(productos);
+        renderPOS();
+        toast(`Actualizado: ${pc.nombre}`, 'ok');
+      }
+    });
+  } catch (e) {
+    console.error('Error inicializando Ecosistema:', e);
+  }
 }
 
 function checkOnline(){
