@@ -7,6 +7,8 @@
 <title>Luminex Sales — Punto de Venta</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../supabase-integration.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw-ventas.js').catch(() => {}));
@@ -1602,7 +1604,7 @@ function selectPay(method,el){
   el.classList.add('active');
 }
 
-function checkout(){
+async function checkout(){
   if(!cart.length) return;
   const subtotal=cart.reduce((s,i)=>s+(i.prod.price*i.qty),0);
   const discPct=Math.min(100,Math.max(0,parseFloat(document.getElementById('discount-val').value)||0));
@@ -1623,6 +1625,16 @@ function checkout(){
   const sales=getSales();sales.push(sale);saveSalesDB(sales);
   document.getElementById('receipt-content').innerHTML=buildReceiptHTML(sale);
   document.getElementById('modal-receipt').classList.add('open');
+  
+  // Integración Supabase
+  try {
+    const negocioId = CU.username; // Usamos el username como negocioId para la demo
+    await supabaseIntegration.registrarVenta(negocioId, sale);
+    toast('Sincronizado con Supabase ☁️', 'ok');
+  } catch (e) {
+    console.error('Error sincronizando con Supabase:', e);
+  }
+
   syncData(true);
   checkStorageQuota();
 }

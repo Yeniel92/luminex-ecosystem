@@ -6,6 +6,8 @@
 <title>Luminex Stock — Gestión de Inventario</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../supabase-integration.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
@@ -686,6 +688,28 @@ if ('serviceWorker' in navigator) {
               <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('restore-file-input').click()">📥 Restaurar respaldo</button>
               <input type="file" id="restore-file-input" accept=".json" style="display:none" onchange="importBackup(event)">
             </div>
+            <hr style="border-color:var(--border);margin:20px 0;">
+            <div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--latte);margin-bottom:12px;">🌐 Ecosistema Luminex</div>
+            <p style="font-size:.82rem;color:var(--latte);margin-bottom:14px;line-height:1.5;">Sincroniza tus productos con el servidor para que Luminex Sales pueda descontar stock en tiempo real.</p>
+            <button class="btn btn-primary" style="width:100%;" onclick="syncEcosystem()">🔄 Sincronizar Catálogo</button>
+            <script>
+              async function syncEcosystem() {
+                try {
+                  const btn = event.target;
+                  btn.disabled = true;
+                  btn.textContent = 'Sincronizando...';
+                  const productos = getProducts();
+                  await supabaseIntegration.sincronizarProductos(currentUser.username, productos);
+                  toast('¡Catálogo sincronizado con el Ecosistema!', 'success');
+                } catch (e) {
+                  console.error(e);
+                  toast('Error al sincronizar', 'error');
+                } finally {
+                  event.target.disabled = false;
+                  event.target.textContent = '🔄 Sincronizar Catálogo';
+                }
+              }
+            </script>
             <div style="text-align:center;margin-top:14px;"><a href="#" onclick="document.getElementById('modal-privacy').style.display='flex';return false;" style="font-size:.75rem;color:var(--accent,#c4892a);">🔒 Política de privacidad</a></div>
             <div style="display:none">
             </div>
@@ -1487,6 +1511,27 @@ function initApp() {
   showPage('dashboard');
   applyBrand();
   checkOnline();
+
+  // Integración Supabase: Escucha en tiempo real
+  try {
+    const negocioId = currentUser.username;
+    supabaseIntegration.suscribirCambiosStock(negocioId, (payload) => {
+      console.log('Cambio detectado en Supabase:', payload);
+      const prodActualizado = payload.new;
+      const productos = getProducts();
+      const idx = productos.findIndex(p => p.name === prodActualizado.nombre);
+      
+      if (idx !== -1) {
+        productos[idx].stock = prodActualizado.stock_actual;
+        saveProducts(productos);
+        renderInventory();
+        toast(`Stock actualizado: ${prodActualizado.nombre}`, 'success');
+      }
+    });
+  } catch (e) {
+    console.error('Error en suscripción Supabase:', e);
+  }
+
   // Advertencia si el admin usa contraseña por defecto
   if (currentUser.username === 'admin' && currentUser.password === 'admin123') {
     setTimeout(() => toast('[!] Seguridad: Cambia la contraseña de admin por defecto en Usuarios', 'warning'), 1500);
