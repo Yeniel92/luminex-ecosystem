@@ -159,6 +159,46 @@
     }
     .btn-primary:hover { background: #eab308; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.3); }
 
+    /* ── PROOF BAR ── */
+    .proof-bar {
+      background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 18px 16px; text-align: center;
+    }
+    .proof-bar-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px;
+    }
+    .proof-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--text2); white-space: nowrap;
+    }
+    .proof-item strong { color: var(--white); }
+
+    /* ── ACCESSIBLE BAND ── */
+    .accessible-band {
+      background: var(--bg2);
+      padding: 40px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .accessible-inner {
+      max-width: 1100px; margin: 0 auto;
+      text-align: center;
+    }
+    .accessible-title {
+      font-family: var(--font-h); font-size: 1.2rem; font-weight: 800; color: var(--white); margin-bottom: 30px;
+    }
+    .accessible-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .accessible-col { text-align: left; }
+    .accessible-col strong { display: block; color: var(--gold); font-size: 14px; margin-bottom: 4px; }
+    .accessible-col p { font-size: 13px; color: var(--text2); line-height: 1.4; }
+    .accessible-footer { margin-top: 30px; font-size: 14px; color: var(--text2); font-weight: 500; }
+    @media (max-width: 768px) {
+      .accessible-grid { grid-template-columns: 1fr; gap: 20px; }
+      .accessible-col { text-align: center; }
+    }
+
     /* ── FEATURES ── */
     .features { padding: 60px 16px; max-width: 1100px; margin: 0 auto; }
     .features-grid {
@@ -174,6 +214,18 @@
     .feat-icon { font-size: 24px; margin-bottom: 12px; }
     .feat-card h3 { font-family: var(--font-h); font-size: 16px; margin-bottom: 8px; }
     .feat-card p { color: var(--text2); font-size: 13px; line-height: 1.5; }
+    .feat-link { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--gold); text-decoration: none; font-weight: 600; }
+
+    /* ── ECOSISTEMA ── */
+    #ecosistema { background: var(--bg); border-top: 1px solid var(--border); padding: 60px 16px; }
+    .eco-table-wrap { overflow-x: auto; margin: 30px 0; border-radius: 12px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; min-width: 500px; font-size: 13px; }
+    th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border); color: var(--white); }
+    th { background: var(--bg2); color: var(--text2); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .highlight-row { background: var(--gold-dim); font-weight: 700; color: var(--gold); }
+    .eco-cta-box { text-align: center; margin-top: 30px; }
+    .eco-subtext { font-size: 13px; color: var(--text3); margin-top: 8px; }
 
     /* ── PRICING ── */
     .pricing { background: var(--bg2); padding: 80px 16px; text-align: center; }
@@ -189,7 +241,7 @@
     .price-val { font-family: var(--font-h); font-size: 56px; font-weight: 800; line-height: 1; margin-bottom: 8px; }
     .price-val span { font-size: 20px; color: var(--text3); font-weight: 400; }
     .price-list { list-style: none; margin: 24px 0; text-align: left; }
-    .price-list li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .price-list li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text2); }
     .price-list li::before { content: '✓'; color: var(--gold); font-weight: 800; }
 
     /* ── FAQ ── */
@@ -272,8 +324,46 @@
       <div class="hero-tag">Gestión de Inventario</div>
       <h1>Controlá tu stock <span>sin planillas</span></h1>
       <p>Luminex Stock te permite gestionar tus productos, movimientos y alertas de stock bajo directamente desde tu celular. Sin internet obligatorio.</p>
-      <a href="#demo" class="btn-primary">Ver demo interactiva ↓</a>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="#demo" class="btn-primary">Ver demo interactiva ↓</a>
+      </div>
+      <div class="proof-bar" style="background:transparent; border:none; margin-top:30px;">
+        <div class="proof-bar-inner">
+          <div class="proof-item">📱 <strong>PWA</strong> Instalable</div>
+          <div class="proof-item">🔌 <strong>Offline</strong> First</div>
+          <div class="proof-item">🔒 <strong>Privacidad</strong> Total</div>
+          <div class="proof-item">💰 <strong>USD 24/año</strong></div>
+          <div class="proof-item">🇺🇾 <strong>Uruguay</strong></div>
+          <div class="proof-item">🔗 <strong>Integrado con Sales</strong></div>
+        </div>
+        <div style="text-align:center; margin-top:10px; font-size:11px; color:var(--text3); font-style:italic;">
+          "Lo que otros cobran por mes, nosotros lo cobramos por año."
+        </div>
+      </div>
     </section>
+
+    <div class="accessible-band">
+      <div class="accessible-inner">
+        <div class="accessible-title">¿Por qué USD 24/año y no USD 24/mes como los demás?</div>
+        <div class="accessible-grid">
+          <div class="accessible-col">
+            <strong><span style="color:#c9a84c">🚫</span> Sin hardware</strong>
+            <p>No necesitás lector de tarjetas ni caja registradora.</p>
+          </div>
+          <div class="accessible-col">
+            <strong><span style="color:#c9a84c">🚫</span> Sin intermediarios</strong>
+            <p>Vendemos directo, sin distribuidores ni comisiones.</p>
+          </div>
+          <div class="accessible-col">
+            <strong><span style="color:#c9a84c">🚫</span> Sin servidores propios</strong>
+            <p>Infraestructura en la nube. Sin costos de datacenter.</p>
+          </div>
+        </div>
+        <div class="accessible-footer">
+          Eso nos permite cobrarte lo justo: una sola vez por año.
+        </div>
+      </div>
+    </div>
 
     <section class="demo-section" id="demo">
       <div class="demo-container">
@@ -343,6 +433,79 @@
         <div class="feat-card"><div class="feat-icon">⚠️</div><h3>Alertas de Stock</h3><p>Recibí notificaciones automáticas cuando un producto esté por agotarse.</p></div>
         <div class="feat-card"><div class="feat-icon">📊</div><h3>Reportes Listos</h3><p>Generá reportes de movimientos y valor total de tu mercadería en segundos.</p></div>
         <div class="feat-card"><div class="feat-icon">☁️</div><h3>Backup Seguro</h3><p>Tus datos están en tu celular, pero podés exportar copias de seguridad.</p></div>
+        <div class="feat-card"><div class="feat-icon">📱</div><h3>PWA Nativa</h3><p>Instalala en tu pantalla de inicio. Sin pasar por tiendas de aplicaciones.</p></div>
+        <div class="feat-card"><div class="feat-icon">🔒</div><h3>Privacidad</h3><p>Tus datos son tuyos. Se guardan localmente en tu dispositivo.</p></div>
+        <div class="feat-card">
+          <div class="feat-icon">🔗</div>
+          <h3>Integrado con Sales</h3>
+          <p>Cada venta de Sales descuenta tu inventario en tiempo real. Abrís Stock al final del día y ya sabe todo lo que vendiste.</p>
+          <a href="#ecosistema" class="feat-link">Ver Plan Ecosistema →</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="ecosistema">
+      <div class="wrap">
+        <div class="reveal">
+          <div class="section-tag">Ecosistema</div>
+          <h2>¿Tenés un negocio completo? Llevate las dos.</h2>
+          <p style="color:var(--text2); margin-bottom:20px;">Sales + Stock juntos. Un precio, cero trabajo doble.</p>
+          <p style="color:var(--text2);">
+            Cada venta en Sales descuenta el inventario en Stock automáticamente. Offline también: si vendés sin señal, los descuentos llegan solos al volver la conexión.
+          </p>
+        </div>
+
+        <div class="eco-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Sistema</th>
+                <th>Qué incluye</th>
+                <th>Precio anual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Loyverse</td><td>POS + inventario add-on</td><td>~USD 300/año</td></tr>
+              <tr><td>Square POS</td><td>POS + inventario básico</td><td>~USD 348/año</td></tr>
+              <tr><td>Poster POS</td><td>POS + inventario</td><td>~USD 348/año</td></tr>
+              <tr><td>Shopify POS</td><td>Solo POS básico</td><td>~USD 60/año</td></tr>
+              <tr class="highlight-row"><td>🌟 Luminex Ecosistema</td><td>POS + Stock integrados</td><td>USD 49/año</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="eco-subtext" style="text-align:center;">"Con Luminex pagás menos en un año de lo que otros cobran en un mes."</p>
+
+        <div class="eco-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Funcionalidad</th>
+                <th>Sales</th>
+                <th>Stock</th>
+                <th>Ecosistema</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Caja / POS</td><td>✓</td><td>—</td><td>✓</td></tr>
+              <tr><td>Catálogo de productos</td><td>✓</td><td>—</td><td>✓</td></tr>
+              <tr><td>Historial de ventas</td><td>✓</td><td>—</td><td>✓</td></tr>
+              <tr><td>Reportes PDF</td><td>✓</td><td>✓</td><td>✓</td></tr>
+              <tr><td>Control de inventario</td><td>—</td><td>✓</td><td>✓</td></tr>
+              <tr><td>Movimientos entrada/salida</td><td>—</td><td>✓</td><td>✓</td></tr>
+              <tr><td>Alertas de stock bajo</td><td>—</td><td>✓</td><td>✓</td></tr>
+              <tr><td>Descuento automático al vender</td><td>—</td><td>—</td><td>✓</td></tr>
+              <tr class="highlight-row"><td>Precio anual</td><td>USD 29</td><td>USD 24</td><td>USD 49</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="text-align:center; font-size:14px; color:var(--text2); margin-top:10px;">
+          Ahorrás USD 4/año vs comprar por separado. Y hasta USD 551 vs Loyverse equivalente.
+        </p>
+
+        <div class="eco-cta-box">
+          <a href="https://wa.me/5355855804" class="btn-primary">💬 Quiero el Plan Ecosistema</a>
+          <p class="eco-subtext">Contactá por WhatsApp y te activamos ambas licencias.</p>
+        </div>
       </div>
     </section>
 
@@ -350,6 +513,7 @@
       <div class="price-box">
         <div class="price-tag">PLAN ANUAL</div>
         <div class="price-val">USD 24<span>/año</span></div>
+        <div style="font-size:12px; color:var(--text3); margin-top:-5px; margin-bottom:15px; font-style:italic;">vs USD 25/mes en la competencia</div>
         <p style="color: var(--text3);">Equivale a solo USD 2,00 por mes</p>
         <ul class="price-list">
           <li>Productos ilimitados</li>
@@ -357,6 +521,8 @@
           <li>Dashboard en tiempo real</li>
           <li>Reportes imprimibles</li>
           <li>7 días de prueba gratis</li>
+          <li>Integración con Luminex Sales</li>
+          <li>Plan Ecosistema disponible (Sales + Stock USD 49/año)</li>
         </ul>
         <a href="https://wa.me/5355855804" target="_blank" class="btn-primary" style="width: 100%; justify-content: center;">Quiero Luminex Stock</a>
       </div>
@@ -381,10 +547,31 @@
             <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si pierdo mi celular? <span class="arrow">▼</span></button>
             <div class="faq-a">Te recomendamos realizar respaldos periódicos. Si tenés un archivo de respaldo, podés restaurar toda tu información en un dispositivo nuevo al instante.</div>
           </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">¿Puedo combinar Stock con Sales? <span class="arrow">▼</span></button>
+            <div class="faq-a">Sí. Cada venta de Sales descuenta tu inventario en tiempo real. Si la venta fue offline, el descuento llega solo al volver la señal. Sin registrar nada dos veces.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">¿Se actualiza Stock aunque no lo tenga abierto? <span class="arrow">▼</span></button>
+            <div class="faq-a">Sí. Al abrirlo después de un día de ventas ya tiene todo descontado. No importa si estaba cerrado.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">¿Hay un plan que incluya ambas apps? <span class="arrow">▼</span></button>
+            <div class="faq-a">Sí. El Plan Ecosistema: Sales + Stock integrados por USD 49/año. Contactá por WhatsApp para activarlo.</div>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <section class="cta-final" style="text-align:center; padding: 60px 16px; background: var(--bg2);">
+    <h2 style="margin-bottom:16px;">Tu inventario bajo control</h2>
+    <p style="color:var(--text2); margin-bottom:30px;">7 días de prueba gratuita. Sin tarjeta, sin complicaciones.</p>
+    <a href="https://wa.me/5355855804" class="btn-primary">🚀 Probar gratis ahora</a><br>
+    <div style="margin-top:15px; font-size:13px; color:var(--text3);">
+      Sin contrato. Sin renovación automática. Sin sorpresas.
+    </div>
+  </section>
 
   <footer>
     <div class="footer-links" style="margin-bottom: 20px; display: flex; justify-content: center; gap: 20px;">
