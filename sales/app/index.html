@@ -462,6 +462,7 @@ if ('serviceWorker' in navigator) {
       <button class="nav-btn" onclick="showPage('productos')"><span class="ni" style="font-style:normal;">◈</span> Productos</button>
       <div class="nav-label">Análisis</div>
       <button class="nav-btn" onclick="showPage('reportes')"><span class="ni" style="font-style:normal;">▦</span> Reportes</button>
+      <button class="nav-btn" onclick="showPage('auditoria')"><span class="ni" style="font-style:normal;">⚖</span> Auditoría de Caja</button>
       <div class="nav-label">Configuración</div>
       <button class="nav-btn" onclick="showPage('negocio')"><span class="ni" style="font-style:normal;">◉</span> Mi Negocio</button>
       <div class="nav-label admin-only">Admin</div>
@@ -612,6 +613,44 @@ if ('serviceWorker' in navigator) {
           <div class="card"><div class="card-head"><div class="card-title">🏆 Top productos</div></div><div class="card-body" id="top-products"></div></div>
           <div class="card"><div class="card-head"><div class="card-title">💳 Por forma de pago</div></div><div class="card-body" id="pay-breakdown"></div></div>
           <div class="card"><div class="card-head"><div class="card-title">📆 Resumen del día</div></div><div class="card-body" id="today-summary"></div></div>
+        </div>
+      </div>
+
+      <!-- AUDITORÍA DE CAJA -->
+      <div class="page" id="page-auditoria">
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-accent" style="background:var(--gold);"></div>
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-val" id="aud-cash-system">$0.00</div>
+            <div class="kpi-label">Efectivo en Sistema</div>
+            <div class="kpi-sub">Ventas Hoy + Fondo Inicial</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-accent" style="background:var(--blue);"></div>
+            <div class="kpi-icon">💳</div>
+            <div class="kpi-val" id="aud-other-system">$0.00</div>
+            <div class="kpi-label">Otros Medios</div>
+            <div class="kpi-sub">Tarjeta + Transferencia</div>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="card">
+            <div class="card-head"><div class="card-title">🚪 Control de Turno</div></div>
+            <div class="card-body" id="shift-control-body">
+              <!-- Se llena dinámicamente -->
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">📜 Últimos Cierres</div></div>
+            <div class="card-body" style="padding:0;">
+              <table class="tbl">
+                <thead><tr><th>Fecha</th><th>Cajero</th><th>Diferencia</th><th>Acción</th></tr></thead>
+                <tbody id="aud-history-tbody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1604,15 +1643,162 @@ function showPage(page){
   document.querySelectorAll('.nav-btn').forEach(b=>{
     if(b.textContent.trim().toLowerCase().startsWith(page.slice(0,4))) b.classList.add('active');
   });
-  const titles={caja:'🛒 Caja / POS',historial:'📋 Historial',productos:'🏷 Productos',reportes:'📊 Reportes',usuarios:'👥 Usuarios',negocio:'🏪 Mi Negocio'};
+  const titles={caja:'🛒 Caja / POS',historial:'📋 Historial',productos:'🏷 Productos',reportes:'📊 Reportes',auditoria:'⚖ Auditoría de Caja',usuarios:'👥 Usuarios',negocio:'🏪 Mi Negocio'};
   document.getElementById('page-title').textContent=titles[page]||page;
   if(page==='caja')      renderPOS();
   if(page==='historial') renderHistorial();
   if(page==='productos') renderProductos();
   if(page==='reportes')  {applyBrand();renderReportes();}
+  if(page==='auditoria') renderAuditoria();
   if(page==='usuarios')  renderUsers();
   if(page==='negocio')   applyBrand();
   if(window.innerWidth<768) document.getElementById('sidebar').classList.remove('open');
+}
+
+// =====================================================================
+//  AUDITORÍA DE CAJA (TURNOS)
+// =====================================================================
+function getShifts(){ return ls(userKey('shifts'), []); }
+function saveShifts(s){ lsSet(userKey('shifts'), s); }
+function getCurrentShift(){ return ls(userKey('current_shift'), null); }
+function saveCurrentShift(s){ lsSet(userKey('current_shift'), s); }
+
+function renderAuditoria(){
+  const shift = getCurrentShift();
+  const body = document.getElementById('shift-control-body');
+  const history = document.getElementById('aud-history-tbody');
+  const sales = getSales();
+  
+  // Calcular totales del día (o del turno actual)
+  const today = new Date().toISOString().slice(0,10);
+  const todaySales = sales.filter(s => s.date.startsWith(today));
+  
+  const cashSales = todaySales.filter(s => s.payment === 'efectivo').reduce((a,b) => a + b.total, 0);
+  const otherSales = todaySales.filter(s => s.payment !== 'efectivo').reduce((a,b) => a + b.total, 0);
+  const initialFund = shift ? shift.initialFund : 0;
+
+  document.getElementById('aud-cash-system').textContent = fmtMoney(cashSales + initialFund);
+  document.getElementById('aud-other-system').textContent = fmtMoney(otherSales);
+
+  if(!shift){
+    body.innerHTML = `
+      <div style="text-align:center;padding:20px;">
+        <div style="font-size:2.5rem;margin-bottom:15px;">🚪</div>
+        <h3 style="margin-bottom:10px;">Turno Cerrado</h3>
+        <p style="font-size:.85rem;color:var(--text2);margin-bottom:20px;">Debes abrir un turno para registrar el fondo inicial de caja.</p>
+        <div class="field" style="max-width:200px;margin:0 auto 15px;">
+          <label>Fondo Inicial (Efectivo)</label>
+          <input type="number" id="open-fund" value="0" step="0.01" style="text-align:center;font-family:var(--mono);">
+        </div>
+        <button class="btn btn-gold" onclick="openShift()" style="max-width:200px;margin:0 auto;">Abrir Turno</button>
+      </div>
+    `;
+  } else {
+    body.innerHTML = `
+      <div style="padding:10px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:15px;font-size:.85rem;">
+          <span style="color:var(--text3)">Abierto por:</span>
+          <span style="font-weight:600;color:var(--gold)">${shift.user}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:15px;font-size:.85rem;">
+          <span style="color:var(--text3)">Desde:</span>
+          <span class="mono">${new Date(shift.startTime).toLocaleTimeString()}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:20px;font-size:.85rem;padding-top:10px;border-top:1px solid var(--border);">
+          <span style="color:var(--text3)">Fondo Inicial:</span>
+          <span class="mono">${fmtMoney(shift.initialFund)}</span>
+        </div>
+        <div class="field">
+          <label>Efectivo Físico en Caja</label>
+          <input type="number" id="close-cash" placeholder="Cuenta el dinero..." step="0.01" style="font-size:1.2rem;text-align:center;font-family:var(--mono);border-color:var(--gold);">
+        </div>
+        <button class="btn btn-red" onclick="closeShift()" style="width:100%;margin-top:10px;">Realizar Arqueo y Cerrar Turno</button>
+      </div>
+    `;
+  }
+
+  const shifts = getShifts().reverse().slice(0, 10);
+  history.innerHTML = shifts.map(s => `
+    <tr>
+      <td><div style="font-size:.8rem;">${new Date(s.endTime).toLocaleDateString()}</div><div style="font-size:.7rem;color:var(--text3)">${new Date(s.endTime).toLocaleTimeString()}</div></td>
+      <td style="font-size:.8rem;">${s.user}</td>
+      <td class="mono" style="color:${s.diff < 0 ? 'var(--red)' : (s.diff > 0 ? 'var(--green)' : 'var(--text2)')}">
+        ${s.diff > 0 ? '+' : ''}${fmtMoney(s.diff)}
+      </td>
+      <td><button class="btn btn-ghost btn-sm" onclick="sendShiftWhatsApp('${s.id}')">📲</button></td>
+    </tr>
+  `).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">No hay cierres registrados</td></tr>';
+}
+
+function openShift(){
+  const fund = parseFloat(document.getElementById('open-fund').value) || 0;
+  const shift = {
+    id: 'sh_' + Date.now(),
+    user: CU.name,
+    username: CU.username,
+    startTime: new Date().toISOString(),
+    initialFund: fund,
+    status: 'open'
+  };
+  saveCurrentShift(shift);
+  toast('Turno abierto con ' + fmtMoney(fund), 'ok');
+  renderAuditoria();
+}
+
+function closeShift(){
+  const shift = getCurrentShift();
+  const physicalCash = parseFloat(document.getElementById('close-cash').value);
+  if(isNaN(physicalCash)) return toast('Ingresa el efectivo contado', 'err');
+
+  const sales = getSales();
+  const today = new Date().toISOString().slice(0,10);
+  const todaySales = sales.filter(s => s.date.startsWith(today));
+  
+  const cashSales = todaySales.filter(s => s.payment === 'efectivo').reduce((a,b) => a + b.total, 0);
+  const otherSales = todaySales.filter(s => s.payment !== 'efectivo').reduce((a,b) => a + b.total, 0);
+  const systemCash = cashSales + shift.initialFund;
+  const diff = physicalCash - systemCash;
+
+  const closedShift = {
+    ...shift,
+    endTime: new Date().toISOString(),
+    systemCash: systemCash,
+    physicalCash: physicalCash,
+    otherSales: otherSales,
+    cashSales: cashSales,
+    diff: diff,
+    status: 'closed'
+  };
+
+  const shifts = getShifts();
+  shifts.push(closedShift);
+  saveShifts(shifts);
+  saveCurrentShift(null);
+
+  alert(`✅ CIERRE DE CAJA COMPLETADO\n\nEfectivo Sistema: ${fmtMoney(systemCash)}\nEfectivo Físico: ${fmtMoney(physicalCash)}\nDiferencia: ${fmtMoney(diff)}\n\n${diff === 0 ? '¡Caja perfecta!' : (diff < 0 ? '⚠️ Faltante detectado' : '💰 Sobrante detectado')}`);
+  
+  renderAuditoria();
+}
+
+function sendShiftWhatsApp(id){
+  const s = getShifts().find(x => x.id === id);
+  if(!s) return;
+  
+  const msg = `*📊 CIERRE DE CAJA - LUMINEX*\n` +
+              `📅 Fecha: ${new Date(s.endTime).toLocaleDateString()}\n` +
+              `👤 Cajero: ${s.user}\n` +
+              `--------------------------\n` +
+              `💰 Fondo Inicial: ${fmtMoney(s.initialFund)}\n` +
+              `💵 Ventas Efectivo: ${fmtMoney(s.cashSales)}\n` +
+              `💳 Otros Medios: ${fmtMoney(s.otherSales)}\n` +
+              `--------------------------\n` +
+              `🖥️ Sistema (Efectivo): ${fmtMoney(s.systemCash)}\n` +
+              `✋ Físico Contado: ${fmtMoney(s.physicalCash)}\n` +
+              `⚖️ Diferencia: *${s.diff > 0 ? '+' : ''}${fmtMoney(s.diff)}*\n` +
+              `--------------------------\n` +
+              `Luminex Ecosystem ✦`;
+  
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
 
@@ -1717,10 +1903,12 @@ async function checkout(){
   const discount=subtotal*(discPct/100);
   const total=subtotal-discount;
   const now=new Date();
+  const shift = getCurrentShift();
   const sale={
     id:genId(),date:now.toISOString(),
     items:cart.map(i=>({id:i.prod.id,name:i.prod.name,icon:i.prod.icon||'☕',price:i.prod.price,qty:i.qty,subtotal:i.prod.price*i.qty})),
-    subtotal,discPct,discount,total,payment:payMethod,user:CU.name
+    subtotal,discPct,discount,total,payment:payMethod,user:CU.name,
+    shiftId: shift ? shift.id : null
   };
   const products=getProducts();
   cart.forEach(ci=>{
