@@ -18,6 +18,14 @@ const supabaseIntegration = {
     return supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   },
 
+  // Normalizar nombres para IDs de sincronización (sin tildes, lowercase, trim)
+  normalizeId(name) {
+    if (!name) return '';
+    return name.trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Quitar tildes
+      .replace(/[^a-z0-9]/g, '_'); // Reemplazar no-alfanuméricos por guion bajo
+  },
+
   // Registrar venta desde Sales y descontar stock
   async registrarVenta(negocioId, venta) {
     const client = this.getClient();
@@ -39,37 +47,47 @@ const supabaseIntegration = {
 
       if (ventaError) throw ventaError;
 
-      // 2. Descontar stock por cada item vendido
+      // 2. Descontar stock por cada item vendido (Atomic RPC recomendado en producción)
+      // Por ahora, usamos una lógica más robusta buscando por nombre normalizado
       const updatePromises = venta.items.map(async (item) => {
-        // Buscar producto por nombre y negocio
+        const normName = this.normalizeId(item.name);
+        
+        // Buscar producto por nombre normalizado y negocio
         const { data: producto, error: pError } = await client
           .from('productos')
-          .select('id, stock_actual')
+          .select('id, stock_actual, nombre')
           .eq('negocio_id', negocioId)
-          .eq('nombre', item.name)
+          .eq('nombre_norm', normName) // Usamos el nuevo campo normalizado
           .maybeSingle();
 
         if (producto) {
+          // Lógica atómica simple: update con filtro de stock previo para evitar sobreescritura ciega
+          // En un entorno real, usaríamos una función RPC: decrement_stock(p_id, p_qty)
           const nuevoStock = Math.max(0, (producto.stock_actual || 0) - (item.qty || 1));
           
-          // Actualizar stock
-          await client
+          const { error: upError } = await client
             .from('productos')
-            .update({ stock_actual: nuevoStock })
-            .eq('id', producto.id);
+            .update({ 
+              stock_actual: nuevoStock,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', producto.id)
+            .eq('stock_actual', producto.stock_actual); // Optimistic Locking
 
-          // Registrar movimiento
-          await client
-            .from('movimientos_stock')
-            .insert({
-              negocio_id: negocioId,
-              producto_id: producto.id,
-              producto_nombre: item.name,
-              tipo: 'venta',
-              cantidad: item.qty || 1,
-              origen: 'sales',
-              referencia_venta: ventaData.id
-            });
+          if (!upError) {
+            // Registrar movimiento
+            await client
+              .from('movimientos_stock')
+              .insert({
+                negocio_id: negocioId,
+                producto_id: producto.id,
+                producto_nombre: producto.nombre,
+                tipo: 'venta',
+                cantidad: item.qty || 1,
+                origen: 'sales',
+                referencia_venta: ventaData.id
+              });
+          }
         }
       });
 
@@ -108,18 +126,20 @@ const supabaseIntegration = {
     
     try {
       for (const p of productosLocales) {
-        // Upsert por nombre y negocio_id
+        const normName = this.normalizeId(p.name);
+        // Upsert por nombre normalizado y negocio_id
         const { error } = await client
           .from('productos')
           .upsert({
             negocio_id: negocioId,
             nombre: p.name,
+            nombre_norm: normName,
             emoji: p.icon || p.emoji || '📦',
             precio: p.price || 0,
             stock_actual: p.stock || 0,
             stock_minimo: p.minStock || 0,
             updated_at: new Date().toISOString()
-          }, { onConflict: 'negocio_id,nombre' }); // Requiere índice único en DB
+          }, { onConflict: 'negocio_id,nombre_norm' }); // Índice único en nombre_norm
 
         if (error) console.error(`Error sincronizando ${p.name}:`, error);
       }

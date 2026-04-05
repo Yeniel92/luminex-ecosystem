@@ -200,6 +200,10 @@ if ('serviceWorker' in navigator) {
   .cat-alimentos{ background:rgba(74,103,65,.1);   color:var(--sage); }
   .cat-insumos  { background:rgba(44,26,14,.08);   color:var(--latte); }
   .cat-lacteos  { background:rgba(166,61,47,.08);  color:var(--rust); }
+  .abc-badge { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; font-size:.65rem; font-weight:800; margin-right:6px; color:white; }
+  .abc-a { background:var(--sage); box-shadow:0 0 8px rgba(74,103,65,.4); }
+  .abc-b { background:var(--caramel); }
+  .abc-c { background:var(--latte); opacity:.7; }
 
   /* ── MODAL ── */
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(44,26,14,.6); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; padding:20px; }
@@ -444,6 +448,7 @@ if ('serviceWorker' in navigator) {
       <button class="nav-item" onclick="showPage('inventario')"><span class="icon" style="font-style:normal;">◈</span> Inventario</button>
       <button class="nav-item" onclick="showPage('movimientos')"><span class="icon" style="font-style:normal;">⇄</span> Movimientos</button>
       <button class="nav-item" onclick="showPage('reportes')"><span class="icon" style="font-style:normal;">▲</span> Reportes</button>
+      <button class="nav-item" onclick="showPage('inteligencia')"><span class="icon" style="font-style:normal;">📈</span> Inteligencia</button>
       <div class="nav-section">Configuración</div>
       <button class="nav-item" onclick="showPage('negocio')"><span class="icon" style="font-style:normal;">◉</span> Mi Negocio</button>
       <div class="nav-section admin-only">Administración</div>
@@ -461,6 +466,9 @@ if ('serviceWorker' in navigator) {
         <div class="page-title" id="page-title">Dashboard</div>
       </div>
       <div class="topbar-actions">
+        <div id="ecosystem-badge" style="display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(44,26,14,.05);border-radius:20px;font-size:.7rem;color:var(--latte);cursor:help;opacity:.6;" title="Ecosistema Luminex">
+          <span id="eco-icon">🔗</span> <span id="eco-status">Solo</span>
+        </div>
         <div class="sync-status" id="sync-status"><div class="sync-dot"></div><span id="sync-text">En línea</span></div>
         <button class="btn btn-sm btn-secondary" onclick="syncData()" id="sync-btn">⟳ Sync</button>
       </div>
@@ -479,6 +487,13 @@ if ('serviceWorker' in navigator) {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
           <div class="card"><div class="card-header"><div class="card-title">Alertas de Stock</div></div><div id="alerts-list"></div></div>
           <div class="card"><div class="card-header"><div class="card-title">Últimos Movimientos</div></div><div id="recent-moves"></div></div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header">
+            <div class="card-title">📦 Reabastecimiento Inteligente (Sugerencias)</div>
+            <button class="btn btn-sm btn-secondary" onclick="copyRestockList()">📋 Copiar Pedido</button>
+          </div>
+          <div id="restock-list" style="padding:10px;"></div>
         </div>
       </div>
 
@@ -537,6 +552,56 @@ if ('serviceWorker' in navigator) {
               <div class="form-group"><label>Cantidad</label><input type="number" id="mov-qty" min="0.01" step="0.01" placeholder="0" class="f-input"></div>
               <div class="form-group"><label>Notas</label><textarea id="mov-notes" placeholder="Opcional..." rows="2" class="f-textarea"></textarea></div>
               <button class="btn btn-primary" style="width:100%;" onclick="registerMovement()">Registrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTELIGENCIA ABC -->
+      <div class="page-section" id="page-inteligencia">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Análisis de Rotación ABC (Últimos 30 días)</div>
+            <button class="btn btn-sm btn-secondary" onclick="renderIntelligence()">⟳ Actualizar</button>
+          </div>
+          <div style="padding:20px;">
+            <div class="info-box" style="margin-bottom:20px;">
+              <strong>¿Qué es el Análisis ABC?</strong><br>
+              • <strong>Clase A (Estrellas):</strong> Generan el 80% de tus ingresos. ¡Nunca te quedes sin stock!<br>
+              • <strong>Clase B (Estables):</strong> Generan el 15% de tus ingresos. Mantén un stock moderado.<br>
+              • <strong>Clase C (Lentos):</strong> Generan el 5% restante. Considera reducir compras o hacer promociones.
+            </div>
+            <div id="eco-promo-stock" class="info-box" style="margin-bottom:20px;background:rgba(74,103,65,.1);border-color:rgba(74,103,65,.3);display:none;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="font-size:1.5rem;">💡</div>
+                <div>
+                  <strong style="color:var(--sage);">Potencia tu Inteligencia</strong><br>
+                  Conecta <strong>Luminex Sales</strong> para automatizar este análisis con tus ventas en tiempo real y obtener sugerencias de compra exactas.
+                </div>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead><tr><th>Producto</th><th>Categoría</th><th>Ventas (30d)</th><th>Stock</th><th>Clase</th><th>Sugerencia</th></tr></thead>
+                <tbody id="abc-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header">
+            <div class="card-title">💰 Reporte de Rentabilidad (Margen Bruto)</div>
+          </div>
+          <div style="padding:20px;">
+            <div class="info-box" style="margin-bottom:20px;">
+              <strong>Análisis de Utilidad:</strong> Este reporte cruza el precio de venta con el costo de adquisición para mostrar la ganancia real. Los productos con mayor margen son tus mejores aliados para el crecimiento.
+            </div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead><tr><th>Producto</th><th>Costo Unit.</th><th>Ventas (30d)</th><th>Utilidad</th><th>Margen %</th></tr></thead>
+                <tbody id="profit-tbody"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -754,6 +819,7 @@ if ('serviceWorker' in navigator) {
       <div class="form-group"><label>Stock inicial</label><input type="number" id="prod-stock" min="0" step="0.01" placeholder="0"></div>
       <div class="form-group"><label>Stock mínimo</label><input type="number" id="prod-min" min="0" step="0.01" placeholder="5"></div>
     </div>
+    <div class="form-group"><label>Costo Unitario (Adquisición)</label><input type="number" id="prod-cost" min="0" step="0.01" placeholder="0.00"></div>
     <div class="form-group"><label>Descripción</label><textarea id="prod-desc" rows="2"></textarea></div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal('modal-product')">Cancelar</button>
@@ -946,17 +1012,17 @@ function setData(key, val) {
     localStorage.setItem(key, JSON.stringify(val));
   } catch (e) {
     if (e.name === 'QuotaExceededError' || e.code === 22) {
-      // Almacenamiento lleno — alerta crítica al usuario
       console.error('[QUOTA] localStorage lleno:', key, e);
       if (!window._quotaWarned) {
         window._quotaWarned = true;
         setTimeout(() => {
-          alert('[!] ALMACENAMIENTO LLENO\n\nNo se pudieron guardar los últimos datos.\nExporta un CSV de respaldo y contacta al administrador.');
+          alert('⚠️ ALMACENAMIENTO LLENO\n\nNo se pudieron guardar los últimos datos.\nTu navegador ha alcanzado el límite de 5MB.\n\nACCIONES RECOMENDADAS:\n1. Exporta un CSV de respaldo en Mi Negocio.\n2. Elimina movimientos antiguos.\n3. Contacta a soporte si el problema persiste.');
           window._quotaWarned = false;
         }, 0);
       }
     } else {
-      throw e;
+      console.error('[STORAGE_ERROR]', e);
+      toast('Error al guardar datos localmente', 'error');
     }
   }
 }
@@ -983,6 +1049,103 @@ function getProducts()    { return getData(userKey('products'), []); }
 function saveProducts(p)  { setData(userKey('products'), p); }
 function getMovements()   { return getData(userKey('movements'), []); }
 function saveMovements(m) { setData(userKey('movements'), m); }
+function getSyncQueue() { return getData(userKey('sync_queue'), []); }
+function saveSyncQueue(q) { setData(userKey('sync_queue'), q); }
+
+// -- Inteligencia ABC --
+function getSalesFromSalesApp() {
+  const salesKey = `cv_u_${currentUser.username}_sales`;
+  try { return JSON.parse(localStorage.getItem(salesKey) || '[]'); } catch(e) { return []; }
+}
+
+function calculateABC() {
+  const sales = getSalesFromSalesApp();
+  const products = getProducts();
+  const stats = {};
+  const qtyStats = {};
+
+  // 1. Agrupar ventas por producto (últimos 30 días)
+  const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+  sales.forEach(s => {
+    if (new Date(s.date).getTime() < thirtyDaysAgo) return;
+    s.items.forEach(item => {
+      if (!stats[item.name]) stats[item.name] = 0;
+      if (!qtyStats[item.name]) qtyStats[item.name] = 0;
+      stats[item.name] += item.subtotal;
+      qtyStats[item.name] += item.qty;
+    });
+  });
+
+  // 2. Calcular total de ingresos
+  const totalRevenue = Object.values(stats).reduce((a, b) => a + b, 0);
+  if (totalRevenue === 0) return products.map(p => ({ ...p, abc: 'C', revenue: 0, suggestion: 0 }));
+
+  // 3. Ordenar productos por ingresos descendente
+  const sorted = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+
+  // 4. Asignar categorías ABC
+  let cumulative = 0;
+  const abcMap = {};
+  sorted.forEach(([name, revenue]) => {
+    cumulative += revenue;
+    const pct = (cumulative / totalRevenue) * 100;
+    if (pct <= 80) abcMap[name] = 'A';
+    else if (pct <= 95) abcMap[name] = 'B';
+    else abcMap[name] = 'C';
+  });
+
+  return products.map(p => {
+    const revenue = stats[p.name] || 0;
+    const qtySold = qtyStats[p.name] || 0;
+    const pvd = qtySold / 30; // Promedio Venta Diaria
+    const targetStock = Math.ceil(pvd * 15); // Stock para 15 días
+    const suggestion = Math.max(0, targetStock - p.stock);
+    
+    const cost = p.cost || 0;
+    const totalCost = cost * qtySold;
+    const profit = revenue - totalCost;
+    const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+    return {
+      ...p,
+      abc: abcMap[p.name] || 'C',
+      revenue,
+      qtySold,
+      pvd,
+      targetStock,
+      suggestion,
+      profit,
+      margin
+    };
+  });
+}
+
+function copyRestockList() {
+  const products = calculateABC();
+  const suggestions = products.filter(p => p.suggestion > 0).sort((a, b) => {
+    if (a.abc !== b.abc) return a.abc.localeCompare(b.abc);
+    return b.suggestion - a.suggestion;
+  });
+
+  if (!suggestions.length) return toast('No hay sugerencias de reabastecimiento', 'warning');
+
+  const brand = getBrand();
+  let text = `📦 *PEDIDO DE REABASTECIMIENTO - ${brand.name || 'LUMINEX'}*\n`;
+  text += `📅 Fecha: ${new Date().toLocaleDateString()}\n\n`;
+  
+  suggestions.forEach(p => {
+    text += `• ${p.name}: *+${p.suggestion} ${p.unit}* (Clase ${p.abc})\n`;
+  });
+
+  text += `\n_Generado automáticamente por Luminex Stock_`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    toast('📋 Lista de pedido copiada al portapapeles', 'success');
+  }).catch(err => {
+    console.error('Error al copiar:', err);
+    toast('Error al copiar al portapapeles', 'error');
+  });
+}
 
 // -- Brand (por usuario) --
 function getBrand()  { return getData(userKey('brand'), { name:'', logo:'', address:'', phone:'', email:'', rif:'', qr:'' }); }
@@ -1209,10 +1372,25 @@ function handleBrandFile(event) {
   if (file.size > 2 * 1024 * 1024) { toast('La imagen supera 2MB', 'error'); return; }
   const reader = new FileReader();
   reader.onload = e => {
-    const preview = document.getElementById('upload-preview');
-    preview.src = e.target.result;
-    preview.style.display = 'block';
-    document.getElementById('upload-placeholder').style.display = 'none';
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 400;
+      const MAX_HEIGHT = 400;
+      let width = img.width;
+      let height = img.height;
+      if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
+      else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+      canvas.width = width; canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      const preview = document.getElementById('upload-preview');
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+      document.getElementById('upload-placeholder').style.display = 'none';
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -1511,6 +1689,7 @@ function initApp() {
   showPage('dashboard');
   applyBrand();
   checkOnline();
+  checkEcosystem();
 
   // Refinamiento Ecosistema: Escucha en tiempo real (Stock + Precios)
   try {
@@ -1567,9 +1746,33 @@ function initApp() {
 }
 
 function checkOnline() {
-  const online = navigator.onLine;
-  document.getElementById('sync-status').className = 'sync-status' + (online ? '' : ' offline');
-  document.getElementById('sync-text').textContent = online ? 'En línea' : 'Sin conexión';
+  const on = navigator.onLine;
+  document.getElementById('sync-status').className = 'sync-status ' + (on ? 'online' : 'offline');
+  document.getElementById('sync-text').textContent = on ? 'En línea' : 'Sin conexión';
+}
+
+function checkEcosystem() {
+  const hasSales = localStorage.getItem(`cv_u_${currentUser.username}_sales`);
+  const badge = document.getElementById('ecosystem-badge');
+  const icon = document.getElementById('eco-icon');
+  const status = document.getElementById('eco-status');
+  const promo = document.getElementById('eco-promo-stock');
+  if (hasSales) {
+    badge.style.color = 'var(--sage)';
+    badge.style.background = 'rgba(74,103,65,.15)';
+    badge.style.opacity = '1';
+    icon.textContent = '🔗';
+    status.textContent = 'Ecosistema Activo';
+    badge.title = 'Conectado con Luminex Sales';
+    if (promo) promo.style.display = 'none';
+  } else {
+    badge.style.color = 'var(--latte)';
+    badge.style.background = 'rgba(44,26,14,.05)';
+    icon.textContent = '⛓️';
+    status.textContent = 'Solo';
+    badge.title = 'Potencia tu negocio conectando Luminex Sales';
+    if (promo) promo.style.display = 'block';
+  }
 }
 
 // =====================================================================
@@ -1582,12 +1785,13 @@ function showPage(page) {
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.textContent.trim().toLowerCase().startsWith(page.slice(0, 5))) n.classList.add('active');
   });
-  const titles = { dashboard:'Dashboard', inventario:'Inventario', movimientos:'Movimientos', reportes:'Reportes', usuarios:'Usuarios', negocio:' Mi Negocio' };
+  const titles = { dashboard:'Dashboard', inventario:'Inventario', movimientos:'Movimientos', reportes:'Reportes', inteligencia:'Inteligencia', usuarios:'Usuarios', negocio:' Mi Negocio' };
   document.getElementById('page-title').textContent = titles[page] || page;
   if (page === 'dashboard')   renderDashboard();
   if (page === 'inventario')  renderInventory();
   if (page === 'movimientos') { renderMovements(); populateMovSel(); }
   if (page === 'reportes')    { applyBrand(); renderReports(); }
+  if (page === 'inteligencia') renderIntelligence();
   if (page === 'usuarios')    renderUsers();
   if (page === 'negocio')     applyBrand();
   if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
@@ -1624,6 +1828,30 @@ function renderDashboard() {
   document.getElementById('recent-moves').innerHTML = recent.length === 0
     ? '<div class="empty-state"><div class="icon"></div><p>Sin movimientos aún</p></div>'
     : recent.map(movHTML).join('');
+
+  // Sugerencias de Reabastecimiento
+  const abcProducts = calculateABC();
+  const suggestions = abcProducts.filter(p => p.suggestion > 0).sort((a, b) => {
+    if (a.abc !== b.abc) return a.abc.localeCompare(b.abc);
+    return b.suggestion - a.suggestion;
+  });
+
+  document.getElementById('restock-list').innerHTML = suggestions.length === 0
+    ? '<div class="empty-state"><div class="icon">✅</div><p>Stock optimizado para los próximos 15 días</p></div>'
+    : `<div style="overflow-x:auto;">
+        <table style="width:100%;font-size:.85rem;">
+          <thead><tr><th>Producto</th><th>Clase</th><th>Stock</th><th>Sugerencia</th></tr></thead>
+          <tbody>
+            ${suggestions.slice(0, 8).map(p => `
+              <tr>
+                <td><strong>${esc(p.name)}</strong></td>
+                <td><span class="abc-badge abc-${p.abc.toLowerCase()}">${p.abc}</span></td>
+                <td>${p.stock} ${p.unit}</td>
+                <td style="color:var(--sage);font-weight:700;">+${p.suggestion} ${p.unit}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
 }
 
 function movHTML(m) {
@@ -1654,29 +1882,68 @@ function filterCategory(cat) {
 
 function renderInventory() {
   var _sinv=document.getElementById('search-inv'); const search = (_sinv ? _sinv.value : '').toLowerCase();
-  let products = getProducts();
+  const abcProducts = calculateABC();
+  let products = abcProducts;
   if (activeCategory !== 'all') products = products.filter(p => p.category === activeCategory);
   if (search) products = products.filter(p => p.name.toLowerCase().includes(search));
 
   const catCls = { Bebidas:'cat-bebidas', Alimentos:'cat-alimentos', Lácteos:'cat-lacteos', Insumos:'cat-insumos' };
   const tbody  = document.getElementById('inventory-tbody');
   if (!products.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--latte);">Sin productos. grega el primero!</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--latte);">Sin productos. ¡Agrega el primero!</td></tr>';
     return;
   }
   tbody.innerHTML = products.map(p => {
     const [bCls, bLabel] = p.stock <= 0 ? ['badge-out','Sin stock'] : p.stock <= p.minStock ? ['badge-low','Stock bajo'] : ['badge-ok','Normal'];
     return `<tr>
-      <td><strong>${esc(p.name)}</strong>${p.desc ? `<br><span style="font-size:.75rem;color:var(--latte);">${esc(p.desc)}</span>` : ''}</td>
+      <td><span class="abc-badge abc-${p.abc.toLowerCase()}" title="Clase ${p.abc}">${p.abc}</span><strong>${esc(p.name)}</strong>${p.desc ? `<br><span style="font-size:.75rem;color:var(--latte);">${esc(p.desc)}</span>` : ''}</td>
       <td><span class="badge ${catCls[p.category]||''}">${p.category}</span></td>
       <td><strong>${p.stock}</strong></td>
       <td>${p.minStock}</td>
       <td>${p.unit}</td>
       <td><span class="badge ${bCls}">${bLabel}</span></td>
       <td><div style="display:flex;gap:6px;">
-        <button class="btn btn-sm btn-secondary" onclick="editProduct('${p.id}')"></button>
-        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}')"></button>
+        <button class="btn btn-sm btn-secondary" onclick="editProduct('${p.id}')">✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}')">🗑️</button>
       </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderIntelligence() {
+  const products = calculateABC();
+  const tbody = document.getElementById('abc-tbody');
+  if (!products.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--latte);">Sin datos suficientes para el análisis.</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = products.sort((a,b) => b.revenue - a.revenue).map(p => {
+    let suggestion = '';
+    if (p.abc === 'A') suggestion = p.stock <= p.minStock ? '<span style="color:var(--rust);font-weight:700;">⚠️ REABASTECER URGENTE</span>' : 'Mantener vigilancia';
+    else if (p.abc === 'B') suggestion = 'Stock estable';
+    else suggestion = 'Considerar promoción';
+
+    return `<tr>
+      <td><strong>${esc(p.name)}</strong></td>
+      <td>${p.category}</td>
+      <td>${fmtPrice(p.revenue)}</td>
+      <td>${p.stock} ${p.unit}</td>
+      <td><span class="abc-badge abc-${p.abc.toLowerCase()}">${p.abc}</span></td>
+      <td>${suggestion}</td>
+    </tr>`;
+  }).join('');
+
+  // Renderizar Rentabilidad
+  const pBody = document.getElementById('profit-tbody');
+  pBody.innerHTML = products.sort((a,b) => b.profit - a.profit).map(p => {
+    const marginCls = p.margin > 30 ? 'color:var(--sage);font-weight:700;' : p.margin < 10 ? 'color:var(--rust);' : '';
+    return `<tr>
+      <td><strong>${esc(p.name)}</strong></td>
+      <td>${fmtPrice(p.cost || 0)}</td>
+      <td>${fmtPrice(p.revenue)}</td>
+      <td style="font-weight:700;">${fmtPrice(p.profit)}</td>
+      <td style="${marginCls}">${p.margin.toFixed(1)}%</td>
     </tr>`;
   }).join('');
 }
@@ -1691,13 +1958,36 @@ function populateMovSel() {
     : '<option>— Sin productos aún —</option>';
 }
 
-function renderMovements() {
+let movPage=1; const movLimit=30;
+function renderMovements(resetPage=true) {
+  if(resetPage) movPage=1;
   var _ftype=document.getElementById('filter-type'); const filter = (_ftype ? _ftype.value : '');
   let movements = [...getMovements()].reverse();
   if (filter) movements = movements.filter(m => m.type === filter);
-  document.getElementById('movements-list').innerHTML = movements.length
-    ? movements.slice(0, 60).map(movHTML).join('')
-    : '<div class="empty-state"><div class="icon"></div><p>Sin movimientos</p></div>';
+  
+  const total = movements.length;
+  const start = (movPage-1)*movLimit;
+  const paginated = movements.slice(start, start+movLimit);
+  
+  const list = document.getElementById('movements-list');
+  if (!total) {
+    list.innerHTML = '<div class="empty-state"><div class="icon"></div><p>Sin movimientos</p></div>';
+    return;
+  }
+  
+  list.innerHTML = paginated.map(movHTML).join('');
+  
+  if(total > movLimit){
+    const hasMore = start + movLimit < total;
+    const hasPrev = movPage > 1;
+    list.innerHTML += `<div style="text-align:center;padding:15px;border-top:1px solid rgba(255,255,255,.05);">
+      <div style="display:flex;justify-content:center;gap:10px;align-items:center;">
+        <button class="btn btn-sm btn-secondary" ${!hasPrev?'disabled':''} onclick="movPage--;renderMovements(false)">←</button>
+        <span style="font-size:.75rem;color:var(--latte)">Pág ${movPage} de ${Math.ceil(total/movLimit)}</span>
+        <button class="btn btn-sm btn-secondary" ${!hasMore?'disabled':''} onclick="movPage++;renderMovements(false)">→</button>
+      </div>
+    </div>`;
+  }
 }
 
 function registerMovement() {
@@ -1731,6 +2021,19 @@ function registerMovement() {
   populateMovSel();
   renderMovements();
   toast(`${type==='entrada'?'Entrada':type==='salida'?'Salida':'Ajuste'} registrado — ${p.name}`, 'success');
+  
+  // Integración Supabase (Sincronizar productos para actualizar stock)
+  try {
+    const negocioId = currentUser.username;
+    const res = await supabaseIntegration.sincronizarProductos(negocioId, [p]);
+    if (res.error) throw new Error(res.error);
+  } catch (e) {
+    console.warn('Error sincronizando stock con Supabase, guardando en cola:', e);
+    const q = getSyncQueue();
+    q.push({ type: 'stock_update', data: p, ts: Date.now() });
+    saveSyncQueue(q);
+  }
+
   syncData(true);
 }
 
@@ -2070,10 +2373,11 @@ function openProductModal(id = null) {
       document.getElementById('prod-unit').value  = p.unit;
       document.getElementById('prod-stock').value = p.stock;
       document.getElementById('prod-min').value   = p.minStock;
+      document.getElementById('prod-cost').value  = p.cost || '';
       document.getElementById('prod-desc').value  = p.desc || '';
     }
   } else {
-    ['prod-name','prod-stock','prod-min','prod-desc'].forEach(k => document.getElementById(k).value = '');
+    ['prod-name','prod-stock','prod-min','prod-cost','prod-desc'].forEach(k => document.getElementById(k).value = '');
     document.getElementById('prod-cat').value  = 'Bebidas';
     document.getElementById('prod-unit').value = 'kg';
   }
@@ -2088,16 +2392,17 @@ function saveProduct() {
   const unit     = document.getElementById('prod-unit').value;
   const stock    = parseFloat(document.getElementById('prod-stock').value) || 0;
   const minStock = parseFloat(document.getElementById('prod-min').value)   || 0;
+  const cost     = parseFloat(document.getElementById('prod-cost').value)  || 0;
   const desc     = document.getElementById('prod-desc').value.trim();
   if (!name) return toast('El nombre es requerido', 'error');
 
   const products = getProducts();
   if (id) {
     const idx = products.findIndex(p => p.id === id);
-    if (idx !== -1) Object.assign(products[idx], { name, category, unit, stock, minStock, desc });
+    if (idx !== -1) Object.assign(products[idx], { name, category, unit, stock, minStock, cost, desc });
     toast('Producto actualizado', 'success');
   } else {
-    products.push({ id:genId(), name, category, unit, stock, minStock, desc, createdAt:new Date().toISOString() });
+    products.push({ id:genId(), name, category, unit, stock, minStock, cost, desc, createdAt:new Date().toISOString() });
     toast('Producto agregado', 'success');
   }
   saveProducts(products);
@@ -2217,7 +2522,28 @@ window.addEventListener('load', async () => {
     initApp();
   }
 });
-window.addEventListener('online',  () => { checkOnline(); syncData(true); });
+async function processSyncQueue() {
+  const q = getSyncQueue();
+  if (!q.length) return;
+  const negocioId = currentUser.username;
+  const remaining = [];
+  let successCount = 0;
+  for (const item of q) {
+    try {
+      if (item.type === 'stock_update') {
+        const res = await supabaseIntegration.sincronizarProductos(negocioId, [item.data]);
+        if (res.error) throw new Error(res.error);
+        successCount++;
+      }
+    } catch (e) {
+      console.error('Error procesando cola:', e);
+      remaining.push(item);
+    }
+  }
+  saveSyncQueue(remaining);
+  if (successCount > 0) toast(`Sincronizados ${successCount} cambios de stock pendientes ☁️`, 'success');
+}
+window.addEventListener('online',  () => { checkOnline(); syncData(true); processSyncQueue(); });
 window.addEventListener('offline', checkOnline);
 </script>
 
