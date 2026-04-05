@@ -460,6 +460,7 @@ if ('serviceWorker' in navigator) {
       <button class="nav-btn" onclick="showPage('historial')"><span class="ni" style="font-style:normal;">≡</span> Historial</button>
       <div class="nav-label">Catálogo</div>
       <button class="nav-btn" onclick="showPage('productos')"><span class="ni" style="font-style:normal;">◈</span> Productos</button>
+      <button class="nav-btn" onclick="showPage('clientes')"><span class="ni" style="font-style:normal;">👤</span> Clientes / Loyalty</button>
       <div class="nav-label">Análisis</div>
       <button class="nav-btn" onclick="showPage('reportes')"><span class="ni" style="font-style:normal;">▦</span> Reportes</button>
       <button class="nav-btn" onclick="showPage('auditoria')"><span class="ni" style="font-style:normal;">⚖</span> Auditoría de Caja</button>
@@ -504,8 +505,22 @@ if ('serviceWorker' in navigator) {
           <div><div class="products-grid" id="pos-products-grid"></div></div>
           <div class="cart-panel">
             <div class="cart-head">
-              <div class="cart-title">🧾 Ticket actual</div>
-              <div class="cart-subtitle" id="cart-count">0 productos</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div>
+                  <div class="cart-title">🧾 Ticket actual</div>
+                  <div class="cart-subtitle" id="cart-count">0 productos</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="openCustSelector()" id="btn-select-cust" title="Asignar Cliente">👤 +</button>
+              </div>
+              <div id="selected-cust-display" style="display:none;background:var(--gold-glow);padding:8px 12px;border-radius:8px;border:1px solid rgba(212,168,83,.2);margin-top:5px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div>
+                    <div id="sc-name" style="font-size:.82rem;font-weight:700;color:var(--gold);">—</div>
+                    <div id="sc-points" style="font-size:.65rem;color:var(--text2);font-family:var(--mono);">Puntos: 0</div>
+                  </div>
+                  <button class="btn btn-ghost btn-sm" onclick="deselectCustomer()" style="padding:2px 6px;font-size:.7rem;">✕</button>
+                </div>
+              </div>
             </div>
             <div class="cart-items" id="cart-items">
               <div class="empty" style="padding:30px 20px;"><div class="empty-icon">🛒</div><p>Selecciona productos del catálogo</p></div>
@@ -650,6 +665,25 @@ if ('serviceWorker' in navigator) {
                 <tbody id="aud-history-tbody"></tbody>
               </table>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTES / LOYALTY -->
+      <div class="page" id="page-clientes">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Fidelización de Clientes</div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input class="search" id="cust-search" placeholder="🔍 Buscar cliente..." oninput="renderClientes()">
+              <button class="btn btn-gold btn-sm" onclick="openCustModal()">+ Cliente</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="tbl">
+              <thead><tr><th>Cliente</th><th>Teléfono</th><th>Puntos</th><th>Última Visita</th><th>Acciones</th></tr></thead>
+              <tbody id="cust-tbody"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -893,6 +927,40 @@ if ('serviceWorker' in navigator) {
   </div>
 </div>
 
+
+<!-- Cliente -->
+<div class="modal-overlay" id="modal-cust">
+  <div class="modal">
+    <div class="modal-title" id="mc-title">Nuevo Cliente</div>
+    <input type="hidden" id="mc-id">
+    <div class="field"><label>Nombre completo *</label><input type="text" id="mc-name" placeholder="Ej: Juan Pérez"></div>
+    <div class="field"><label>Teléfono / ID *</label><input type="text" id="mc-phone" placeholder="Ej: 099123456"></div>
+    <div class="field"><label>Notas</label><textarea id="mc-notes" rows="2" placeholder="Opcional..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cust')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveCustomer()">Guardar Cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Seleccionador de Cliente (POS) -->
+<div class="modal-overlay" id="modal-cust-selector">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-title">Asignar Cliente</div>
+    <div class="field">
+      <input type="text" id="cust-sel-search" placeholder="🔍 Buscar por nombre o tel..." oninput="renderCustSelector()" style="font-size:1rem;">
+    </div>
+    <div id="cust-sel-list" style="max-height:300px;overflow-y:auto;margin-top:10px;border:1px solid var(--border);border-radius:10px;">
+      <!-- Se llena dinámicamente -->
+    </div>
+    <div style="margin-top:15px;text-align:center;">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-cust-selector');openCustModal()">+ Crear nuevo cliente</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cust-selector')">Cerrar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Onboarding -->
 <div class="modal-overlay" id="modal-onboarding" style="display:none;z-index:9999;">
@@ -1649,13 +1717,138 @@ function showPage(page){
   if(page==='historial') renderHistorial();
   if(page==='productos') renderProductos();
   if(page==='reportes')  {applyBrand();renderReportes();}
+  if(page==='auditoria') renderAuditoria();  if(page==='negocio')   applyBrand();
   if(page==='auditoria') renderAuditoria();
-  if(page==='usuarios')  renderUsers();
-  if(page==='negocio')   applyBrand();
+  if(page==='clientes')  renderClientes();
   if(window.innerWidth<768) document.getElementById('sidebar').classList.remove('open');
 }
 
 // =====================================================================
+//  CLIENTES / LOYALTY
+// =====================================================================
+function getCustomers(){ return ls(userKey('customers'), []); }
+function saveCustomers(c){ lsSet(userKey('customers'), c); }
+
+function renderClientes(){
+  const query = document.getElementById('cust-search').value.toLowerCase();
+  const customers = getCustomers().filter(c => 
+    c.name.toLowerCase().includes(query) || c.phone.includes(query)
+  ).reverse();
+  
+  const tbody = document.getElementById('cust-tbody');
+  tbody.innerHTML = customers.map(c => `
+    <tr>
+      <td><div class="u-name">${c.name}</div><div style="font-size:.7rem;color:var(--text3)">ID: ${c.id.slice(-6)}</div></td>
+      <td class="mono">${c.phone}</td>
+      <td><span class="badge badge-gold">⭐ ${c.points || 0} pts</span></td>
+      <td style="font-size:.8rem;">${c.lastVisit ? new Date(c.lastVisit).toLocaleDateString() : '—'}</td>
+      <td>
+        <div style="display:flex;gap:5px;">
+          <button class="btn btn-ghost btn-sm" onclick="openCustModal('${c.id}')">✏️</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteCustomer('${c.id}')" style="color:var(--red)">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text3)">No hay clientes registrados</td></tr>';
+}
+
+function openCustModal(id = null){
+  const c = id ? getCustomers().find(x => x.id === id) : null;
+  document.getElementById('mc-title').textContent = id ? 'Editar Cliente' : 'Nuevo Cliente';
+  document.getElementById('mc-id').value = id || '';
+  document.getElementById('mc-name').value = c ? c.name : '';
+  document.getElementById('mc-phone').value = c ? c.phone : '';
+  document.getElementById('mc-notes').value = c ? (c.notes || '') : '';
+  document.getElementById('modal-cust').classList.add('open');
+}
+
+function saveCustomer(){
+  const id = document.getElementById('mc-id').value;
+  const name = document.getElementById('mc-name').value.trim();
+  const phone = document.getElementById('mc-phone').value.trim();
+  const notes = document.getElementById('mc-notes').value.trim();
+  
+  if(!name || !phone) return toast('Nombre y teléfono son requeridos', 'err');
+  
+  const customers = getCustomers();
+  if(id){
+    const i = customers.findIndex(c => c.id === id);
+    if(i !== -1) customers[i] = { ...customers[i], name, phone, notes };
+  } else {
+    if(customers.find(c => c.phone === phone)) return toast('Este teléfono ya está registrado', 'err');
+    customers.push({
+      id: 'c_' + Date.now(),
+      name, phone, notes,
+      points: 0,
+      lastVisit: null,
+      createdAt: new Date().toISOString()
+    });
+  }
+  
+  saveCustomers(customers);
+  closeModal('modal-cust');
+  renderClientes();
+  toast('Cliente guardado', 'ok');
+}
+
+function deleteCustomer(id){
+  if(!confirm('¿Eliminar este cliente? Se perderán sus puntos.')) return;
+  const customers = getCustomers().filter(c => c.id !== id);
+  saveCustomers(customers);
+  renderClientes();
+}
+
+// --- POS Integration ---
+let selectedCustomer = null;
+
+function openCustSelector(){
+  document.getElementById('modal-cust-selector').classList.add('open');
+  document.getElementById('cust-sel-search').value = '';
+  renderCustSelector();
+  setTimeout(() => document.getElementById('cust-sel-search').focus(), 100);
+}
+
+function renderCustSelector(){
+  const query = document.getElementById('cust-sel-search').value.toLowerCase();
+  const customers = getCustomers().filter(c => 
+    c.name.toLowerCase().includes(query) || c.phone.includes(query)
+  ).slice(0, 5);
+  
+  const list = document.getElementById('cust-sel-list');
+  if(!customers.length){
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text3);font-size:.85rem;">No se encontraron clientes</div>';
+    return;
+  }
+  
+  list.innerHTML = customers.map(c => `
+    <div onclick="selectCustomer('${c.id}')" style="padding:12px 15px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;">
+      <div style="font-weight:600;font-size:.9rem;">${c.name}</div>
+      <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text2);margin-top:2px;">
+        <span>📱 ${c.phone}</span>
+        <span style="color:var(--gold)">⭐ ${c.points || 0} pts</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectCustomer(id){
+  const c = getCustomers().find(x => x.id === id);
+  if(!c) return;
+  selectedCustomer = c;
+  document.getElementById('selected-cust-display').style.display = 'block';
+  document.getElementById('sc-name').textContent = c.name;
+  document.getElementById('sc-points').textContent = `Puntos: ${c.points || 0}`;
+  document.getElementById('btn-select-cust').innerHTML = '👤 ✓';
+  closeModal('modal-cust-selector');
+  toast('Cliente asignado', 'ok');
+}
+
+function deselectCustomer(){
+  selectedCustomer = null;
+  document.getElementById('selected-cust-display').style.display = 'none';
+  document.getElementById('btn-select-cust').innerHTML = '👤 +';
+  toast('Cliente desvinculado', 'info');
+}/ =====================================================================
 //  AUDITORÍA DE CAJA (TURNOS)
 // =====================================================================
 function getShifts(){ return ls(userKey('shifts'), []); }
@@ -1908,8 +2101,23 @@ async function checkout(){
     id:genId(),date:now.toISOString(),
     items:cart.map(i=>({id:i.prod.id,name:i.prod.name,icon:i.prod.icon||'☕',price:i.prod.price,qty:i.qty,subtotal:i.prod.price*i.qty})),
     subtotal,discPct,discount,total,payment:payMethod,user:CU.name,
-    shiftId: shift ? shift.id : null
+    shiftId: shift ? shift.id : null,
+    customerId: selectedCustomer ? selectedCustomer.id : null
   };
+  
+  // Acumular puntos si hay cliente (1 punto por cada $100)
+  if(selectedCustomer){
+    const earnedPoints = Math.floor(total / 100);
+    const customers = getCustomers();
+    const ci = customers.findIndex(c => c.id === selectedCustomer.id);
+    if(ci !== -1){
+      customers[ci].points = (customers[ci].points || 0) + earnedPoints;
+      customers[ci].lastVisit = now.toISOString();
+      saveCustomers(customers);
+      sale.earnedPoints = earnedPoints;
+      sale.totalPoints = customers[ci].points;
+    }
+  }
   const products=getProducts();
   cart.forEach(ci=>{
     const pi=products.findIndex(p=>p.id===ci.prod.id);
@@ -1919,6 +2127,7 @@ async function checkout(){
   const sales=getSales();sales.push(sale);saveSalesDB(sales);
   document.getElementById('receipt-content').innerHTML=buildReceiptHTML(sale);
   document.getElementById('modal-receipt').classList.add('open');
+  deselectCustomer(); // Limpiar cliente para la siguiente venta
   
   // Integración Supabase
   try {
@@ -1953,6 +2162,19 @@ function buildReceiptHTML(sale){
   setTimeout(()=>{
     if(b.qr){const el=document.getElementById(qrId);if(el){try{new QRCode(el,{text:b.qr,width:80,height:80,colorDark:'#000',colorLight:'#fff'});}catch(e){}}}
   },100);
+
+  let loyaltyHTML = '';
+  if(sale.customerId){
+    loyaltyHTML = `
+      <hr class="receipt-divider">
+      <div style="text-align:center;font-size:.75rem;margin:8px 0;">
+        <div style="font-weight:700;color:var(--gold);">⭐ FIDELIDAD LUMINEX</div>
+        <div>Puntos ganados: +${sale.earnedPoints || 0}</div>
+        <div>Total acumulado: ${sale.totalPoints || 0} pts</div>
+      </div>
+    `;
+  }
+
   return`<div class="receipt-header">
     ${logoHTML}
     <div class="receipt-store">${storeName}</div>
@@ -1967,6 +2189,7 @@ function buildReceiptHTML(sale){
   <hr class="receipt-divider">
   <div class="receipt-row receipt-total"><span>TOTAL</span><span>${fmtMoney(sale.total)}</span></div>
   <div class="receipt-row" style="margin-top:8px;"><span>Pago</span><span>${{efectivo:'💵 Efectivo',tarjeta:'💳 Tarjeta',transferencia:'📲 Transferencia'}[sale.payment]}</span></div>
+  ${loyaltyHTML}
   ${qrHTML}
   <div style="text-align:center;margin-top:14px;font-size:.72rem;color:var(--text3);">¡Gracias por su compra!</div>`;
 }
