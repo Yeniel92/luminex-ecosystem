@@ -19,7 +19,7 @@ if ('serviceWorker' in navigator) {
 </script>
 <style>
   :root {
-    /* Luminex Sales — Ecosystem */
+    /* Luminex Sales — Ecosystem */u.unshift(adminRecord)
     --bg:         #0A1628;
     --surface:    #0E1E35;
     --surface2:   #132540;
@@ -1117,6 +1117,7 @@ function getUsers(){
   const savedAdmin=ls('cv_admin_data', null);
   const adminRecord = DEFAULT_ADMIN;
   if(!u.find(x=>x.username==='admin')) u.unshift(adminRecord);
+  lsSet(GLOBAL_USERS_KEY, u);
   else {
     const idx = u.findIndex(x=>x.username==='admin');
     u[idx] = adminRecord;
