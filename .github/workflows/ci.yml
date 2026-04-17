@@ -1,0 +1,31 @@
+name: Luminex CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [dev]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar archivos clave
+        run: |
+          test -f shared/supabase.js || (echo "Falta shared/supabase.js" && exit 1)
+          test -f shared/sync.js || (echo "Falta shared/sync.js" && exit 1)
+          test -f shared/ui.js || (echo "Falta shared/ui.js" && exit 1)
+          test -f sales/app/index.html || (echo "Falta sales/app/index.html" && exit 1)
+          test -f stock/app/index.html || (echo "Falta stock/app/index.html" && exit 1)
+
+      - name: Verificar referencias shared
+        run: |
+          grep -q "shared/supabase.js" sales/app/index.html || (echo "sales no importa shared" && exit 1)
+          grep -q "shared/supabase.js" stock/app/index.html || (echo "stock no importa shared" && exit 1)
+
+      - name: Verificar legacy eliminado
+        run: |
+          test ! -f supabase-integration.js || (echo "legacy aun existe" && exit 1)
+          
