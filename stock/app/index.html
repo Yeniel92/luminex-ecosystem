@@ -1036,6 +1036,7 @@ function getUsers() {
   const savedAdmin = getData('cc_admin_data', null);
   const adminRecord = savedAdmin && savedAdmin.username === 'admin' ? savedAdmin : DEFAULT_ADMIN;
   if (!u.find(x => x.username === 'admin')) u.unshift(adminRecord);
+  lsSet(GLOBAL_USERS_KEY, u);
   return u;
 }
 function saveUsers(list) {
