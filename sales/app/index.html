@@ -1115,7 +1115,7 @@ function cloudKey(s){return `cv_cloud_${CU.username}_${s}`;}
 function getUsers(){
   const u=ls(GLOBAL_USERS_KEY,[]);
   const savedAdmin=ls('cv_admin_data', null);
-  const adminRecord = savedAdmin && savedAdmin.username ? savedAdmin : DEFAULT_ADMIN;
+  const adminRecord = savedAdmin && savedAdmin.username ? savedAdmin : {username:'admin',password:'admin123',role:'admin',name:'Administrador'};
   if(!u.find(x=>x.username==='admin')) u.unshift(adminRecord);
   
 
