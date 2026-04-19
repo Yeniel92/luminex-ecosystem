@@ -1115,15 +1115,13 @@ function cloudKey(s){return `cv_cloud_${CU.username}_${s}`;}
 function getUsers(){
   const u=ls(GLOBAL_USERS_KEY,[]);
   const savedAdmin=ls('cv_admin_data', null);
-  const adminRecord = DEFAULT_ADMIN;
+  const adminRecord = savedAdmin && savedAdmin.username ? savedAdmin : DEFAULT_ADMIN;
   if(!u.find(x=>x.username==='admin')) u.unshift(adminRecord);
-  lsSet(GLOBAL_USERS_KEY, u);
-  else {
-    const idx = u.findIndex(x=>x.username==='admin');
-    u[idx] = adminRecord;
-  }
-  return u;
-}
+  
+
+  
+
+  
 function saveUsers(list){
   const adminRecord=list.find(u=>u.username==='admin');
   if(adminRecord) lsSet('cv_admin_data', adminRecord);
