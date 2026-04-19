@@ -1116,7 +1116,8 @@ function getUsers(){
   const u=ls(GLOBAL_USERS_KEY,[]);
   const savedAdmin=ls('cv_admin_data', null);
   const adminRecord = savedAdmin && savedAdmin.username ? savedAdmin : {username:'admin',password:'admin123',role:'admin',name:'Administrador'};
-  if(!u.find(x=>x.username==='admin')) u.unshift(adminRecord);
+  if(!u.find(x=>x.username==='admin')) u.unshift(adminRecord);return u;
+}
   
 
   
