@@ -1,26 +1,6 @@
 [build]
   publish = "."
 
-[[redirects]]
-  from = "/sales"
-  to = "/sales/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/stock"
-  to = "/stock/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/sales/app"
-  to = "/sales/app/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/stock/app"
-  to = "/stock/app/index.html"
-  status = 200
-
 [[headers]]
   for = "/*"
   [headers.values]
