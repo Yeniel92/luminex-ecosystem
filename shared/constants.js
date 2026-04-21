@@ -14,6 +14,11 @@ export const LICENSE_STATUS = {
   ACTIVE:   'activa',
   REVOKED:  'revocada'
 };
+// Roles de cajeros
+export const ROLES = {
+  ADMIN: 'administración',
+  CAJERO: 'cajero'
+};
 
 // Configuración general
 export const CONFIG = {
