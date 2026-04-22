@@ -1767,6 +1767,7 @@ async function confirmarVenta() {
     showScreen('screen-ticket');
   } catch(e) {
     console.error('Error guardando venta:', e);
+    alert('ERROR: ' + e.message);
     toast('Error al guardar la venta', 'err');
   }
 
