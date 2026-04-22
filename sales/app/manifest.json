@@ -1,0 +1,18 @@
+{
+  "name": "Luminex Sales",
+  "short_name": "L·Sales",
+  "description": "Sistema de ventas Luminex",
+  "start_url": "/sales/app/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/ChatGPT Image 21 abr 2026, 05_25_14 p.m..png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
