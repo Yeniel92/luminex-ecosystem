@@ -1743,11 +1743,11 @@ async function confirmarVenta() {
     const items = state.cart.map(i => ({
       venta_id: venta.id,
       producto_id: i.product.id,
-      nombre_producto: i.product.nombre,
+      producto_nombre: i.product.nombre,
       cantidad: i.qty,
       precio_unitario: i.product.precio,
       subtotal: i.product.precio * i.qty,
-      variante: i.variant || null
+      
     }));
     await sbFetch('venta_items', {
       method: 'POST',
