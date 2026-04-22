@@ -1,6 +1,16 @@
 [build]
   publish = "."
 
+[[redirects]]
+  from = "/sales/app"
+  to = "/sales/app/luminex-sales.html"
+  status = 200
+
+[[redirects]]
+  from = "/sales/app/"
+  to = "/sales/app/luminex-sales.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
