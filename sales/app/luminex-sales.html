@@ -1730,9 +1730,9 @@ async function confirmarVenta() {
       body: JSON.stringify({
         negocio_id: NEGOCIO_ID,
         cajero_id: state.cajero.id,
-        subtotal: Math.round(subtotal),
+        
         descuento: Math.round(discAmt),
-        iva: Math.round(iva),
+        
         total: Math.round(total),
         metodo_pago: state.payMethod,
         estado: 'completada'
