@@ -1658,8 +1658,7 @@ function irACobro() {
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   const discAmt = subtotal * (state.discount / 100);
   const afterDisc = subtotal - discAmt;
-  const iva = afterDisc * IVA_RATE;
-  const total = afterDisc + iva;
+  const total = afterDisc;
 
   document.getElementById('cobro-total').textContent = fmt(total);
   document.getElementById('cobro-currency').textContent = CURRENCY;
@@ -1694,7 +1693,7 @@ function selectMethod(method) {
 function calcCambio() {
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   const discAmt = subtotal * (state.discount / 100);
-  const total = (subtotal - discAmt) * (1 + IVA_RATE);
+  const total = subtotal - discAmt;
   const monto = parseFloat(document.getElementById('monto-input').value) || 0;
   const cambio = monto - total;
   const card = document.getElementById('cambio-card');
@@ -1719,8 +1718,13 @@ async function confirmarVenta() {
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   const discAmt = subtotal * (state.discount / 100);
   const afterDisc = subtotal - discAmt;
-  const iva = afterDisc * IVA_RATE;
-  const total = afterDisc + iva;
+  const total = afterDisc;
+const ivaMap = {};
+state.cart.forEach(i => {
+  const tasa = i.product.tasa_iva || 22;
+  const lineTotal = i.product.precio * i.qty * (1 - state.discount/100);
+  ivaMap[tasa] = (ivaMap[tasa] || 0) + lineTotal / (1 + tasa/100) * (tasa/100);
+});
   const now = new Date();
 
   try {
@@ -1757,7 +1761,7 @@ async function confirmarVenta() {
     state.lastSale = {
       id: venta.id,
       items: [...state.cart],
-      subtotal, discAmt, iva, total,
+      subtotal, discAmt, ivaMap, total,
       payMethod: state.payMethod,
       cajero: state.cajero,
       fecha: now,
@@ -1767,7 +1771,7 @@ async function confirmarVenta() {
     showScreen('screen-ticket');
   } catch(e) {
     console.error('Error guardando venta:', e);
-    alert('ERROR: ' + e.message);
+    
     toast('Error al guardar la venta', 'err');
   }
 
@@ -1799,7 +1803,9 @@ function buildTicket(sale) {
   let totHtml = '';
   totHtml += `<div class="ticket-total-row"><span>Subtotal</span><span>${fmt(sale.subtotal)}</span></div>`;
   if (sale.discAmt > 0) totHtml += `<div class="ticket-total-row"><span>Descuento</span><span>-${fmt(sale.discAmt)}</span></div>`;
-  totHtml += `<div class="ticket-total-row"><span>IVA 22%</span><span>${fmt(sale.iva)}</span></div>`;
+  Object.entries(sale.ivaMap || {}).forEach(([tasa, monto]) => {
+  totHtml += `<div class="ticket-total-row"><span>IVA incluido ${tasa}%</span><span>${fmt(monto)}</span></div>`;
+});
   totHtml += `<div class="ticket-total-row big"><span>Total</span><span class="tval">${fmt(sale.total)}</span></div>`;
   totHtml += `<div class="ticket-payment"><span>Pago</span><span>${payLabels[sale.payMethod]}</span></div>`;
   document.getElementById('ticket-totals').innerHTML = totHtml;
@@ -1837,7 +1843,7 @@ function nuevaVenta() {
 //  UTILS
 // ══════════════════════════════════════════
 function fmt(n) {
-  return CURRENCY + ' ' + n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+return CURRENCY + ' ' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 function showScreen(id) {
