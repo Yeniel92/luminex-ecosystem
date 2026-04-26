@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Luminex — Historial de Ventas</title>
+<meta name="theme-color" content="#0a0a0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --bg:#0a0a0f;
+  --bg2:#111118;
+  --bg3:#1a1a24;
+  --bg4:#22222e;
+  --border:rgba(255,255,255,.06);
+  --border2:rgba(255,255,255,.12);
+  --text:#f0f0f8;
+  --text2:#8888aa;
+  --text3:#44445a;
+  --accent:#00E676;
+  --accent2:#7DFF00;
+  --accentbg:rgba(0,230,118,.10);
+  --accentbord:rgba(0,230,118,.25);
+  --green:#3dd68c;
+  --greenbg:rgba(61,214,140,.10);
+  --greenbord:rgba(61,214,140,.25);
+  --red:#ff5757;
+  --redbg:rgba(255,87,87,.10);
+  --redbord:rgba(255,87,87,.25);
+  --blue:#5b8dee;
+  --bluebg:rgba(91,141,238,.10);
+  --bluebord:rgba(91,141,238,.25);
+  --amber:#f59e0b;
+  --amberbg:rgba(245,158,11,.10);
+  --amberbord:rgba(245,158,11,.25);
+  --r:14px;
+  --r2:10px;
+  --mono:'DM Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+  --display:'Syne',sans-serif;
+}
+
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+.screen{display:none;position:fixed;inset:0;overflow:hidden}
+.screen.active{display:flex;flex-direction:column}
+
+/* ══════════════════════════════════════
+   LOGIN
+══════════════════════════════════════ */
+#screen-login{
+  background:var(--bg);
+  align-items:center;justify-content:center;
+  padding:24px;
+}
+#screen-login::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(11,60,93,.18),transparent),
+             radial-gradient(ellipse 50% 40% at 80% 100%,rgba(61,214,140,.06),transparent);
+  pointer-events:none;
+}
+.login-card{
+  width:100%;max-width:360px;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:24px;
+  padding:36px 28px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,230,118,.06);
+  position:relative;z-index:1;
+}
+.login-brand{text-align:center;margin-bottom:32px;}
+.login-brand-name{font-family:var(--display);font-size:1.8rem;font-weight:700;letter-spacing:-.01em;color:#0B3C5D;text-shadow:0 0 40px rgba(0,230,118,.15);}
+.login-brand-name .eco{color:#00E676;font-weight:300;letter-spacing:.12em;font-size:1.1rem;display:block;margin-top:-2px;text-transform:uppercase;}
+.login-brand-sub{font-size:.75rem;color:var(--text2);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;}
+.login-label{font-size:.72rem;font-weight:600;color:var(--text2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.pin-display{display:flex;gap:10px;justify-content:center;margin-bottom:24px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);transition:all .15s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px rgba(0,230,118,.4);}
+.pin-dot.error{background:var(--red);border-color:var(--red);animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.pin-btn{
+  aspect-ratio:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  font-family:var(--display);font-size:1.4rem;font-weight:700;color:var(--text);
+  cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;
+  user-select:none;-webkit-user-select:none;
+}
+.pin-btn:active{background:var(--bg4);transform:scale(.94);border-color:var(--border2);}
+.pin-btn.del{font-size:1rem;color:var(--text2);}
+.pin-btn.confirm{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);font-size:.85rem;font-weight:700;letter-spacing:.03em;}
+.pin-btn.confirm:active{background:var(--accent);color:var(--bg);}
+.login-cajeros{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
+.login-cajeros-label{font-size:.7rem;color:var(--text3);text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.cajero-list{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
+.cajero-item{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  cursor:pointer;transition:all .12s;
+}
+.cajero-item:active,.cajero-item.selected{border-color:var(--accentbord);background:var(--accentbg);}
+.cajero-avatar{
+  width:30px;height:30px;border-radius:50%;background:var(--accentbg);border:1px solid var(--accentbord);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--accent);flex-shrink:0;
+}
+.cajero-name{font-size:.86rem;font-weight:500}
+.cajero-role{font-size:.72rem;color:var(--text2)}
+.login-version{text-align:center;font-size:.68rem;color:var(--text3);margin-top:20px;font-family:var(--mono);}
+.login-error{
+  display:none;text-align:center;font-size:.8rem;color:var(--red);
+  background:var(--redbg);border:1px solid var(--redbord);
+  border-radius:8px;padding:8px 12px;margin-bottom:12px;
+}
+.login-error.show{display:block;}
+
+/* ══════════════════════════════════════
+   APP SCREEN
+══════════════════════════════════════ */
+#screen-app{background:var(--bg);}
+
+/* TOPBAR */
+.topbar{
+  height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;z-index:50;
+}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{font-family:var(--display);font-size:.95rem;font-weight:700;color:#0B3C5D;}
+.topbar-logo .eco{color:#00E676;font-weight:300;letter-spacing:.1em;font-size:.78rem;}
+.topbar-section{
+  font-size:.7rem;color:var(--text2);
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;padding:3px 10px;letter-spacing:.04em;
+}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.topbar-btn{
+  width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1rem;transition:all .12s;text-decoration:none;color:var(--text);
+}
+.topbar-btn:active{background:var(--bg4);}
+
+/* DATE BAR */
+.date-bar{
+  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.date-label{
+  font-size:.72rem;color:var(--text2);font-weight:600;
+  text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;
+}
+.date-input{
+  flex:1;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:8px 12px;color:var(--text);font-family:var(--mono);font-size:.85rem;
+  outline:none;transition:border-color .15s;
+}
+.date-input:focus{border-color:var(--accentbord);}
+.date-today-btn{
+  padding:7px 14px;background:var(--accentbg);border:1px solid var(--accentbord);
+  border-radius:var(--r2);color:var(--accent);font-size:.78rem;font-weight:600;
+  cursor:pointer;white-space:nowrap;transition:all .12s;font-family:var(--sans);
+}
+.date-today-btn:active{background:var(--accent);color:var(--bg);}
+
+/* RESUMEN CARDS */
+.resumen-strip{
+  padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex-shrink:0;
+}
+.resumen-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:10px 10px 8px;text-align:center;
+}
+.resumen-card-val{
+  font-family:var(--mono);font-size:1rem;font-weight:500;color:var(--accent);
+  line-height:1;
+}
+.resumen-card-val.big{font-size:1.05rem;}
+.resumen-card-label{
+  font-size:.64rem;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.05em;margin-top:4px;
+}
+
+/* METODOS PAGO DESGLOSE */
+.metodos-strip{
+  padding:8px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;gap:6px;overflow-x:auto;flex-shrink:0;
+}
+.metodos-strip::-webkit-scrollbar{display:none;}
+.metodo-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 10px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;white-space:nowrap;flex-shrink:0;
+}
+.metodo-chip-icon{font-size:.85rem;}
+.metodo-chip-info{display:flex;flex-direction:column;}
+.metodo-chip-name{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;}
+.metodo-chip-val{font-family:var(--mono);font-size:.78rem;color:var(--text);}
+
+/* LISTA VENTAS */
+.ventas-list-area{
+  flex:1;overflow-y:auto;
+  padding:12px 16px;
+  scrollbar-width:thin;scrollbar-color:var(--bg4) transparent;
+}
+.ventas-empty{
+  display:flex;flex-direction:column;align-items:center;
+  padding:48px 20px;text-align:center;gap:12px;
+}
+.ventas-empty-icon{font-size:2.4rem;opacity:.3;}
+.ventas-empty-msg{font-size:.88rem;color:var(--text3);}
+
+.venta-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  margin-bottom:8px;overflow:hidden;cursor:pointer;
+  transition:border-color .15s;
+}
+.venta-card:active{border-color:var(--accentbord);}
+.venta-card-header{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+}
+.venta-time{
+  font-family:var(--mono);font-size:.82rem;font-weight:500;
+  color:var(--accent);min-width:46px;flex-shrink:0;
+}
+.venta-info{flex:1;min-width:0;}
+.venta-cajero{font-size:.82rem;font-weight:500;}
+.venta-items-count{font-size:.72rem;color:var(--text3);margin-top:1px;}
+.venta-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;}
+.venta-total{
+  font-family:var(--mono);font-size:.9rem;font-weight:500;color:var(--text);
+}
+.venta-metodo{
+  font-size:.68rem;padding:2px 8px;border-radius:20px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.venta-metodo.efectivo{background:var(--greenbg);color:var(--green);border:1px solid var(--greenbord);}
+.venta-metodo.tarjeta{background:var(--bluebg);color:var(--blue);border:1px solid var(--bluebord);}
+.venta-metodo.transferencia{background:var(--amberbg);color:var(--amber);border:1px solid var(--amberbord);}
+.venta-metodo.qr{background:var(--accentbg);color:var(--accent);border:1px solid var(--accentbord);}
+.venta-metodo.otro{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);}
+
+.venta-estado-anulada{
+  font-size:.68rem;padding:2px 8px;border-radius:20px;font-weight:600;
+  background:var(--redbg);color:var(--red);border:1px solid var(--redbord);
+}
+
+/* DETALLE VENTA (expand) */
+.venta-detalle{
+  display:none;
+  border-top:1px solid var(--border);
+  background:var(--bg3);
+  padding:12px 14px;
+}
+.venta-detalle.open{display:block;}
+
+.detalle-items{margin-bottom:10px;}
+.detalle-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 0;border-bottom:1px solid var(--border);font-size:.8rem;
+}
+.detalle-item:last-child{border-bottom:none;}
+.detalle-item-name{flex:1;color:var(--text2);}
+.detalle-item-qty{font-family:var(--mono);font-size:.72rem;color:var(--text3);margin:0 8px;}
+.detalle-item-sub{font-family:var(--mono);color:var(--text);}
+
+.detalle-totales{
+  border-top:1px solid var(--border2);padding-top:8px;
+  display:flex;flex-direction:column;gap:3px;
+}
+.detalle-row{
+  display:flex;justify-content:space-between;font-size:.78rem;color:var(--text2);
+}
+.detalle-row.total{
+  font-size:.9rem;font-weight:700;color:var(--text);margin-top:4px;
+  padding-top:6px;border-top:1px dashed var(--border2);
+}
+.detalle-row.total .dval{font-family:var(--mono);color:var(--accent);}
+.detalle-row .dval{font-family:var(--mono);}
+
+.detalle-iva-section{
+  margin-top:8px;border-top:1px solid var(--border);padding-top:8px;
+}
+.detalle-iva-title{
+  font-size:.66rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;
+}
+.detalle-iva-row{
+  display:flex;justify-content:space-between;font-size:.76rem;color:var(--text3);padding:2px 0;
+}
+.detalle-iva-row .dval{font-family:var(--mono);}
+
+/* LOADING */
+.loading-overlay{
+  display:none;position:fixed;inset:0;background:rgba(10,10,15,.8);
+  backdrop-filter:blur(4px);z-index:200;
+  align-items:center;justify-content:center;flex-direction:column;gap:12px;
+}
+.loading-overlay.show{display:flex;}
+.spinner{
+  width:36px;height:36px;border:3px solid var(--border2);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:.82rem;color:var(--text2);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg3);border:1px solid var(--border2);border-radius:10px;
+  padding:10px 18px;font-size:.82rem;color:var(--text);
+  opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:300;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:var(--accentbord);color:var(--accent);}
+.toast.error{border-color:var(--redbord);color:var(--red);}
+
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-name">
+        Luminex
+        <span class="eco">Ecosystem</span>
+      </div>
+      <div class="login-brand-sub">Historial de Ventas</div>
+    </div>
+
+    <div class="login-error" id="login-error">PIN incorrecto o sin acceso admin</div>
+
+    <div class="login-label">Seleccioná tu usuario</div>
+    <div class="cajero-list" id="cajero-list">
+      <div style="text-align:center;color:var(--text3);font-size:.8rem;padding:12px">Cargando…</div>
+    </div>
+
+    <div class="login-cajeros">
+      <div class="login-cajeros-label">Ingresá tu PIN</div>
+      <div class="pin-display" id="pin-display">
+        <div class="pin-dot" id="d0"></div>
+        <div class="pin-dot" id="d1"></div>
+        <div class="pin-dot" id="d2"></div>
+        <div class="pin-dot" id="d3"></div>
+      </div>
+      <div class="pinpad">
+        <button class="pin-btn" onclick="pinPress('1')">1</button>
+        <button class="pin-btn" onclick="pinPress('2')">2</button>
+        <button class="pin-btn" onclick="pinPress('3')">3</button>
+        <button class="pin-btn" onclick="pinPress('4')">4</button>
+        <button class="pin-btn" onclick="pinPress('5')">5</button>
+        <button class="pin-btn" onclick="pinPress('6')">6</button>
+        <button class="pin-btn" onclick="pinPress('7')">7</button>
+        <button class="pin-btn" onclick="pinPress('8')">8</button>
+        <button class="pin-btn" onclick="pinPress('9')">9</button>
+        <button class="pin-btn del" onclick="pinDel()">⌫</button>
+        <button class="pin-btn" onclick="pinPress('0')">0</button>
+        <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
+      </div>
+    </div>
+    <div class="login-version">Historial v1.0.0</div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div class="screen" id="screen-app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">
+        Luminex <span class="eco">Ecosystem</span>
+      </div>
+      <div class="topbar-section">Historial</div>
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-btn" href="cierre-caja.html" title="Cierre de caja">🧾</a>
+      <a class="topbar-btn" href="admin-productos.html" title="Admin">⚙️</a>
+      <div class="topbar-btn" id="btn-logout" onclick="logout()" title="Salir">🚪</div>
+    </div>
+  </div>
+
+  <!-- DATE BAR -->
+  <div class="date-bar">
+    <div class="date-label">Fecha</div>
+    <input type="date" class="date-input" id="date-input" onchange="cargarVentas()">
+    <button class="date-today-btn" onclick="irHoy()">Hoy</button>
+  </div>
+
+  <!-- RESUMEN TOTALES -->
+  <div class="resumen-strip" id="resumen-strip">
+    <div class="resumen-card">
+      <div class="resumen-card-val big" id="res-total">$0</div>
+      <div class="resumen-card-label">Total</div>
+    </div>
+    <div class="resumen-card">
+      <div class="resumen-card-val" id="res-cant">0</div>
+      <div class="resumen-card-label">Ventas</div>
+    </div>
+    <div class="resumen-card">
+      <div class="resumen-card-val" id="res-prom">$0</div>
+      <div class="resumen-card-label">Promedio</div>
+    </div>
+  </div>
+
+  <!-- DESGLOSE POR METODO -->
+  <div class="metodos-strip" id="metodos-strip"></div>
+
+  <!-- LISTA VENTAS -->
+  <div class="ventas-list-area" id="ventas-list-area">
+    <div class="ventas-empty">
+      <div class="ventas-empty-icon">📋</div>
+      <div class="ventas-empty-msg">Seleccioná una fecha para ver las ventas</div>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Cargando ventas…</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = 'https://zsalcpmeagwxdpengwtg.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzYWxjcG1lYWd3eGRwZW5nd3RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MTkzNDQsImV4cCI6MjA4ODE5NTM0NH0.MikKIKaO-fmomGosVG336xl9qPof-e0XPfuWALLyarc';
+const NEGOCIO_ID = '9f331849-9f3d-4ccf-85d1-19555363925c';
+const HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+async function sbGet(path) {
+  const r = await fetch(SB_URL + '/rest/v1/' + path, { headers: HEADERS });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+// ── Utils ──
+function fmt(n) {
+  return '$' + Number(n || 0).toLocaleString('es-UY', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+function fmtDec(n) {
+  return '$' + Number(n || 0).toLocaleString('es-UY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function normalizaTasa(t) {
+  const v = parseFloat(t) || 0;
+  if (v > 1) return v / 100;
+  return v;
+}
+function showLoading(s) { document.getElementById('loading').classList.toggle('show', s); }
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  setTimeout(() => { t.className = 'toast'; }, 2500);
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── LOGIN ──
+let cajeros = [];
+let selectedCajero = null;
+let pinVal = '';
+
+async function initLogin() {
+  try {
+    cajeros = await sbGet(`cajeros?negocio_id=eq.${NEGOCIO_ID}&activo=eq.true&select=id,nombre,pin,rol&order=nombre.asc`);
+    renderCajeros();
+  } catch(e) {
+    document.getElementById('cajero-list').innerHTML = '<div style="color:var(--red);font-size:.8rem;text-align:center;padding:12px">Error al cargar usuarios</div>';
+  }
+}
+
+function renderCajeros() {
+  const el = document.getElementById('cajero-list');
+  if (!cajeros.length) { el.innerHTML = '<div style="color:var(--text3);font-size:.8rem;text-align:center;padding:12px">Sin usuarios</div>'; return; }
+  el.innerHTML = cajeros.map(c => `
+    <div class="cajero-item" onclick="selectCajero('${c.id}')">
+      <div class="cajero-avatar">${c.nombre.charAt(0).toUpperCase()}</div>
+      <div>
+        <div class="cajero-name">${c.nombre}</div>
+        <div class="cajero-role">${c.rol === 'admin' ? '👑 Admin' : 'Cajero'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectCajero(id) {
+  selectedCajero = cajeros.find(c => c.id === id);
+  document.querySelectorAll('.cajero-item').forEach((el, i) => {
+    el.classList.toggle('selected', cajeros[i].id === id);
+  });
+  pinVal = '';
+  updatePinDots();
+  document.getElementById('login-error').classList.remove('show');
+}
+
+function pinPress(d) {
+  if (!selectedCajero) { showToast('Seleccioná un usuario primero', 'error'); return; }
+  if (pinVal.length >= 4) return;
+  pinVal += d;
+  updatePinDots();
+  if (pinVal.length === 4) setTimeout(pinConfirm, 120);
+}
+function pinDel() { pinVal = pinVal.slice(0, -1); updatePinDots(); }
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('d' + i).classList.toggle('filled', i < pinVal.length);
+    document.getElementById('d' + i).classList.remove('error');
+  }
+}
+function pinConfirm() {
+  if (!selectedCajero) return;
+  if (selectedCajero.rol !== 'admin') {
+    pinError('Solo los admin pueden acceder');
+    return;
+  }
+  if (String(selectedCajero.pin) !== pinVal) {
+    pinError('PIN incorrecto');
+    return;
+  }
+  // Login OK
+  sessionStorage.setItem('hist_cajero', JSON.stringify(selectedCajero));
+  showScreen('screen-app');
+  irHoy();
+}
+function pinError(msg) {
+  for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.add('error');
+  document.getElementById('login-error').textContent = msg;
+  document.getElementById('login-error').classList.add('show');
+  setTimeout(() => { pinVal = ''; updatePinDots(); }, 600);
+}
+function logout() {
+  sessionStorage.removeItem('hist_cajero');
+  selectedCajero = null; pinVal = '';
+  updatePinDots();
+  document.querySelectorAll('.cajero-item').forEach(el => el.classList.remove('selected'));
+  showScreen('screen-login');
+}
+
+// ── FECHA ──
+function irHoy() {
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('date-input').value = hoy;
+  cargarVentas();
+}
+
+// ── CARGAR VENTAS ──
+async function cargarVentas() {
+  const fecha = document.getElementById('date-input').value;
+  if (!fecha) return;
+
+  showLoading(true);
+  try {
+    // Rango del día
+    const desde = fecha + 'T00:00:00.000Z';
+    const hasta = fecha + 'T23:59:59.999Z';
+
+    const ventas = await sbGet(
+      `ventas?negocio_id=eq.${NEGOCIO_ID}&created_at=gte.${desde}&created_at=lte.${hasta}&order=created_at.desc&select=*`
+    );
+
+    if (!ventas.length) {
+      renderResumen([], {});
+      document.getElementById('ventas-list-area').innerHTML = `
+        <div class="ventas-empty">
+          <div class="ventas-empty-icon">🗒️</div>
+          <div class="ventas-empty-msg">No hay ventas registradas en esta fecha</div>
+        </div>`;
+      showLoading(false);
+      return;
+    }
+
+    // Cargar cajeros map
+    const cajerosMap = {};
+    cajeros.forEach(c => { cajerosMap[c.id] = c.nombre; });
+
+    // Cargar items de todas las ventas
+    const ventaIds = ventas.map(v => v.id);
+    let items = [];
+    // Supabase: in() filter
+    const idsParam = '(' + ventaIds.map(id => `"${id}"`).join(',') + ')';
+    items = await sbGet(`venta_items?venta_id=in.${idsParam}&select=*`);
+
+    // Agrupar items por venta
+    const itemsPorVenta = {};
+    items.forEach(item => {
+      if (!itemsPorVenta[item.venta_id]) itemsPorVenta[item.venta_id] = [];
+      itemsPorVenta[item.venta_id].push(item);
+    });
+
+    // Calcular IVA por item
+    function calcIVAItem(item) {
+      const tasa = normalizaTasa(item.tasa_iva || 0);
+      const sub = parseFloat(item.subtotal) || 0;
+      return tasa > 0 ? sub * tasa / (1 + tasa) : 0;
+    }
+
+    // Renderizar
+    renderResumen(ventas, itemsPorVenta);
+    renderVentas(ventas, itemsPorVenta, cajerosMap, calcIVAItem);
+
+  } catch(e) {
+    showToast('Error al cargar ventas', 'error');
+    console.error(e);
+  }
+  showLoading(false);
+}
+
+// ── RESUMEN ──
+function renderResumen(ventas, itemsPorVenta) {
+  const activas = ventas.filter(v => v.estado !== 'anulada');
+  const total = activas.reduce((s, v) => s + (parseFloat(v.total) || 0), 0);
+  const cant = activas.length;
+  const prom = cant > 0 ? total / cant : 0;
+
+  document.getElementById('res-total').textContent = fmt(total);
+  document.getElementById('res-cant').textContent = cant;
+  document.getElementById('res-prom').textContent = fmt(prom);
+
+  // Desglose por método
+  const metodos = {};
+  activas.forEach(v => {
+    const m = v.metodo_pago || 'otro';
+    if (!metodos[m]) metodos[m] = 0;
+    metodos[m] += parseFloat(v.total) || 0;
+  });
+
+  const iconos = { efectivo:'💵', tarjeta:'💳', transferencia:'🏦', qr:'📱', otro:'💰' };
+  const nombres = { efectivo:'Efectivo', tarjeta:'Tarjeta', transferencia:'Transfer.', qr:'QR', otro:'Otro' };
+
+  const strip = document.getElementById('metodos-strip');
+  if (!Object.keys(metodos).length) {
+    strip.innerHTML = '';
+    return;
+  }
+  strip.innerHTML = Object.entries(metodos).map(([m, val]) => `
+    <div class="metodo-chip">
+      <span class="metodo-chip-icon">${iconos[m] || '💰'}</span>
+      <div class="metodo-chip-info">
+        <span class="metodo-chip-name">${nombres[m] || m}</span>
+        <span class="metodo-chip-val">${fmt(val)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── LISTA VENTAS ──
+function renderVentas(ventas, itemsPorVenta, cajerosMap, calcIVAItem) {
+  const area = document.getElementById('ventas-list-area');
+  if (!ventas.length) { area.innerHTML = '<div class="ventas-empty"><div class="ventas-empty-icon">🗒️</div><div class="ventas-empty-msg">Sin ventas</div></div>'; return; }
+
+  area.innerHTML = ventas.map((v, idx) => {
+    const hora = new Date(v.created_at).toLocaleTimeString('es-UY', { hour:'2-digit', minute:'2-digit' });
+    const cajNombre = cajerosMap[v.cajero_id] || 'Desconocido';
+    const items = itemsPorVenta[v.id] || [];
+    const anulada = v.estado === 'anulada';
+    const metodoClass = (v.metodo_pago || 'otro').toLowerCase().replace(' ', '');
+
+    // Items detalle
+    const itemsHTML = items.map(item => {
+      const sub = parseFloat(item.subtotal) || 0;
+      const iva = calcIVAItem(item);
+      return `
+        <div class="detalle-item">
+          <span class="detalle-item-name">${item.producto_nombre}</span>
+          <span class="detalle-item-qty">×${item.cantidad}</span>
+          <span class="detalle-item-sub">${fmtDec(sub)}</span>
+        </div>`;
+    }).join('');
+
+    // Totales detalle
+    const subtotalBruto = items.reduce((s, i) => s + (parseFloat(i.subtotal) || 0), 0);
+    const descuento = parseFloat(v.descuento) || 0;
+    const total = parseFloat(v.total) || 0;
+
+    // IVA desglosado por tasa
+    const ivaGrupos = {};
+    items.forEach(item => {
+      const tasa = normalizaTasa(item.tasa_iva || 0);
+      if (tasa === 0) return;
+      const pct = Math.round(tasa * 100);
+      if (!ivaGrupos[pct]) ivaGrupos[pct] = 0;
+      ivaGrupos[pct] += calcIVAItem(item);
+    });
+
+    const ivaHTML = Object.entries(ivaGrupos).length
+      ? `<div class="detalle-iva-section">
+          <div class="detalle-iva-title">IVA incluido en precio</div>
+          ${Object.entries(ivaGrupos).map(([pct, val]) =>
+            `<div class="detalle-iva-row"><span>IVA ${pct}%</span><span class="dval">${fmtDec(val)}</span></div>`
+          ).join('')}
+        </div>`
+      : '';
+
+    const descHTML = descuento > 0
+      ? `<div class="detalle-row"><span>Descuento (${v.descuento}%)</span><span class="dval" style="color:var(--red)">-${fmtDec(subtotalBruto * descuento / 100)}</span></div>`
+      : '';
+
+    return `
+      <div class="venta-card" id="vcard-${idx}">
+        <div class="venta-card-header" onclick="toggleDetalle(${idx})">
+          <div class="venta-time">${hora}</div>
+          <div class="venta-info">
+            <div class="venta-cajero">${cajNombre}</div>
+            <div class="venta-items-count">${items.length} producto${items.length !== 1 ? 's' : ''}</div>
+          </div>
+          <div class="venta-right">
+            <div class="venta-total">${anulada ? '<s>' + fmt(total) + '</s>' : fmt(total)}</div>
+            ${anulada
+              ? '<span class="venta-estado-anulada">Anulada</span>'
+              : `<span class="venta-metodo ${metodoClass}">${v.metodo_pago || 'otro'}</span>`
+            }
+          </div>
+        </div>
+        <div class="venta-detalle" id="vdetalle-${idx}">
+          <div class="detalle-items">${itemsHTML || '<div style="color:var(--text3);font-size:.8rem">Sin productos</div>'}</div>
+          <div class="detalle-totales">
+            <div class="detalle-row"><span>Subtotal</span><span class="dval">${fmtDec(subtotalBruto)}</span></div>
+            ${descHTML}
+            <div class="detalle-row total"><span>TOTAL</span><span class="dval">${fmtDec(total)}</span></div>
+          </div>
+          ${ivaHTML}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleDetalle(idx) {
+  const d = document.getElementById('vdetalle-' + idx);
+  const c = document.getElementById('vcard-' + idx);
+  const isOpen = d.classList.contains('open');
+  d.classList.toggle('open', !isOpen);
+  c.style.borderColor = isOpen ? '' : 'var(--accentbord)';
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  // Verificar sesión previa
+  const sess = sessionStorage.getItem('hist_cajero');
+  if (sess) {
+    try {
+      selectedCajero = JSON.parse(sess);
+      showScreen('screen-app');
+      irHoy();
+    } catch(e) { sessionStorage.removeItem('hist_cajero'); }
+  }
+  initLogin();
+});
+</script>
+</body>
+</html>
