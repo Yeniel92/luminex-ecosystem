@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Luminex — Cierre de Caja</title>
+<meta name="theme-color" content="#0a0a0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --bg:#0a0a0f;
+  --bg2:#111118;
+  --bg3:#1a1a24;
+  --bg4:#22222e;
+  --border:rgba(255,255,255,.06);
+  --border2:rgba(255,255,255,.12);
+  --text:#f0f0f8;
+  --text2:#8888aa;
+  --text3:#44445a;
+  --accent:#00E676;
+  --accent2:#7DFF00;
+  --accentbg:rgba(0,230,118,.10);
+  --accentbord:rgba(0,230,118,.25);
+  --green:#3dd68c;
+  --greenbg:rgba(61,214,140,.10);
+  --greenbord:rgba(61,214,140,.25);
+  --red:#ff5757;
+  --redbg:rgba(255,87,87,.10);
+  --redbord:rgba(255,87,87,.25);
+  --blue:#5b8dee;
+  --bluebg:rgba(91,141,238,.10);
+  --bluebord:rgba(91,141,238,.25);
+  --amber:#f59e0b;
+  --amberbg:rgba(245,158,11,.10);
+  --amberbord:rgba(245,158,11,.25);
+  --r:14px;
+  --r2:10px;
+  --mono:'DM Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+  --display:'Syne',sans-serif;
+}
+
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+.screen{display:none;position:fixed;inset:0;overflow:hidden}
+.screen.active{display:flex;flex-direction:column}
+
+/* ══ LOGIN ══ */
+#screen-login{
+  background:var(--bg);
+  align-items:center;justify-content:center;padding:24px;
+}
+#screen-login::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(11,60,93,.18),transparent),
+             radial-gradient(ellipse 50% 40% at 80% 100%,rgba(61,214,140,.06),transparent);
+  pointer-events:none;
+}
+.login-card{
+  width:100%;max-width:360px;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:24px;
+  padding:36px 28px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,230,118,.06);
+  position:relative;z-index:1;
+}
+.login-brand{text-align:center;margin-bottom:32px;}
+.login-brand-name{font-family:var(--display);font-size:1.8rem;font-weight:700;color:#0B3C5D;}
+.login-brand-name .eco{color:#00E676;font-weight:300;letter-spacing:.12em;font-size:1.1rem;display:block;margin-top:-2px;text-transform:uppercase;}
+.login-brand-sub{font-size:.75rem;color:var(--text2);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;}
+.login-label{font-size:.72rem;font-weight:600;color:var(--text2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.pin-display{display:flex;gap:10px;justify-content:center;margin-bottom:24px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);transition:all .15s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px rgba(0,230,118,.4);}
+.pin-dot.error{background:var(--red);border-color:var(--red);animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.pin-btn{
+  aspect-ratio:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  font-family:var(--display);font-size:1.4rem;font-weight:700;color:var(--text);
+  cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;
+  user-select:none;-webkit-user-select:none;
+}
+.pin-btn:active{background:var(--bg4);transform:scale(.94);}
+.pin-btn.del{font-size:1rem;color:var(--text2);}
+.pin-btn.confirm{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);font-size:.85rem;font-weight:700;}
+.pin-btn.confirm:active{background:var(--accent);color:var(--bg);}
+.cajero-list{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
+.cajero-item{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  cursor:pointer;transition:all .12s;
+}
+.cajero-item:active,.cajero-item.selected{border-color:var(--accentbord);background:var(--accentbg);}
+.cajero-avatar{width:30px;height:30px;border-radius:50%;background:var(--accentbg);border:1px solid var(--accentbord);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--accent);flex-shrink:0;}
+.cajero-name{font-size:.86rem;font-weight:500}
+.cajero-role{font-size:.72rem;color:var(--text2)}
+.login-sep{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
+.login-error{display:none;text-align:center;font-size:.8rem;color:var(--red);background:var(--redbg);border:1px solid var(--redbord);border-radius:8px;padding:8px 12px;margin-bottom:12px;}
+.login-error.show{display:block;}
+.login-version{text-align:center;font-size:.68rem;color:var(--text3);margin-top:20px;font-family:var(--mono);}
+
+/* ══ APP ══ */
+#screen-app{background:var(--bg);}
+
+.topbar{
+  height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;
+}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{font-family:var(--display);font-size:.95rem;font-weight:700;color:#0B3C5D;}
+.topbar-logo .eco{color:#00E676;font-weight:300;letter-spacing:.1em;font-size:.78rem;}
+.topbar-section{font-size:.7rem;color:var(--text2);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 10px;letter-spacing:.04em;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.topbar-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .12s;text-decoration:none;color:var(--text);}
+.topbar-btn:active{background:var(--bg4);}
+
+/* DATE BAR */
+.date-bar{
+  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.date-label{font-size:.72rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;}
+.date-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:8px 12px;color:var(--text);font-family:var(--mono);font-size:.85rem;outline:none;transition:border-color .15s;}
+.date-input:focus{border-color:var(--accentbord);}
+.date-today-btn{padding:7px 14px;background:var(--accentbg);border:1px solid var(--accentbord);border-radius:var(--r2);color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .12s;font-family:var(--sans);}
+.date-today-btn:active{background:var(--accent);color:var(--bg);}
+
+/* CONTENIDO */
+.content{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--bg4) transparent;}
+
+/* SECCIÓN */
+.seccion{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.seccion-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.seccion-icon{font-size:1rem;}
+.seccion-title{font-family:var(--display);font-size:.88rem;font-weight:700;letter-spacing:.02em;}
+.seccion-body{padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+
+/* FILA DATO */
+.dato-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
+.dato-row:last-child{border-bottom:none;}
+.dato-label{font-size:.82rem;color:var(--text2);}
+.dato-val{font-family:var(--mono);font-size:.88rem;color:var(--text);}
+.dato-val.accent{color:var(--accent);}
+.dato-val.big{font-size:1.1rem;font-weight:500;}
+
+/* RESUMEN HERO */
+.hero-total{
+  background:var(--bg3);border:1px solid var(--accentbord);border-radius:var(--r2);
+  padding:16px;text-align:center;margin-bottom:4px;
+}
+.hero-total-label{font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.hero-total-val{font-family:var(--mono);font-size:2rem;font-weight:500;color:var(--accent);}
+.hero-sub{display:flex;justify-content:center;gap:20px;margin-top:8px;}
+.hero-sub-item{text-align:center;}
+.hero-sub-val{font-family:var(--mono);font-size:.9rem;color:var(--text);}
+.hero-sub-label{font-size:.66rem;color:var(--text3);margin-top:2px;}
+
+/* METODO CHIP */
+.metodo-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+}
+.metodo-left{display:flex;align-items:center;gap:8px;}
+.metodo-icon{font-size:.95rem;}
+.metodo-nombre{font-size:.84rem;font-weight:500;}
+.metodo-cant{font-size:.72rem;color:var(--text3);}
+.metodo-monto{font-family:var(--mono);font-size:.9rem;font-weight:500;}
+
+/* IVA ROWS */
+.iva-row{display:flex;justify-content:space-between;padding:7px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);}
+.iva-tasa{font-size:.82rem;color:var(--text2);}
+.iva-monto{font-family:var(--mono);font-size:.84rem;}
+
+/* EFECTIVO REAL */
+.efectivo-wrap{display:flex;flex-direction:column;gap:10px;}
+.efectivo-input-row{display:flex;align-items:center;gap:10px;}
+.efectivo-prefix{font-family:var(--mono);font-size:1.1rem;color:var(--text2);flex-shrink:0;}
+.efectivo-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:12px 14px;color:var(--text);font-family:var(--mono);font-size:1.1rem;font-weight:500;
+  outline:none;transition:border-color .15s;
+}
+.efectivo-input:focus{border-color:var(--accentbord);}
+.efectivo-input::placeholder{color:var(--text3);}
+
+/* DIFERENCIA */
+.diferencia-card{
+  padding:14px 16px;border-radius:var(--r2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .2s;
+}
+.diferencia-card.cuadra{background:var(--greenbg);border-color:var(--greenbord);}
+.diferencia-card.falta{background:var(--redbg);border-color:var(--redbord);}
+.diferencia-card.sobra{background:var(--amberbg);border-color:var(--amberbord);}
+.diferencia-card.neutro{background:var(--bg3);}
+.diferencia-left{}
+.diferencia-titulo{font-size:.82rem;font-weight:600;}
+.diferencia-card.cuadra .diferencia-titulo{color:var(--green);}
+.diferencia-card.falta .diferencia-titulo{color:var(--red);}
+.diferencia-card.sobra .diferencia-titulo{color:var(--amber);}
+.diferencia-card.neutro .diferencia-titulo{color:var(--text2);}
+.diferencia-sub{font-size:.72rem;color:var(--text3);margin-top:2px;}
+.diferencia-val{font-family:var(--mono);font-size:1.3rem;font-weight:500;}
+.diferencia-card.cuadra .diferencia-val{color:var(--green);}
+.diferencia-card.falta .diferencia-val{color:var(--red);}
+.diferencia-card.sobra .diferencia-val{color:var(--amber);}
+.diferencia-card.neutro .diferencia-val{color:var(--text3);}
+
+/* OBSERVACIONES */
+.obs-textarea{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:12px 14px;color:var(--text);font-family:var(--sans);font-size:.88rem;
+  outline:none;resize:none;min-height:80px;transition:border-color .15s;
+  line-height:1.5;
+}
+.obs-textarea:focus{border-color:var(--accentbord);}
+.obs-textarea::placeholder{color:var(--text3);}
+
+/* BOTONES ACCIÓN */
+.acciones{display:flex;gap:10px;padding:0 0 8px;}
+.btn-compartir{
+  flex:1;background:var(--accentbg);border:1px solid var(--accentbord);border-radius:var(--r2);
+  padding:13px;color:var(--accent);font-family:var(--display);font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-compartir:active{background:var(--accent);color:var(--bg);}
+.btn-imprimir{
+  flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:13px;color:var(--text);font-family:var(--sans);font-size:.88rem;font-weight:500;
+  cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-imprimir:active{background:var(--bg4);}
+
+/* EMPTY */
+.empty-msg{text-align:center;padding:40px 20px;color:var(--text3);font-size:.88rem;}
+.empty-icon{font-size:2rem;margin-bottom:8px;opacity:.3;}
+
+/* LOADING */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,.8);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.loading-overlay.show{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:.82rem;color:var(--text);opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:var(--accentbord);color:var(--accent);}
+.toast.err{border-color:var(--redbord);color:var(--red);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-name">Luminex<span class="eco">Ecosystem</span></div>
+      <div class="login-brand-sub">Cierre de Caja</div>
+    </div>
+    <div class="login-error" id="login-error">PIN incorrecto o sin acceso admin</div>
+    <div class="login-label">Seleccioná tu usuario</div>
+    <div class="cajero-list" id="cajero-list">
+      <div style="text-align:center;color:var(--text3);font-size:.8rem;padding:12px">Cargando…</div>
+    </div>
+    <div class="login-sep">
+      <div class="login-label">Ingresá tu PIN</div>
+      <div class="pin-display" id="pin-display">
+        <div class="pin-dot" id="d0"></div>
+        <div class="pin-dot" id="d1"></div>
+        <div class="pin-dot" id="d2"></div>
+        <div class="pin-dot" id="d3"></div>
+      </div>
+      <div class="pinpad">
+        <button class="pin-btn" onclick="pinPress('1')">1</button>
+        <button class="pin-btn" onclick="pinPress('2')">2</button>
+        <button class="pin-btn" onclick="pinPress('3')">3</button>
+        <button class="pin-btn" onclick="pinPress('4')">4</button>
+        <button class="pin-btn" onclick="pinPress('5')">5</button>
+        <button class="pin-btn" onclick="pinPress('6')">6</button>
+        <button class="pin-btn" onclick="pinPress('7')">7</button>
+        <button class="pin-btn" onclick="pinPress('8')">8</button>
+        <button class="pin-btn" onclick="pinPress('9')">9</button>
+        <button class="pin-btn del" onclick="pinDel()">⌫</button>
+        <button class="pin-btn" onclick="pinPress('0')">0</button>
+        <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
+      </div>
+    </div>
+    <div class="login-version">Cierre de Caja v1.0.0</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="screen-app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">Luminex<span class="eco"> Ecosystem</span></div>
+      <div class="topbar-section">Cierre de Caja</div>
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-btn" href="historial.html" title="Historial">📋</a>
+      <a class="topbar-btn" href="admin-productos.html" title="Admin">⚙️</a>
+      <div class="topbar-btn" onclick="logout()">🚪</div>
+    </div>
+  </div>
+
+  <div class="date-bar">
+    <div class="date-label">Fecha</div>
+    <input type="date" class="date-input" id="date-input" onchange="cargarCierre()">
+    <button class="date-today-btn" onclick="irHoy()">Hoy</button>
+  </div>
+
+  <div class="content" id="content">
+    <div class="empty-msg">
+      <div class="empty-icon">🧾</div>
+      Seleccioná una fecha para generar el cierre
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loading"><div class="spinner"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+async function sbGet(path) {
+  const r = await fetch(SB_URL + '/rest/v1/' + path, { headers: HEADERS });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+function fmt(n) { return '$' + Number(n||0).toLocaleString('es-UY',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtDec(n) { return '$' + Number(n||0).toLocaleString('es-UY',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function normalizaTasa(t) { const v = parseFloat(t)||0; return v > 1 ? v/100 : v; }
+function showLoading(s) { document.getElementById('loading').classList.toggle('show',s); }
+function showToast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+type; setTimeout(()=>{t.className='toast';},2500); }
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+// ── LOGIN ──
+let cajeros = [];
+let selectedCajero = null;
+let pinVal = '';
+
+async function initLogin() {
+  try {
+    cajeros = await sbGet(`cajeros?negocio_id=eq.${NEGOCIO_ID}&activo=eq.true&select=id,nombre,pin,rol&order=nombre.asc`);
+    renderCajeros();
+  } catch(e) {
+    document.getElementById('cajero-list').innerHTML = '<div style="color:var(--red);font-size:.8rem;text-align:center;padding:12px">Error al cargar</div>';
+  }
+}
+
+function renderCajeros() {
+  const el = document.getElementById('cajero-list');
+  if (!cajeros.length) { el.innerHTML = '<div style="color:var(--text3);font-size:.8rem;text-align:center;padding:12px">Sin usuarios</div>'; return; }
+  el.innerHTML = cajeros.map(c => `
+    <div class="cajero-item" onclick="selectCajero('${c.id}')">
+      <div class="cajero-avatar">${c.nombre.charAt(0).toUpperCase()}</div>
+      <div><div class="cajero-name">${c.nombre}</div><div class="cajero-role">${c.rol==='admin'?'👑 Admin':'Cajero'}</div></div>
+    </div>`).join('');
+}
+
+function selectCajero(id) {
+  selectedCajero = cajeros.find(c => c.id === id);
+  document.querySelectorAll('.cajero-item').forEach((el,i) => el.classList.toggle('selected', cajeros[i].id === id));
+  pinVal = ''; updatePinDots();
+  document.getElementById('login-error').classList.remove('show');
+}
+
+function pinPress(d) {
+  if (!selectedCajero) { showToast('Seleccioná un usuario','err'); return; }
+  if (pinVal.length >= 4) return;
+  pinVal += d; updatePinDots();
+  if (pinVal.length === 4) setTimeout(pinConfirm, 120);
+}
+function pinDel() { pinVal = pinVal.slice(0,-1); updatePinDots(); }
+function updatePinDots() {
+  for (let i=0;i<4;i++) {
+    document.getElementById('d'+i).classList.toggle('filled', i < pinVal.length);
+    document.getElementById('d'+i).classList.remove('error');
+  }
+}
+function pinConfirm() {
+  if (!selectedCajero) return;
+  if (selectedCajero.rol !== 'admin') { pinError('Solo admin puede acceder'); return; }
+  if (String(selectedCajero.pin) !== pinVal) { pinError('PIN incorrecto'); return; }
+  sessionStorage.setItem('cierre_cajero', JSON.stringify(selectedCajero));
+  showScreen('screen-app');
+  irHoy();
+}
+function pinError(msg) {
+  for (let i=0;i<4;i++) document.getElementById('d'+i).classList.add('error');
+  document.getElementById('login-error').textContent = msg;
+  document.getElementById('login-error').classList.add('show');
+  setTimeout(() => { pinVal=''; updatePinDots(); }, 600);
+}
+function logout() {
+  sessionStorage.removeItem('cierre_cajero');
+  selectedCajero = null; pinVal = ''; updatePinDots();
+  document.querySelectorAll('.cajero-item').forEach(el => el.classList.remove('selected'));
+  showScreen('screen-login');
+}
+
+// ── FECHA ──
+function irHoy() {
+  document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
+  cargarCierre();
+}
+
+// ── DATOS ──
+let datosVentas = [];
+let datosItems = [];
+
+async function cargarCierre() {
+  const fecha = document.getElementById('date-input').value;
+  if (!fecha) return;
+  showLoading(true);
+  try {
+    const desde = fecha + 'T00:00:00.000Z';
+    const hasta = fecha + 'T23:59:59.999Z';
+
+    datosVentas = await sbGet(`ventas?negocio_id=eq.${NEGOCIO_ID}&created_at=gte.${desde}&created_at=lte.${hasta}&order=created_at.desc&select=*`);
+
+    if (!datosVentas.length) {
+      document.getElementById('content').innerHTML = `<div class="empty-msg"><div class="empty-icon">🗒️</div>No hay ventas en esta fecha</div>`;
+      showLoading(false); return;
+    }
+
+    const ventaIds = datosVentas.map(v => v.id);
+    const idsParam = '(' + ventaIds.map(id => `"${id}"`).join(',') + ')';
+    datosItems = await sbGet(`venta_items?venta_id=in.${idsParam}&select=*`);
+
+    renderCierre(fecha);
+  } catch(e) {
+    showToast('Error cargando datos','err');
+    console.error(e);
+  }
+  showLoading(false);
+}
+
+// ── RENDER CIERRE ──
+function renderCierre(fecha) {
+  const activas = datosVentas.filter(v => v.estado !== 'anulada');
+  const anuladas = datosVentas.filter(v => v.estado === 'anulada');
+
+  const total = activas.reduce((s,v) => s + (parseFloat(v.total)||0), 0);
+  const cant = activas.length;
+  const prom = cant > 0 ? total/cant : 0;
+
+  // Por método
+  const metodos = {};
+  const metodosCant = {};
+  activas.forEach(v => {
+    const m = v.metodo_pago || 'otro';
+    metodos[m] = (metodos[m]||0) + (parseFloat(v.total)||0);
+    metodosCant[m] = (metodosCant[m]||0) + 1;
+  });
+
+  // IVA por tasa
+  const ivaGrupos = {};
+  const ivaBase = {};
+  datosItems.forEach(item => {
+    // Solo items de ventas activas
+    const venta = datosVentas.find(v => v.id === item.venta_id);
+    if (!venta || venta.estado === 'anulada') return;
+    const tasa = normalizaTasa(item.tasa_iva || 0);
+    if (tasa === 0) return;
+    const pct = Math.round(tasa * 100);
+    const sub = parseFloat(item.subtotal)||0;
+    const ivaAmt = sub * tasa / (1 + tasa);
+    ivaGrupos[pct] = (ivaGrupos[pct]||0) + ivaAmt;
+    ivaBase[pct] = (ivaBase[pct]||0) + (sub - ivaAmt);
+  });
+
+  const totalIva = Object.values(ivaGrupos).reduce((s,v) => s+v, 0);
+  const efectivoEsperado = metodos['efectivo'] || 0;
+
+  // Iconos y nombres métodos
+  const iconos = {efectivo:'💵',tarjeta:'💳',transferencia:'🏦',qr:'📱',otro:'💰'};
+  const nombres = {efectivo:'Efectivo',tarjeta:'Tarjeta',transferencia:'Transferencia',qr:'QR / Digital',otro:'Otro'};
+
+  // Fecha formateada
+  const [y,m,d] = fecha.split('-');
+  const fechaStr = `${d}/${m}/${y}`;
+
+  document.getElementById('content').innerHTML = `
+
+    <!-- RESUMEN HERO -->
+    <div class="seccion">
+      <div class="seccion-header">
+        <span class="seccion-icon">📊</span>
+        <span class="seccion-title">Resumen del día — ${fechaStr}</span>
+      </div>
+      <div class="seccion-body">
+        <div class="hero-total">
+          <div class="hero-total-label">Total vendido</div>
+          <div class="hero-total-val">${fmt(total)}</div>
+          <div class="hero-sub">
+            <div class="hero-sub-item">
+              <div class="hero-sub-val">${cant}</div>
+              <div class="hero-sub-label">ventas</div>
+            </div>
+            <div class="hero-sub-item">
+              <div class="hero-sub-val">${fmt(prom)}</div>
+              <div class="hero-sub-label">promedio</div>
+            </div>
+            <div class="hero-sub-item">
+              <div class="hero-sub-val">${anuladas.length}</div>
+              <div class="hero-sub-label">anuladas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÉTODOS DE PAGO -->
+    <div class="seccion">
+      <div class="seccion-header">
+        <span class="seccion-icon">💳</span>
+        <span class="seccion-title">Desglose por método de pago</span>
+      </div>
+      <div class="seccion-body">
+        ${Object.entries(metodos).map(([m,val]) => `
+          <div class="metodo-row">
+            <div class="metodo-left">
+              <span class="metodo-icon">${iconos[m]||'💰'}</span>
+              <div>
+                <div class="metodo-nombre">${nombres[m]||m}</div>
+                <div class="metodo-cant">${metodosCant[m]} venta${metodosCant[m]!==1?'s':''}</div>
+              </div>
+            </div>
+            <div class="metodo-monto">${fmt(val)}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- IVA -->
+    ${totalIva > 0 ? `
+    <div class="seccion">
+      <div class="seccion-header">
+        <span class="seccion-icon">🧾</span>
+        <span class="seccion-title">IVA incluido en ventas</span>
+      </div>
+      <div class="seccion-body">
+        ${Object.entries(ivaGrupos).map(([pct,ivaAmt]) => `
+          <div class="iva-row">
+            <span class="iva-tasa">IVA ${pct}% — base imponible ${fmtDec(ivaBase[pct]||0)}</span>
+            <span class="iva-monto">${fmtDec(ivaAmt)}</span>
+          </div>`).join('')}
+        <div class="dato-row" style="padding-top:8px">
+          <span class="dato-label" style="font-weight:600">Total IVA</span>
+          <span class="dato-val accent">${fmtDec(totalIva)}</span>
+        </div>
+      </div>
+    </div>` : ''}
+
+    <!-- EFECTIVO REAL -->
+    <div class="seccion">
+      <div class="seccion-header">
+        <span class="seccion-icon">💵</span>
+        <span class="seccion-title">Conteo de caja</span>
+      </div>
+      <div class="seccion-body">
+        <div class="dato-row">
+          <span class="dato-label">Efectivo esperado</span>
+          <span class="dato-val accent" id="efectivo-esperado">${fmt(efectivoEsperado)}</span>
+        </div>
+        <div class="efectivo-wrap">
+          <div style="font-size:.75rem;color:var(--text3);margin-bottom:2px;">Efectivo real en caja</div>
+          <div class="efectivo-input-row">
+            <span class="efectivo-prefix">$</span>
+            <input class="efectivo-input" id="efectivo-real" type="number" inputmode="decimal" placeholder="0" oninput="calcDiferencia(${efectivoEsperado})">
+          </div>
+        </div>
+        <div class="diferencia-card neutro" id="diferencia-card">
+          <div class="diferencia-left">
+            <div class="diferencia-titulo" id="dif-titulo">Diferencia</div>
+            <div class="diferencia-sub" id="dif-sub">Ingresá el efectivo real</div>
+          </div>
+          <div class="diferencia-val" id="dif-val">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OBSERVACIONES -->
+    <div class="seccion">
+      <div class="seccion-header">
+        <span class="seccion-icon">📝</span>
+        <span class="seccion-title">Observaciones</span>
+      </div>
+      <div class="seccion-body">
+        <textarea class="obs-textarea" id="obs-texto" placeholder="Ej: Faltaron $200 por cambio pendiente del turno anterior…"></textarea>
+      </div>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="acciones">
+      <button class="btn-compartir" onclick="compartirCierre('${fechaStr}', ${total}, ${cant}, ${efectivoEsperado})">
+        📤 Compartir
+      </button>
+      <button class="btn-imprimir" onclick="imprimirCierre()">
+        🖨️ Imprimir
+      </button>
+    </div>
+
+  `;
+}
+
+// ── DIFERENCIA ──
+function calcDiferencia(esperado) {
+  const realStr = document.getElementById('efectivo-real').value;
+  const card = document.getElementById('diferencia-card');
+  const titulo = document.getElementById('dif-titulo');
+  const sub = document.getElementById('dif-sub');
+  const val = document.getElementById('dif-val');
+
+  if (realStr === '' || realStr === null) {
+    card.className = 'diferencia-card neutro';
+    titulo.textContent = 'Diferencia';
+    sub.textContent = 'Ingresá el efectivo real';
+    val.textContent = '—';
+    return;
+  }
+
+  const real = parseFloat(realStr) || 0;
+  const diff = real - esperado;
+
+  if (Math.abs(diff) < 1) {
+    card.className = 'diferencia-card cuadra';
+    titulo.textContent = '✓ Caja cuadrada';
+    sub.textContent = 'El efectivo coincide con lo esperado';
+    val.textContent = '$0';
+  } else if (diff < 0) {
+    card.className = 'diferencia-card falta';
+    titulo.textContent = '⚠ Falta efectivo';
+    sub.textContent = `Esperado ${fmt(esperado)} · Real ${fmt(real)}`;
+    val.textContent = fmt(diff);
+  } else {
+    card.className = 'diferencia-card sobra';
+    titulo.textContent = '↑ Sobra efectivo';
+    sub.textContent = `Esperado ${fmt(esperado)} · Real ${fmt(real)}`;
+    val.textContent = '+' + fmt(diff);
+  }
+}
+
+// ── COMPARTIR ──
+function compartirCierre(fechaStr, total, cant, efectivoEsperado) {
+  const real = parseFloat(document.getElementById('efectivo-real')?.value) || 0;
+  const diff = real - efectivoEsperado;
+  const obs = document.getElementById('obs-texto')?.value?.trim() || '';
+
+  let texto = `🧾 CIERRE DE CAJA — ${fechaStr}\n`;
+  texto += `${'─'.repeat(30)}\n`;
+  texto += `Total vendido: ${fmt(total)}\n`;
+  texto += `Ventas: ${cant}\n\n`;
+
+  // Métodos
+  const metodos = {};
+  datosVentas.filter(v=>v.estado!=='anulada').forEach(v => {
+    const m = v.metodo_pago||'otro';
+    metodos[m] = (metodos[m]||0) + (parseFloat(v.total)||0);
+  });
+  const nombres = {efectivo:'Efectivo',tarjeta:'Tarjeta',transferencia:'Transferencia',qr:'QR',otro:'Otro'};
+  Object.entries(metodos).forEach(([m,val]) => {
+    texto += `${nombres[m]||m}: ${fmt(val)}\n`;
+  });
+
+  if (real > 0) {
+    texto += `\n💵 CONTEO DE CAJA\n`;
+    texto += `Esperado: ${fmt(efectivoEsperado)}\n`;
+    texto += `Real: ${fmt(real)}\n`;
+    texto += `Diferencia: ${diff >= 0 ? '+' : ''}${fmt(diff)}\n`;
+  }
+
+  if (obs) {
+    texto += `\n📝 Observaciones:\n${obs}\n`;
+  }
+
+  texto += `\n— Luminex Ecosystem`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'Cierre de Caja', text: texto }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(texto).then(() => showToast('Copiado al portapapeles ✓','ok')).catch(() => showToast('No se pudo copiar','err'));
+  }
+}
+
+// ── IMPRIMIR ──
+function imprimirCierre() {
+  window.print();
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  const sess = sessionStorage.getItem('cierre_cajero');
+  if (sess) {
+    try {
+      selectedCajero = JSON.parse(sess);
+      showScreen('screen-app');
+      irHoy();
+    } catch(e) { sessionStorage.removeItem('cierre_cajero'); }
+  }
+  initLogin();
+});
+</script>
+</body>
+</html>
