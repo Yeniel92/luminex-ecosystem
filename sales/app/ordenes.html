@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Luminex · Órdenes</title>
+<meta name="theme-color" content="#0a0a0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--bg4:#22222e;--border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);--text:#f0f0f8;--text2:#8888aa;--text3:#44445a;--accent:#00E676;--accent2:#7DFF00;--accentbg:rgba(0,230,118,.10);--accentbord:rgba(0,230,118,.25);--green:#3dd68c;--greenbg:rgba(61,214,140,.10);--greenbord:rgba(61,214,140,.25);--red:#ff5757;--redbg:rgba(255,87,87,.10);--redbord:rgba(255,87,87,.25);--amber:#f59e0b;--amberbg:rgba(245,158,11,.10);--amberbord:rgba(245,158,11,.25);--r:14px;--r2:10px;--mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+.screen{display:none;position:fixed;inset:0;overflow:hidden}
+.screen.active{display:flex;flex-direction:column}
+
+/* LOGIN */
+#screen-login{background:var(--bg);align-items:center;justify-content:center;padding:24px;}
+#screen-login::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(11,60,93,.2),transparent),radial-gradient(ellipse 50% 40% at 80% 100%,rgba(0,230,118,.08),transparent);pointer-events:none;}
+.login-card{width:100%;max-width:360px;background:var(--bg2);border:1px solid var(--border2);border-radius:24px;padding:36px 28px;box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,230,118,.06);position:relative;z-index:1;}
+.login-brand{text-align:center;margin-bottom:32px;}
+.login-brand-name{font-family:var(--display);font-size:1.8rem;font-weight:700;letter-spacing:-.01em;color:#0B3C5D;}
+.login-brand-name .eco{color:#00E676;font-weight:300;letter-spacing:.12em;font-size:1.1rem;display:block;margin-top:-2px;text-transform:uppercase;}
+.login-brand-sub{font-size:.75rem;color:var(--text2);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;}
+.login-label{font-size:.72rem;font-weight:600;color:var(--text2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.pin-display{display:flex;gap:10px;justify-content:center;margin-bottom:24px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);transition:all .15s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px rgba(0,230,118,.4);}
+.pin-dot.error{background:var(--red);border-color:var(--red);animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.pin-btn{aspect-ratio:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);font-family:var(--display);font-size:1.4rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;}
+.pin-btn:active{background:var(--bg4);transform:scale(.94);border-color:var(--border2);}
+.pin-btn.del{font-size:1rem;color:var(--text2);}
+.pin-btn.confirm{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);font-size:.85rem;font-weight:700;letter-spacing:.03em;}
+.pin-btn.confirm:active{background:var(--accent);color:var(--bg);}
+.cajero-list{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
+.cajero-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all .12s;}
+.cajero-item:active,.cajero-item.selected{border-color:var(--accentbord);background:var(--accentbg);}
+.cajero-avatar{width:30px;height:30px;border-radius:50%;background:var(--accentbg);border:1px solid var(--accentbord);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--accent);flex-shrink:0;}
+.cajero-name{font-size:.86rem;font-weight:500}
+.cajero-role{font-size:.72rem;color:var(--text2)}
+.login-cajeros{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
+.login-cajeros-label{font-size:.7rem;color:var(--text3);text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.login-version{text-align:center;font-size:.68rem;color:var(--text3);margin-top:20px;font-family:var(--mono);}
+
+/* APP */
+#screen-app{background:var(--bg)}
+.topbar{height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-logo{font-family:var(--display);font-size:.95rem;font-weight:700;color:#0B3C5D;}
+.topbar-logo .eco{color:#00E676;font-weight:300;letter-spacing:.1em;font-size:.78rem;}
+.topbar-cajero{font-size:.75rem;color:var(--text2);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 10px;}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .12s;}
+.topbar-btn:active{background:var(--bg4)}
+
+/* PANEL */
+.panel-header{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.panel-title{font-family:var(--display);font-size:1.1rem;font-weight:800;margin-bottom:2px;}
+.panel-sub{font-size:.76rem;color:var(--text2);}
+.panel-body{flex:1;overflow-y:auto;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--bg4) transparent;}
+
+.btn-nueva-orden{width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:var(--r);font-family:var(--display);font-size:1rem;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;letter-spacing:.02em;}
+.btn-nueva-orden:active{background:var(--accent2);transform:scale(.98);}
+
+.ordenes-list{display:flex;flex-direction:column;gap:10px;}
+.orden-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;}
+.orden-card:active{border-color:var(--accentbord);transform:scale(.98);}
+.orden-icon{width:42px;height:42px;border-radius:12px;background:var(--accentbg);border:1px solid var(--accentbord);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.orden-info{flex:1;min-width:0;}
+.orden-identificador{font-size:.9rem;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.orden-meta{font-size:.74rem;color:var(--text2);}
+.orden-tiempo{font-family:var(--mono);font-size:.78rem;color:var(--amber);font-weight:500;flex-shrink:0;text-align:right;}
+.orden-items-count{font-size:.68rem;color:var(--text3);margin-top:2px;text-align:right;}
+.orden-chevron{color:var(--text3);font-size:.8rem;margin-left:4px;}
+
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
+.empty-icon{font-size:2.5rem;margin-bottom:12px}
+.empty-text{font-size:.86rem;line-height:1.5}
+.empty-hint{font-size:.76rem;color:var(--text3);margin-top:6px;opacity:.6}
+
+.section-label{font-size:.7rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+
+/* MODAL NUEVA ORDEN */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:20px 20px 0 0;width:100%;padding:20px 16px 32px;animation:slideUp .25s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
+.modal-title{font-family:var(--display);font-size:1rem;font-weight:800;margin-bottom:4px;}
+.modal-sub{font-size:.78rem;color:var(--text2);margin-bottom:20px;}
+.modal-field-label{font-size:.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.modal-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 14px;color:var(--text);font-family:var(--sans);font-size:.95rem;outline:none;transition:border-color .15s;margin-bottom:16px;}
+.modal-input:focus{border-color:var(--accentbord)}
+.modal-input::placeholder{color:var(--text3)}
+.modal-actions{display:flex;gap:10px;}
+.btn-modal-cancel{flex:1;padding:13px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-family:var(--sans);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .12s;}
+.btn-modal-cancel:active{background:var(--bg4)}
+.btn-modal-confirm{flex:2;padding:13px;background:var(--accent);border:none;border-radius:var(--r);color:var(--bg);font-family:var(--display);font-size:.95rem;font-weight:800;cursor:pointer;transition:all .12s;}
+.btn-modal-confirm:active{transform:scale(.98);background:var(--accent2)}
+.btn-modal-confirm:disabled{opacity:.3;cursor:not-allowed;transform:none}
+
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:8px 18px;font-size:.82rem;white-space:nowrap;z-index:300;opacity:0;transition:all .2s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:var(--greenbord);color:var(--green)}
+.toast.err{border-color:var(--redbord);color:var(--red)}
+.version-chip{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.62rem;color:var(--text3);z-index:10;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-name">Luminex<span class="eco">Ecosystem</span></div>
+      <div class="login-brand-sub">Órdenes</div>
+    </div>
+    <div class="login-label">Seleccioná tu usuario</div>
+    <div class="cajero-list" id="cajero-list"></div>
+    <div class="login-cajeros">
+      <div class="login-cajeros-label">Ingresá tu PIN</div>
+      <div class="pin-display" id="pin-display">
+        <div class="pin-dot" id="pd0"></div>
+        <div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div>
+        <div class="pin-dot" id="pd3"></div>
+      </div>
+      <div class="pinpad">
+        <button class="pin-btn" onclick="pinPress('1')">1</button>
+        <button class="pin-btn" onclick="pinPress('2')">2</button>
+        <button class="pin-btn" onclick="pinPress('3')">3</button>
+        <button class="pin-btn" onclick="pinPress('4')">4</button>
+        <button class="pin-btn" onclick="pinPress('5')">5</button>
+        <button class="pin-btn" onclick="pinPress('6')">6</button>
+        <button class="pin-btn" onclick="pinPress('7')">7</button>
+        <button class="pin-btn" onclick="pinPress('8')">8</button>
+        <button class="pin-btn" onclick="pinPress('9')">9</button>
+        <button class="pin-btn del" onclick="pinDel()">⌫</button>
+        <button class="pin-btn" onclick="pinPress('0')">0</button>
+        <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
+      </div>
+    </div>
+    <div class="login-version">Luminex Órdenes · v1.0.0</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="screen-app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">Luminex<span class="eco"> Ecosystem</span></div>
+      <div class="topbar-cajero" id="tb-cajero">—</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-btn" onclick="irAlPOS()" title="Ir al POS">🏪</div>
+      <div class="topbar-btn" onclick="logout()" title="Cerrar sesión">🚪</div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <button class="btn-nueva-orden" onclick="abrirModalNuevaOrden()">＋ Nueva Orden</button>
+    <div class="section-label" id="ordenes-label">Órdenes abiertas</div>
+    <div class="ordenes-list" id="ordenes-list">
+      <div class="empty-state">
+        <div class="empty-icon">⏳</div>
+        <div class="empty-text">Cargando órdenes...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA ORDEN -->
+<div class="modal-overlay" id="modal-nueva" onclick="cerrarModalSiOverlay(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva Orden</div>
+    <div class="modal-sub">Identificador opcional — mesa, nombre o dejá vacío</div>
+    <div class="modal-field-label">Mesa / Nombre / Referencia</div>
+    <input class="modal-input" id="input-identificador" type="text" placeholder="Ej: Mesa 3, Juan, Para llevar...">
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="cerrarModalNuevaOrden()">Cancelar</button>
+      <button class="btn-modal-confirm" id="btn-crear-orden" onclick="crearOrden()">Crear Orden</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+<div class="version-chip">Luminex Órdenes · v1.0.0</div>
+
+<script>
+// SB_URL, SB_KEY y NEGOCIO_ID vienen de config.js
+
+let state = { cajero: null, cajeros: [], ordenes: [] };
+let pinBuffer = '';
+let selectedCajeroId = null;
+let timerInterval = null;
+
+async function sbFetch(path, options = {}) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    ...options,
+    headers: {
+      'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || 'return=representation',
+      ...(options.headers || {})
+    }
+  });
+  if (!res.ok) { const err = await res.text(); throw new Error(err); }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+// LOGIN
+async function initLogin() {
+  const list = document.getElementById('cajero-list');
+  list.innerHTML = '<div style="text-align:center;color:var(--text3);padding:16px;font-size:.8rem">Cargando...</div>';
+  try {
+    const cajeros = await sbFetch(`cajeros?negocio_id=eq.${NEGOCIO_ID}&activo=eq.true&order=nombre.asc`);
+    state.cajeros = cajeros;
+    list.innerHTML = cajeros.map(c => `
+      <div class="cajero-item" id="ci-${c.id}" onclick="selectCajero('${c.id}')">
+        <div class="cajero-avatar">${c.nombre[0].toUpperCase()}</div>
+        <div><div class="cajero-name">${c.nombre}</div><div class="cajero-role">${c.rol === 'administración' ? '⭐ Admin' : '👤 Cajero'}</div></div>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;color:var(--red);padding:16px;font-size:.8rem">Error al cargar usuarios</div>';
+  }
+}
+
+function selectCajero(id) {
+  selectedCajeroId = id;
+  document.querySelectorAll('.cajero-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('ci-' + id)?.classList.add('selected');
+  pinBuffer = ''; updatePinDisplay();
+}
+
+function pinPress(d) {
+  if (!selectedCajeroId) { toast('Seleccioná un usuario primero', 'err'); return; }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += d; updatePinDisplay();
+  if (pinBuffer.length === 4) setTimeout(pinConfirm, 200);
+}
+function pinDel() { pinBuffer = pinBuffer.slice(0, -1); updatePinDisplay(); }
+function updatePinDisplay() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('pd' + i);
+    dot.classList.toggle('filled', i < pinBuffer.length);
+    dot.classList.remove('error');
+  }
+}
+function pinConfirm() {
+  if (!selectedCajeroId) return;
+  const cajero = state.cajeros.find(c => c.id === selectedCajeroId);
+  if (!cajero) return;
+  if (pinBuffer === cajero.pin) {
+    state.cajero = cajero;
+    document.getElementById('tb-cajero').textContent = cajero.nombre;
+    showScreen('screen-app');
+    cargarOrdenes();
+    timerInterval = setInterval(actualizarTiempos, 60000);
+  } else {
+    for (let i = 0; i < 4; i++) document.getElementById('pd' + i).classList.add('error');
+    setTimeout(() => { pinBuffer = ''; updatePinDisplay(); }, 600);
+    toast('PIN incorrecto', 'err');
+  }
+}
+function logout() {
+  state.cajero = null; selectedCajeroId = null; pinBuffer = '';
+  clearInterval(timerInterval);
+  updatePinDisplay();
+  document.querySelectorAll('.cajero-item').forEach(el => el.classList.remove('selected'));
+  showScreen('screen-login'); initLogin();
+}
+
+// ÓRDENES
+async function cargarOrdenes() {
+  const list = document.getElementById('ordenes-list');
+  try {
+    const ordenes = await sbFetch(`ordenes?negocio_id=eq.${NEGOCIO_ID}&estado=eq.abierta&order=created_at.asc`);
+    state.ordenes = ordenes;
+
+    // Cargar conteo de items por orden
+    if (ordenes.length > 0) {
+      const ids = ordenes.map(o => o.id).join(',');
+      const items = await sbFetch(`orden_items?orden_id=in.(${ids})&select=orden_id`);
+      const countMap = {};
+      items.forEach(i => { countMap[i.orden_id] = (countMap[i.orden_id] || 0) + 1; });
+      state.ordenes = ordenes.map(o => ({ ...o, itemCount: countMap[o.id] || 0 }));
+    }
+
+    renderOrdenes();
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Error al cargar órdenes</div></div>';
+  }
+}
+
+function renderOrdenes() {
+  const list = document.getElementById('ordenes-list');
+  const label = document.getElementById('ordenes-label');
+  if (!state.ordenes.length) {
+    label.textContent = 'No hay órdenes abiertas';
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🗒️</div>
+        <div class="empty-text">No hay órdenes abiertas</div>
+        <div class="empty-hint">Tocá "Nueva Orden" para comenzar</div>
+      </div>`;
+    return;
+  }
+  label.textContent = `Órdenes abiertas (${state.ordenes.length})`;
+  list.innerHTML = state.ordenes.map(o => {
+    const tiempo = calcTiempo(o.created_at);
+    const label = o.identificador || `Orden #${o.id.slice(-4).toUpperCase()}`;
+    const itemTxt = o.itemCount === 1 ? '1 producto' : `${o.itemCount} productos`;
+    return `
+      <div class="orden-card" onclick="irAOrden('${o.id}')">
+        <div class="orden-icon">🗒️</div>
+        <div class="orden-info">
+          <div class="orden-identificador">${label}</div>
+          <div class="orden-meta">Por ${state.cajero.nombre} · ${itemTxt}</div>
+        </div>
+        <div>
+          <div class="orden-tiempo" id="tiempo-${o.id}">🕐 ${tiempo}</div>
+          <div class="orden-items-count"></div>
+        </div>
+        <div class="orden-chevron">›</div>
+      </div>`;
+  }).join('');
+}
+
+function actualizarTiempos() {
+  state.ordenes.forEach(o => {
+    const el = document.getElementById('tiempo-' + o.id);
+    if (el) el.textContent = '🕐 ' + calcTiempo(o.created_at);
+  });
+}
+
+function calcTiempo(createdAt) {
+  const diff = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000);
+  if (diff < 60) return `${diff}s`;
+  if (diff < 3600) return `${Math.floor(diff / 60)} min`;
+  const h = Math.floor(diff / 3600);
+  const m = Math.floor((diff % 3600) / 60);
+  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+}
+
+// NUEVA ORDEN
+function abrirModalNuevaOrden() {
+  document.getElementById('input-identificador').value = '';
+  document.getElementById('modal-nueva').classList.add('open');
+  setTimeout(() => document.getElementById('input-identificador').focus(), 300);
+}
+function cerrarModalNuevaOrden() {
+  document.getElementById('modal-nueva').classList.remove('open');
+}
+function cerrarModalSiOverlay(e) {
+  if (e.target === document.getElementById('modal-nueva')) cerrarModalNuevaOrden();
+}
+
+async function crearOrden() {
+  const btn = document.getElementById('btn-crear-orden');
+  btn.disabled = true; btn.textContent = 'Creando...';
+  const identificador = document.getElementById('input-identificador').value.trim() || null;
+  try {
+    const [orden] = await sbFetch('ordenes', {
+      method: 'POST',
+      body: JSON.stringify({
+        negocio_id: NEGOCIO_ID,
+        cajero_id: state.cajero.id,
+        identificador,
+        estado: 'abierta'
+      })
+    });
+    cerrarModalNuevaOrden();
+    // Guardar cajero en sessionStorage para orden-detalle.html
+    sessionStorage.setItem('lx_cajero', JSON.stringify(state.cajero));
+    window.location.href = `orden-detalle.html?id=${orden.id}`;
+  } catch(e) {
+    toast('Error al crear la orden', 'err');
+    btn.disabled = false; btn.textContent = 'Crear Orden';
+  }
+}
+
+function irAOrden(id) {
+  sessionStorage.setItem('lx_cajero', JSON.stringify(state.cajero));
+  window.location.href = `orden-detalle.html?id=${id}`;
+}
+
+function irAlPOS() {
+  window.location.href = 'luminex-sales.html';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+let _tt;
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast-el');
+  el.textContent = msg; el.className = 'toast show ' + type;
+  clearTimeout(_tt); _tt = setTimeout(() => el.className = 'toast', 2500);
+}
+
+initLogin();
+</script>
+</body>
+</html>
