@@ -112,11 +112,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .obs-textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 14px;color:var(--text);font-family:var(--sans);font-size:.88rem;outline:none;resize:none;min-height:80px;transition:border-color .15s;line-height:1.5;}
 .obs-textarea:focus{border-color:var(--accentbord);}
 .obs-textarea::placeholder{color:var(--text3);}
+/* Badge cierre guardado */
+.cierre-badge{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--greenbg);border:1px solid var(--greenbord);border-radius:var(--r2);}
+.cierre-badge-icon{font-size:1rem;}
+.cierre-badge-text{font-size:.8rem;color:var(--green);font-weight:600;}
+.cierre-badge-time{font-size:.72rem;color:var(--text3);margin-left:auto;font-family:var(--mono);}
+/* Botones acciones */
 .acciones{display:flex;gap:10px;padding:0 0 8px;}
-.btn-compartir{flex:1;background:var(--accentbg);border:1px solid var(--accentbord);border-radius:var(--r2);padding:13px;color:var(--accent);font-family:var(--display);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.btn-compartir:active{background:var(--accent);color:var(--bg);}
-.btn-imprimir{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:13px;color:var(--text);font-family:var(--sans);font-size:.88rem;font-weight:500;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.btn-imprimir:active{background:var(--bg4);}
+.btn-guardar{flex:2;background:var(--accentbg);border:1px solid var(--accentbord);border-radius:var(--r2);padding:14px;color:var(--accent);font-family:var(--display);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-guardar:active{background:var(--accent);color:var(--bg);}
+.btn-guardar:disabled{opacity:.4;pointer-events:none;}
+.btn-compartir{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:14px;color:var(--text);font-family:var(--sans);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-compartir:active{background:var(--bg4);}
 .empty-msg{text-align:center;padding:40px 20px;color:var(--text3);font-size:.88rem;}
 .empty-icon{font-size:2rem;margin-bottom:8px;opacity:.3;}
 .loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,.8);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
@@ -165,7 +172,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Cierre de Caja v1.0.0</div>
+    <div class="login-version">Cierre de Caja v2.0.0</div>
   </div>
 </div>
 
@@ -195,10 +202,25 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <div class="toast" id="toast"></div>
 
 <script>
-const HEADERS = { 'apikey': CONFIG.SB_KEY, 'Authorization': 'Bearer ' + CONFIG.SB_KEY, 'Content-Type': 'application/json' };
+const HEADERS = {
+  'apikey': CONFIG.SB_KEY,
+  'Authorization': 'Bearer ' + CONFIG.SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
 
 async function sbGet(path) {
   const r = await fetch(CONFIG.SB_URL + '/rest/v1/' + path, { headers: HEADERS });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbUpsert(table, data) {
+  const r = await fetch(CONFIG.SB_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: { ...HEADERS, 'Prefer': 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify(data)
+  });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
@@ -207,11 +229,14 @@ function fmt(n) { return '$' + Number(n||0).toLocaleString('es-UY',{minimumFract
 function fmtDec(n) { return '$' + Number(n||0).toLocaleString('es-UY',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function normalizaTasa(t) { const v = parseFloat(t)||0; return v > 1 ? v/100 : v; }
 function showLoading(s) { document.getElementById('loading').classList.toggle('show',s); }
-function showToast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+type; setTimeout(()=>{t.className='toast';},2500); }
+function showToast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+type; setTimeout(()=>{t.className='toast';},2800); }
 function showScreen(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
 let cajeros = [], selectedCajero = null, pinVal = '';
+let datosVentas = [], datosItems = [];
+let cierreGuardado = null; // cierre existente en BD para la fecha actual
 
+// ─── LOGIN ───────────────────────────────────────────────
 async function initLogin() {
   try {
     cajeros = await sbGet('cajeros?negocio_id=eq.'+CONFIG.NEGOCIO_ID+'&activo=eq.true&select=id,nombre,pin,rol&order=nombre.asc');
@@ -269,25 +294,35 @@ function logout() {
   showScreen('screen-login');
 }
 
+// ─── FECHA ───────────────────────────────────────────────
 function irHoy() {
   document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
   cargarCierre();
 }
 
-let datosVentas = [], datosItems = [];
-
+// ─── CARGA DE DATOS ──────────────────────────────────────
 async function cargarCierre() {
   const fecha = document.getElementById('date-input').value;
   if (!fecha) return;
   showLoading(true);
+  cierreGuardado = null;
   try {
+    // Ventas del día
     const desde = fecha + 'T00:00:00.000Z';
     const hasta = fecha + 'T23:59:59.999Z';
     datosVentas = await sbGet('ventas?negocio_id=eq.'+CONFIG.NEGOCIO_ID+'&created_at=gte.'+desde+'&created_at=lte.'+hasta+'&order=created_at.desc&select=*');
+
+    // Cierre guardado para esa fecha (si existe)
+    try {
+      const cierres = await sbGet('cierres_caja?negocio_id=eq.'+CONFIG.NEGOCIO_ID+'&fecha=eq.'+fecha+'&select=*&limit=1');
+      if (cierres && cierres.length > 0) cierreGuardado = cierres[0];
+    } catch(e) { /* si falla no bloquea */ }
+
     if (!datosVentas.length) {
       document.getElementById('content').innerHTML = '<div class="empty-msg"><div class="empty-icon">&#x1F5D2;&#xFE0F;</div>No hay ventas en esta fecha</div>';
       showLoading(false); return;
     }
+
     const ventaIds = datosVentas.map(v => v.id);
     const idsParam = '('+ventaIds.map(id=>'"'+id+'"').join(',')+')';
     datosItems = await sbGet('venta_items?venta_id=in.'+idsParam+'&select=*');
@@ -296,18 +331,21 @@ async function cargarCierre() {
   showLoading(false);
 }
 
+// ─── RENDER ──────────────────────────────────────────────
 function renderCierre(fecha) {
   const activas = datosVentas.filter(v => v.estado !== 'anulada');
   const anuladas = datosVentas.filter(v => v.estado === 'anulada');
   const total = activas.reduce((s,v) => s+(parseFloat(v.total)||0), 0);
   const cant = activas.length;
   const prom = cant > 0 ? total/cant : 0;
+
   const metodos = {}, metodosCant = {};
   activas.forEach(v => {
     const m = v.metodo_pago||'otro';
     metodos[m] = (metodos[m]||0)+(parseFloat(v.total)||0);
     metodosCant[m] = (metodosCant[m]||0)+1;
   });
+
   const ivaGrupos = {}, ivaBase = {};
   datosItems.forEach(item => {
     const venta = datosVentas.find(v => v.id === item.venta_id);
@@ -322,22 +360,39 @@ function renderCierre(fecha) {
   });
   const totalIva = Object.values(ivaGrupos).reduce((s,v)=>s+v,0);
   const efectivoEsperado = metodos['efectivo']||0;
+
   const iconos = {efectivo:'&#x1F4B5;',tarjeta:'&#x1F4B3;',transferencia:'&#x1F3E6;',qr:'&#x1F4F1;',otro:'&#x1F4B0;'};
   const nombres = {efectivo:'Efectivo',tarjeta:'Tarjeta',transferencia:'Transferencia',qr:'QR / Digital',otro:'Otro'};
   const [y,m,d] = fecha.split('-');
   const fechaStr = d+'/'+m+'/'+y;
 
+  // Badge si ya hay cierre guardado
+  let badgeHtml = '';
+  if (cierreGuardado) {
+    const guardadoEn = new Date(cierreGuardado.created_at).toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'});
+    badgeHtml = '<div class="cierre-badge"><span class="cierre-badge-icon">&#x2705;</span><span class="cierre-badge-text">Cierre guardado</span><span class="cierre-badge-time">'+guardadoEn+'</span></div>';
+  }
+
+  // Prefill efectivo real y observaciones si hay cierre guardado
+  const efectivoRealPrev = cierreGuardado ? (cierreGuardado.efectivo_real || '') : '';
+  const obsPrev = cierreGuardado ? (cierreGuardado.observaciones || '') : '';
+
   document.getElementById('content').innerHTML =
+    badgeHtml +
     '<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F4CA;</span><span class="seccion-title">Resumen del día — '+fechaStr+'</span></div><div class="seccion-body"><div class="hero-total"><div class="hero-total-label">Total vendido</div><div class="hero-total-val">'+fmt(total)+'</div><div class="hero-sub"><div class="hero-sub-item"><div class="hero-sub-val">'+cant+'</div><div class="hero-sub-label">ventas</div></div><div class="hero-sub-item"><div class="hero-sub-val">'+fmt(prom)+'</div><div class="hero-sub-label">promedio</div></div><div class="hero-sub-item"><div class="hero-sub-val">'+anuladas.length+'</div><div class="hero-sub-label">anuladas</div></div></div></div></div></div>'+
     '<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F4B3;</span><span class="seccion-title">Desglose por método de pago</span></div><div class="seccion-body">'+
     Object.entries(metodos).map(([m,val])=>'<div class="metodo-row"><div class="metodo-left"><span class="metodo-icon">'+(iconos[m]||'&#x1F4B0;')+'</span><div><div class="metodo-nombre">'+(nombres[m]||m)+'</div><div class="metodo-cant">'+metodosCant[m]+' venta'+(metodosCant[m]!==1?'s':'')+'</div></div></div><div class="metodo-monto">'+fmt(val)+'</div></div>').join('')+
     '</div></div>'+
     (totalIva>0?'<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F9FE;</span><span class="seccion-title">IVA incluido en ventas</span></div><div class="seccion-body">'+Object.entries(ivaGrupos).map(([pct,ivaAmt])=>'<div class="iva-row"><span class="iva-tasa">IVA '+pct+'% — base imponible '+fmtDec(ivaBase[pct]||0)+'</span><span class="iva-monto">'+fmtDec(ivaAmt)+'</span></div>').join('')+'<div class="dato-row" style="padding-top:8px"><span class="dato-label" style="font-weight:600">Total IVA</span><span class="dato-val accent">'+fmtDec(totalIva)+'</span></div></div></div>':'')+
-    '<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F4B5;</span><span class="seccion-title">Conteo de caja</span></div><div class="seccion-body"><div class="dato-row"><span class="dato-label">Efectivo esperado</span><span class="dato-val accent" id="efectivo-esperado">'+fmt(efectivoEsperado)+'</span></div><div class="efectivo-wrap"><div style="font-size:.75rem;color:var(--text3);margin-bottom:2px;">Efectivo real en caja</div><div class="efectivo-input-row"><span class="efectivo-prefix">$</span><input class="efectivo-input" id="efectivo-real" type="number" inputmode="decimal" placeholder="0" oninput="calcDiferencia('+efectivoEsperado+')"></div></div><div class="diferencia-card neutro" id="diferencia-card"><div><div class="diferencia-titulo" id="dif-titulo">Diferencia</div><div class="diferencia-sub" id="dif-sub">Ingresá el efectivo real</div></div><div class="diferencia-val" id="dif-val">—</div></div></div></div>'+
-    '<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F4DD;</span><span class="seccion-title">Observaciones</span></div><div class="seccion-body"><textarea class="obs-textarea" id="obs-texto" placeholder="Ej: Faltaron $200 por cambio pendiente del turno anterior…"></textarea></div></div>'+
-    '<div class="acciones"><button class="btn-compartir" onclick="compartirCierre(\''+fechaStr+'\','+total+','+cant+','+efectivoEsperado+')">&#x1F4E4; Compartir</button><button class="btn-imprimir" onclick="imprimirCierre()">&#x1F5A8;&#xFE0F; Imprimir</button></div>';
+    '<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F4B5;</span><span class="seccion-title">Conteo de caja</span></div><div class="seccion-body"><div class="dato-row"><span class="dato-label">Efectivo esperado</span><span class="dato-val accent" id="efectivo-esperado">'+fmt(efectivoEsperado)+'</span></div><div class="efectivo-wrap"><div style="font-size:.75rem;color:var(--text3);margin-bottom:2px;">Efectivo real en caja</div><div class="efectivo-input-row"><span class="efectivo-prefix">$</span><input class="efectivo-input" id="efectivo-real" type="number" inputmode="decimal" placeholder="0" value="'+efectivoRealPrev+'" oninput="calcDiferencia('+efectivoEsperado+')"></div></div><div class="diferencia-card neutro" id="diferencia-card"><div><div class="diferencia-titulo" id="dif-titulo">Diferencia</div><div class="diferencia-sub" id="dif-sub">Ingresá el efectivo real</div></div><div class="diferencia-val" id="dif-val">—</div></div></div></div>'+
+    '<div class="seccion"><div class="seccion-header"><span class="seccion-icon">&#x1F4DD;</span><span class="seccion-title">Observaciones</span></div><div class="seccion-body"><textarea class="obs-textarea" id="obs-texto" placeholder="Ej: Faltaron $200 por cambio pendiente del turno anterior…">'+obsPrev+'</textarea></div></div>'+
+    '<div class="acciones"><button class="btn-guardar" id="btn-guardar" onclick="guardarCierre(\''+fecha+'\','+total+','+cant+','+efectivoEsperado+')">&#x1F4BE; Guardar cierre</button><button class="btn-compartir" onclick="compartirCierre(\''+fechaStr+'\','+total+','+cant+','+efectivoEsperado+')">&#x1F4E4; Compartir</button></div>';
+
+  // Si hay valor previo de efectivo, calcular diferencia
+  if (efectivoRealPrev !== '') calcDiferencia(efectivoEsperado);
 }
 
+// ─── DIFERENCIA ──────────────────────────────────────────
 function calcDiferencia(esperado) {
   const realStr = document.getElementById('efectivo-real').value;
   const card = document.getElementById('diferencia-card');
@@ -352,6 +407,73 @@ function calcDiferencia(esperado) {
   else { card.className='diferencia-card sobra'; titulo.textContent='↑ Sobra efectivo'; sub.textContent='Esperado '+fmt(esperado)+' · Real '+fmt(real); val.textContent='+'+fmt(diff); }
 }
 
+// ─── GUARDAR CIERRE ──────────────────────────────────────
+async function guardarCierre(fecha, total, cant, efectivoEsperado) {
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Guardando…';
+
+  const efectivoRealStr = document.getElementById('efectivo-real')?.value;
+  const efectivoReal = efectivoRealStr !== '' ? (parseFloat(efectivoRealStr)||0) : null;
+  const diferencia = efectivoReal !== null ? efectivoReal - efectivoEsperado : null;
+  const obs = document.getElementById('obs-texto')?.value?.trim() || null;
+
+  // Construir metodos_pago y iva_desglose
+  const activas = datosVentas.filter(v => v.estado !== 'anulada');
+  const metodosPago = {};
+  activas.forEach(v => {
+    const m = v.metodo_pago||'otro';
+    metodosPago[m] = (metodosPago[m]||0)+(parseFloat(v.total)||0);
+  });
+
+  const ivaDesglose = {};
+  datosItems.forEach(item => {
+    const venta = datosVentas.find(v => v.id === item.venta_id);
+    if (!venta || venta.estado === 'anulada') return;
+    const tasa = normalizaTasa(item.tasa_iva||0);
+    if (tasa === 0) return;
+    const pct = Math.round(tasa*100);
+    const sub = parseFloat(item.subtotal)||0;
+    ivaDesglose[pct] = (ivaDesglose[pct]||0) + sub*tasa/(1+tasa);
+  });
+
+  const payload = {
+    negocio_id: CONFIG.NEGOCIO_ID,
+    cajero_id: selectedCajero.id,
+    fecha: fecha,
+    total_ventas: total,
+    cantidad_ventas: cant,
+    efectivo_esperado: efectivoEsperado,
+    efectivo_real: efectivoReal,
+    diferencia: diferencia,
+    observaciones: obs,
+    metodos_pago: metodosPago,
+    iva_desglose: ivaDesglose
+  };
+
+  try {
+    await sbUpsert('cierres_caja', payload);
+    cierreGuardado = payload;
+    showToast('✓ Cierre guardado correctamente','ok');
+    // Actualizar badge sin recargar todo
+    const badgeExistente = document.querySelector('.cierre-badge');
+    const ahora = new Date().toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'});
+    const badgeHtml = '<div class="cierre-badge"><span class="cierre-badge-icon">&#x2705;</span><span class="cierre-badge-text">Cierre guardado</span><span class="cierre-badge-time">'+ahora+'</span></div>';
+    if (badgeExistente) {
+      badgeExistente.outerHTML = badgeHtml;
+    } else {
+      document.getElementById('content').insertAdjacentHTML('afterbegin', badgeHtml);
+    }
+  } catch(e) {
+    console.error(e);
+    showToast('Error al guardar','err');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '&#x1F4BE; Guardar cierre';
+}
+
+// ─── COMPARTIR ───────────────────────────────────────────
 function compartirCierre(fechaStr, total, cant, efectivoEsperado) {
   const real = parseFloat(document.getElementById('efectivo-real')?.value)||0;
   const diff = real - efectivoEsperado;
@@ -360,7 +482,7 @@ function compartirCierre(fechaStr, total, cant, efectivoEsperado) {
   const metodos = {};
   datosVentas.filter(v=>v.estado!=='anulada').forEach(v=>{const m=v.metodo_pago||'otro';metodos[m]=(metodos[m]||0)+(parseFloat(v.total)||0);});
   const nombres = {efectivo:'Efectivo',tarjeta:'Tarjeta',transferencia:'Transferencia',qr:'QR',otro:'Otro'};
-  Object.entries(metodos).forEach(([m,val])=>{texto+=nombres[m]||m+': '+fmt(val)+'\n';});
+  Object.entries(metodos).forEach(([m,val])=>{texto+=(nombres[m]||m)+': '+fmt(val)+'\n';});
   if (real>0){texto+='\n💵 CONTEO DE CAJA\nEsperado: '+fmt(efectivoEsperado)+'\nReal: '+fmt(real)+'\nDiferencia: '+(diff>=0?'+':'')+fmt(diff)+'\n';}
   if (obs){texto+='\n📝 Observaciones:\n'+obs+'\n';}
   texto+='\n— Luminex Ecosystem';
@@ -368,8 +490,7 @@ function compartirCierre(fechaStr, total, cant, efectivoEsperado) {
   else{navigator.clipboard.writeText(texto).then(()=>showToast('Copiado al portapapeles ✓','ok')).catch(()=>showToast('No se pudo copiar','err'));}
 }
 
-function imprimirCierre() { window.print(); }
-
+// ─── INIT ────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const sess = sessionStorage.getItem('cierre_cajero');
   if (sess) { try { selectedCajero=JSON.parse(sess); showScreen('screen-app'); irHoy(); } catch(e){sessionStorage.removeItem('cierre_cajero');} }
