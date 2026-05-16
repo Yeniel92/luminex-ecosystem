@@ -216,7 +216,7 @@ async function sbGet(path) {
 }
 
 async function sbUpsert(table, data) {
-  const r = await fetch(CONFIG.SB_URL + '/rest/v1/' + table, {
+  const r = await fetch(CONFIG.SB_URL + '/rest/v1/' + table + '?on_conflict=negocio_id,fecha', {
     method: 'POST',
     headers: { ...HEADERS, 'Prefer': 'resolution=merge-duplicates,return=representation' },
     body: JSON.stringify(data)
