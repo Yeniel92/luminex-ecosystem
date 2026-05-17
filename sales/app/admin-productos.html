@@ -48,13 +48,9 @@
 
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
 
-/* ── SCREENS ── */
 .screen{display:none;position:fixed;inset:0;overflow:hidden}
 .screen.active{display:flex;flex-direction:column}
 
-/* ══════════════════════════════════════
-   LOGIN SCREEN
-══════════════════════════════════════ */
 #screen-login{
   background:var(--bg);
   align-items:center;justify-content:center;
@@ -96,8 +92,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .pin-btn.del{font-size:1rem;color:var(--text2);}
 .pin-btn.confirm{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);font-size:.85rem;font-weight:700;letter-spacing:.03em;}
 .pin-btn.confirm:active{background:var(--accent);color:var(--bg);}
-.login-cajeros{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
-.login-cajeros-label{font-size:.7rem;color:var(--text3);text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
 .cajero-list{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
 .cajero-item{
   display:flex;align-items:center;gap:10px;padding:9px 12px;
@@ -119,12 +113,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 }
 .login-error.show{display:block;}
 
-/* ══════════════════════════════════════
-   APP SCREEN
-══════════════════════════════════════ */
 #screen-app{background:var(--bg);}
 
-/* TOPBAR */
 .topbar{
   height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);padding:0 16px;
@@ -147,7 +137,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 }
 .topbar-btn:active{background:var(--bg4);}
 
-/* TOOLBAR */
 .toolbar{
   padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
   display:flex;gap:8px;flex-shrink:0;
@@ -168,7 +157,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 }
 .btn-nuevo:active{opacity:.85;transform:scale(.97);}
 
-/* FILTROS */
 .filtros-bar{
   padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
   display:flex;gap:8px;overflow-x:auto;flex-shrink:0;
@@ -182,7 +170,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .filtro-chip.active{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .filtro-chip:active{transform:scale(.95);}
 
-/* STATS BAR */
 .stats-bar{
   padding:10px 16px;display:flex;gap:10px;flex-shrink:0;
   border-bottom:1px solid var(--border);background:var(--bg);
@@ -196,7 +183,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .stat-pill-num{font-family:var(--mono);font-weight:500;color:var(--text);}
 .stat-pill-label{color:var(--text2);}
 
-/* LISTA */
 .productos-list{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
 .productos-list::-webkit-scrollbar{display:none;}
 
@@ -208,7 +194,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 }
 .producto-card:active{background:var(--bg3);border-color:var(--border2);}
 .producto-card.inactivo{opacity:.5;}
-
 .producto-emoji{
   width:44px;height:44px;border-radius:12px;
   background:var(--bg3);border:1px solid var(--border);
@@ -227,37 +212,19 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .producto-stock.ok{color:var(--green);}
 .producto-stock.low{color:var(--amber);}
 .producto-stock.zero{color:var(--red);}
-.producto-badge{
-  font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  padding:2px 7px;border-radius:8px;
-}
+.producto-badge{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:8px;}
 .producto-badge.activo{background:var(--greenbg);color:var(--green);border:1px solid var(--greenbord);}
 .producto-badge.inactivo{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);}
 
-.empty-state{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;padding:40px;text-align:center;color:var(--text3);
-}
-.empty-state-icon{font-size:2.5rem;opacity:.4;}
-.empty-state-text{font-size:.9rem;}
-
-/* LOADING */
 .loading-overlay{
   position:fixed;inset:0;background:rgba(10,10,15,.8);backdrop-filter:blur(4px);
   display:flex;align-items:center;justify-content:center;z-index:200;
   display:none;
 }
 .loading-overlay.show{display:flex;}
-.spinner{
-  width:36px;height:36px;border:3px solid var(--border2);
-  border-top-color:var(--accent);border-radius:50%;
-  animation:spin .6s linear infinite;
-}
+.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ══════════════════════════════════════
-   MODAL (crear/editar producto)
-══════════════════════════════════════ */
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
   z-index:100;display:none;align-items:flex-end;justify-content:center;
@@ -271,29 +238,15 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   animation:slideUp .25s ease;
 }
 @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-handle{
-  width:40px;height:4px;border-radius:2px;background:var(--border2);
-  margin:12px auto 0;flex-shrink:0;
-}
-.modal-header{
-  padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);flex-shrink:0;
-}
+.modal-handle{width:40px;height:4px;border-radius:2px;background:var(--border2);margin:12px auto 0;flex-shrink:0;}
+.modal-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
 .modal-title{font-family:var(--display);font-size:1.1rem;font-weight:800;}
-.modal-close{
-  width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:1rem;color:var(--text2);transition:all .12s;
-}
+.modal-close{width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--text2);transition:all .12s;}
 .modal-close:active{background:var(--bg4);}
 .modal-body{flex:1;overflow-y:auto;padding:16px 20px;}
 .modal-body::-webkit-scrollbar{display:none;}
-.modal-footer{
-  padding:14px 20px;border-top:1px solid var(--border);
-  display:flex;gap:10px;flex-shrink:0;
-}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;}
 
-/* FORM FIELDS */
 .field{margin-bottom:14px;}
 .field-label{font-size:.72rem;font-weight:600;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:block;}
 .field-input{
@@ -308,10 +261,8 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
   background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
 }
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .field-hint{font-size:.7rem;color:var(--text3);margin-top:4px;}
 
-/* EMOJI PICKER */
 .emoji-field{display:flex;gap:8px;align-items:center;}
 .emoji-preview{
   width:52px;height:52px;border-radius:12px;background:var(--bg3);border:1px solid var(--border2);
@@ -327,13 +278,9 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
   display:none;
 }
 .emoji-grid.show{display:grid;}
-.emoji-opt{
-  font-size:1.3rem;text-align:center;cursor:pointer;padding:4px;
-  border-radius:8px;transition:all .1s;
-}
+.emoji-opt{font-size:1.3rem;text-align:center;cursor:pointer;padding:4px;border-radius:8px;transition:all .1s;}
 .emoji-opt:active{background:var(--accentbg);transform:scale(1.2);}
 
-/* IVA SELECTOR */
 .iva-options{display:flex;gap:8px;}
 .iva-opt{
   flex:1;padding:9px 6px;border-radius:var(--r2);border:1px solid var(--border2);
@@ -343,42 +290,21 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
 .iva-opt.selected{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .iva-opt:active{transform:scale(.97);}
 
-/* TOGGLE ACTIVO */
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;}
 .toggle-label{font-size:.9rem;font-weight:500;}
 .toggle-sub{font-size:.75rem;color:var(--text2);margin-top:2px;}
-.toggle-switch{
-  width:48px;height:26px;border-radius:13px;background:var(--bg4);border:1px solid var(--border2);
-  position:relative;cursor:pointer;transition:all .2s;flex-shrink:0;
-}
+.toggle-switch{width:48px;height:26px;border-radius:13px;background:var(--bg4);border:1px solid var(--border2);position:relative;cursor:pointer;transition:all .2s;flex-shrink:0;}
 .toggle-switch.on{background:var(--green);border-color:var(--greenbord);}
-.toggle-knob{
-  position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
-  background:var(--text2);transition:all .2s;
-}
+.toggle-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--text2);transition:all .2s;}
 .toggle-switch.on .toggle-knob{left:25px;background:#fff;}
 
-/* BOTONES MODAL */
-.btn-primary{
-  flex:1;background:var(--accent);color:var(--bg);border:none;border-radius:var(--r2);
-  padding:13px;font-family:var(--display);font-size:.9rem;font-weight:700;
-  cursor:pointer;transition:all .12s;
-}
+.btn-primary{flex:1;background:var(--accent);color:var(--bg);border:none;border-radius:var(--r2);padding:13px;font-family:var(--display);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .12s;}
 .btn-primary:active{opacity:.85;}
-.btn-secondary{
-  flex:1;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:var(--r2);
-  padding:13px;font-family:var(--sans);font-size:.88rem;font-weight:500;
-  cursor:pointer;transition:all .12s;
-}
+.btn-secondary{flex:1;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:var(--r2);padding:13px;font-family:var(--sans);font-size:.88rem;font-weight:500;cursor:pointer;transition:all .12s;}
 .btn-secondary:active{background:var(--bg4);}
-.btn-danger{
-  background:var(--redbg);color:var(--red);border:1px solid var(--redbord);border-radius:var(--r2);
-  padding:13px 20px;font-family:var(--sans);font-size:.88rem;font-weight:600;
-  cursor:pointer;transition:all .12s;
-}
+.btn-danger{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);border-radius:var(--r2);padding:13px 20px;font-family:var(--sans);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .12s;}
 .btn-danger:active{opacity:.75;}
 
-/* TOAST */
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
   background:var(--bg3);border:1px solid var(--border2);border-radius:12px;
@@ -391,11 +317,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
 .toast.ok{border-color:var(--greenbord);color:var(--green);}
 .toast.err{border-color:var(--redbord);color:var(--red);}
 
-/* SECTION HEADER */
-.section-empty{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:40px;color:var(--text3);gap:10px;
-}
+.section-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;color:var(--text3);gap:10px;}
 </style>
 </head>
 <body>
@@ -416,7 +338,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
     <div class="login-error" id="login-error">PIN incorrecto. Solo administradores.</div>
     <p class="login-label">Seleccioná tu usuario</p>
     <div class="cajero-list" id="cajero-list"></div>
-    <div class="login-cajeros" style="border-top:none;padding-top:16px;">
+    <div style="padding-top:16px;">
       <p class="login-label" style="margin-top:8px;">Ingresá tu PIN</p>
       <div class="pin-display" id="pin-display"></div>
       <div class="pinpad">
@@ -440,7 +362,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
 
 <!-- SCREEN APP -->
 <div class="screen" id="screen-app">
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-logo">Luminex<span class="eco"> Ecosystem</span></div>
@@ -452,7 +373,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
     </div>
   </div>
 
-  <!-- TOOLBAR -->
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
@@ -461,12 +381,10 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
     <button class="btn-nuevo" onclick="abrirModalNuevo()">＋ Nuevo</button>
   </div>
 
-  <!-- FILTROS CATEGORIAS -->
   <div class="filtros-bar" id="filtros-bar">
     <div class="filtro-chip active" data-cat="todos" onclick="seleccionarCat(this,'todos')">Todos</div>
   </div>
 
-  <!-- STATS -->
   <div class="stats-bar" id="stats-bar">
     <div class="stat-pill">
       <div class="stat-pill-dot" style="background:var(--green)"></div>
@@ -485,7 +403,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
     </div>
   </div>
 
-  <!-- LISTA PRODUCTOS -->
   <div class="productos-list" id="productos-list"></div>
 </div>
 
@@ -498,8 +415,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
       <div class="modal-close" onclick="cerrarModal()">✕</div>
     </div>
     <div class="modal-body">
-
-      <!-- EMOJI -->
       <div class="field">
         <label class="field-label">Emoji / Ícono</label>
         <div class="emoji-field">
@@ -508,22 +423,16 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
         </div>
         <div class="emoji-grid" id="emoji-grid"></div>
       </div>
-
-      <!-- NOMBRE -->
       <div class="field">
         <label class="field-label">Nombre del producto</label>
         <input class="field-input" id="campo-nombre" type="text" placeholder="Ej: Coca-Cola 1.5L">
       </div>
-
-      <!-- CATEGORIA -->
       <div class="field">
         <label class="field-label">Categoría</label>
         <select class="field-input" id="campo-categoria">
           <option value="">— Sin categoría —</option>
         </select>
       </div>
-
-      <!-- PRECIO + UNIDAD -->
       <div class="field-row">
         <div class="field">
           <label class="field-label">Precio ($)</label>
@@ -542,8 +451,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
           </select>
         </div>
       </div>
-
-      <!-- IVA -->
       <div class="field">
         <label class="field-label">Tasa IVA (incluida en precio)</label>
         <div class="iva-options">
@@ -552,8 +459,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
           <div class="iva-opt" data-iva="0.22" onclick="seleccionarIva(this)">22%</div>
         </div>
       </div>
-
-      <!-- STOCK -->
       <div class="field-row">
         <div class="field">
           <label class="field-label">Stock actual</label>
@@ -565,15 +470,11 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
           <div class="field-hint">Alerta cuando baje de este nivel</div>
         </div>
       </div>
-
-      <!-- CÓDIGO DE BARRAS -->
       <div class="field">
         <label class="field-label">Código de barras</label>
         <input class="field-input" id="campo-codigo" type="text" inputmode="numeric" placeholder="Dejar vacío para generar LMX-XXXX">
         <div class="field-hint" id="codigo-hint">Se generará un código interno automático.</div>
       </div>
-
-      <!-- ACTIVO TOGGLE -->
       <div class="toggle-row">
         <div>
           <div class="toggle-label">Producto activo</div>
@@ -583,7 +484,6 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
           <div class="toggle-knob"></div>
         </div>
       </div>
-
     </div>
     <div class="modal-footer">
       <button class="btn-danger" id="btn-toggle-estado" onclick="toggleEstadoProducto()" style="display:none">Desactivar</button>
@@ -594,23 +494,48 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
 </div>
 
 <script>
-const SB_HEADERS = {
-  'apikey': CONFIG.SB_KEY,
-  'Authorization': 'Bearer ' + CONFIG.SB_KEY,
-  'Content-Type': 'application/json'
-};
+// ── AUTH JWT ──────────────────────────────────────────────
+let sbAccessToken = null;
 
+async function supabaseLogin() {
+  try {
+    const r = await fetch(`${CONFIG.SB_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: {
+        'apikey': CONFIG.SB_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: CONFIG.SB_EMAIL, password: CONFIG.SB_PASSWORD })
+    });
+    if (r.ok) {
+      const data = await r.json();
+      sbAccessToken = data.access_token || null;
+    }
+  } catch(e) {
+    sbAccessToken = null; // degradación segura: usa anon key
+  }
+}
+
+function getHeaders() {
+  return {
+    'apikey': CONFIG.SB_KEY,
+    'Authorization': 'Bearer ' + (sbAccessToken || CONFIG.SB_KEY),
+    'Content-Type': 'application/json'
+  };
+}
+
+// ── SUPABASE HELPERS ──────────────────────────────────────
 async function sbGet(tabla, params) {
   const url = new URL(`${CONFIG.SB_URL}/rest/v1/${tabla}`);
   if (params) Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
-  const r = await fetch(url, { headers: { ...SB_HEADERS, 'Prefer': 'return=representation' }});
+  const r = await fetch(url, { headers: { ...getHeaders(), 'Prefer': 'return=representation' }});
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
 async function sbPost(tabla, body) {
   const r = await fetch(`${CONFIG.SB_URL}/rest/v1/${tabla}`, {
     method: 'POST',
-    headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+    headers: { ...getHeaders(), 'Prefer': 'return=representation' },
     body: JSON.stringify(body)
   });
   if (!r.ok) throw new Error(await r.text());
@@ -619,17 +544,18 @@ async function sbPost(tabla, body) {
 async function sbPatch(tabla, id, body) {
   const r = await fetch(`${CONFIG.SB_URL}/rest/v1/${tabla}?id=eq.${id}`, {
     method: 'PATCH',
-    headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+    headers: { ...getHeaders(), 'Prefer': 'return=representation' },
     body: JSON.stringify(body)
   });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
 
+// ── ESTADO ────────────────────────────────────────────────
 let cajeros = [];
 let cajeroSeleccionado = null;
 let pinActual = '';
-let PIN_MAX = 4;
+const PIN_MAX = 4;
 let productos = [];
 let categorias = [];
 let catFiltro = 'todos';
@@ -638,6 +564,7 @@ let ivaSeleccionado = 0;
 let activoActual = true;
 let usuarioActual = null;
 
+// ── LOGIN ─────────────────────────────────────────────────
 async function iniciarLogin() {
   mostrarLoading(true);
   try {
@@ -720,8 +647,10 @@ function pinConfirm() {
 }
 function pinError() {
   pinActual = '';
-  const dots = document.querySelectorAll('.pin-dot');
-  dots.forEach(d => { d.classList.add('error'); setTimeout(() => d.classList.remove('error','filled'), 400); });
+  document.querySelectorAll('.pin-dot').forEach(d => {
+    d.classList.add('error');
+    setTimeout(() => d.classList.remove('error','filled'), 400);
+  });
 }
 function entrarApp() {
   document.getElementById('screen-login').classList.remove('active');
@@ -737,6 +666,7 @@ function logout() {
   renderPinDisplay();
 }
 
+// ── DATOS ─────────────────────────────────────────────────
 async function cargarDatos() {
   mostrarLoading(true);
   try {
@@ -763,14 +693,12 @@ function renderFiltros() {
   ).join('');
   bar.innerHTML = `<div class="filtro-chip active" data-cat="todos" onclick="seleccionarCat(this,'todos')">Todos</div>` + chips;
 }
-
 function seleccionarCat(el, val) {
   catFiltro = val;
   document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   renderProductos();
 }
-
 function filtrar() { renderProductos(); }
 
 function renderStats() {
@@ -811,10 +739,9 @@ function renderProductos() {
   let lista = productos;
   if (catFiltro !== 'todos') lista = lista.filter(p => p.categoria_id === catFiltro);
   if (q) lista = lista.filter(p => p.nombre.toLowerCase().includes(q) || (p.codigo_barras||'').toLowerCase().includes(q));
-
   const el = document.getElementById('productos-list');
   if (!lista.length) {
-    el.innerHTML = `<div class="section-empty"><div class="empty-state-icon">📭</div><div class="empty-state-text">Sin productos${q ? ' para "'+q+'"' : ''}</div></div>`;
+    el.innerHTML = `<div class="section-empty"><div style="font-size:2.5rem;opacity:.4">📭</div><div style="font-size:.9rem">Sin productos${q ? ' para "'+q+'"' : ''}</div></div>`;
     return;
   }
   el.innerHTML = lista.map(p => `
@@ -837,6 +764,7 @@ function renderProductos() {
   `).join('');
 }
 
+// ── EMOJI ─────────────────────────────────────────────────
 function generarCodigoLMX() {
   const nums = productos.map(p => {
     if (!p.codigo_barras) return 0;
@@ -864,6 +792,7 @@ function actualizarEmoji() {
   document.getElementById('emoji-preview').textContent = v || '📦';
 }
 
+// ── MODAL ─────────────────────────────────────────────────
 function abrirModalNuevo() {
   productoEditando = null;
   document.getElementById('modal-titulo').textContent = 'Nuevo Producto';
@@ -923,7 +852,6 @@ function cerrarModal() {
 function cerrarModalClick(e) {
   if (e.target === document.getElementById('modal-overlay')) cerrarModal();
 }
-
 function seleccionarIva(el) {
   ivaSeleccionado = parseFloat(el.dataset.iva);
   document.querySelectorAll('.iva-opt').forEach(o => o.classList.remove('selected'));
@@ -934,6 +862,7 @@ function actualizarToggle() {
   document.getElementById('toggle-activo').classList.toggle('on', activoActual);
 }
 
+// ── GUARDAR ───────────────────────────────────────────────
 async function guardarProducto() {
   const nombre = document.getElementById('campo-nombre').value.trim();
   if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
@@ -997,6 +926,7 @@ function renderCatSelect() {
     categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
 }
 
+// ── UI HELPERS ────────────────────────────────────────────
 function mostrarLoading(v) { document.getElementById('loading').classList.toggle('show', v); }
 let toastTimer = null;
 function showToast(msg, tipo) {
@@ -1007,8 +937,9 @@ function showToast(msg, tipo) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
+// ── INIT ──────────────────────────────────────────────────
 renderEmojiGrid();
-iniciarLogin();
+supabaseLogin().then(() => iniciarLogin());
 </script>
 </body>
 </html>
