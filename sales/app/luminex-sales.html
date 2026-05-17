@@ -153,7 +153,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .cambio-card.show{display:flex}
 .cambio-label{font-size:.78rem;color:var(--green)}
 .cambio-val{font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--green);}
-/* ── PROPINA ── */
 .propina-section{margin-bottom:20px;display:none;}
 .propina-section.show{display:block}
 .propina-btns{display:flex;gap:8px;margin-bottom:10px;}
@@ -164,7 +163,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .propina-custom-label{font-size:.78rem;color:var(--text2);flex-shrink:0;}
 .propina-custom-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-family:var(--mono);font-size:.9rem;outline:none;text-align:center;}
 .propina-custom-input:focus{border-color:var(--amberbord)}
-/* ── RESUMEN Y NOTA ── */
 .resumen-section{margin-bottom:20px}
 .resumen-items{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
 .resumen-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:.82rem;}
@@ -449,6 +447,7 @@ const CURRENCY   = 'UYU';
 
 let discountType = 'pct';
 let propinaAmt   = 0;
+let sbAccessToken = null; // JWT del usuario autenticado
 
 let state = {
   cajero: null, cart: [], discount: 0, payMethod: 'efectivo',
@@ -460,13 +459,33 @@ let currentVariantProduct = null;
 let selectedVariant = null;
 
 // ══════════════════════════════════════════
+//  SUPABASE AUTH — login silencioso al cargar
+// ══════════════════════════════════════════
+async function supabaseLogin() {
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: CONFIG.SB_EMAIL, password: CONFIG.SB_PASSWORD })
+    });
+    if (!res.ok) { console.warn('Auth fallida, usando anon key'); return; }
+    const data = await res.json();
+    sbAccessToken = data.access_token;
+  } catch(e) {
+    console.warn('Auth error, usando anon key:', e.message);
+  }
+}
+
+// ══════════════════════════════════════════
 //  SUPABASE
 // ══════════════════════════════════════════
 async function sbFetch(path, options = {}) {
+  const token = sbAccessToken || SB_KEY;
   const res = await fetch(SB_URL + '/rest/v1/' + path, {
     ...options,
     headers: {
-      'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json',
       'Prefer': options.prefer || 'return=representation',
       ...(options.headers || {})
@@ -941,7 +960,7 @@ function toast(msg, type = 'ok') {
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
-initLogin();
+supabaseLogin().then(() => initLogin());
 </script>
 </body>
 </html>
