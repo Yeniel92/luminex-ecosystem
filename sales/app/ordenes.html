@@ -16,8 +16,6 @@
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
 .screen{display:none;position:fixed;inset:0;overflow:hidden}
 .screen.active{display:flex;flex-direction:column}
-
-/* LOGIN */
 #screen-login{background:var(--bg);align-items:center;justify-content:center;padding:24px;}
 #screen-login::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(11,60,93,.2),transparent),radial-gradient(ellipse 50% 40% at 80% 100%,rgba(0,230,118,.08),transparent);pointer-events:none;}
 .login-card{width:100%;max-width:360px;background:var(--bg2);border:1px solid var(--border2);border-radius:24px;padding:36px 28px;box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,230,118,.06);position:relative;z-index:1;}
@@ -46,8 +44,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .login-cajeros{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
 .login-cajeros-label{font-size:.7rem;color:var(--text3);text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
 .login-version{text-align:center;font-size:.68rem;color:var(--text3);margin-top:20px;font-family:var(--mono);}
-
-/* APP */
 #screen-app{background:var(--bg)}
 .topbar{height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;}
 .topbar-left{display:flex;align-items:center;gap:10px}
@@ -57,16 +53,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .topbar-right{display:flex;align-items:center;gap:8px}
 .topbar-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .12s;}
 .topbar-btn:active{background:var(--bg4)}
-
-/* PANEL */
-.panel-header{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.panel-title{font-family:var(--display);font-size:1.1rem;font-weight:800;margin-bottom:2px;}
-.panel-sub{font-size:.76rem;color:var(--text2);}
 .panel-body{flex:1;overflow-y:auto;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--bg4) transparent;}
-
 .btn-nueva-orden{width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:var(--r);font-family:var(--display);font-size:1rem;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;letter-spacing:.02em;}
 .btn-nueva-orden:active{background:var(--accent2);transform:scale(.98);}
-
 .ordenes-list{display:flex;flex-direction:column;gap:10px;}
 .orden-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;}
 .orden-card:active{border-color:var(--accentbord);transform:scale(.98);}
@@ -77,15 +66,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .orden-tiempo{font-family:var(--mono);font-size:.78rem;color:var(--amber);font-weight:500;flex-shrink:0;text-align:right;}
 .orden-items-count{font-size:.68rem;color:var(--text3);margin-top:2px;text-align:right;}
 .orden-chevron{color:var(--text3);font-size:.8rem;margin-left:4px;}
-
 .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
 .empty-icon{font-size:2.5rem;margin-bottom:12px}
 .empty-text{font-size:.86rem;line-height:1.5}
 .empty-hint{font-size:.76rem;color:var(--text3);margin-top:6px;opacity:.6}
-
 .section-label{font-size:.7rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
-
-/* MODAL NUEVA ORDEN */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.open{display:flex}
 .modal-sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:20px 20px 0 0;width:100%;padding:20px 16px 32px;animation:slideUp .25s ease;}
@@ -103,7 +88,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-modal-confirm{flex:2;padding:13px;background:var(--accent);border:none;border-radius:var(--r);color:var(--bg);font-family:var(--display);font-size:.95rem;font-weight:800;cursor:pointer;transition:all .12s;}
 .btn-modal-confirm:active{transform:scale(.98);background:var(--accent2)}
 .btn-modal-confirm:disabled{opacity:.3;cursor:not-allowed;transform:none}
-
 .toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:8px 18px;font-size:.82rem;white-space:nowrap;z-index:300;opacity:0;transition:all .2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{border-color:var(--greenbord);color:var(--green)}
@@ -145,7 +129,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Órdenes · v1.0.0</div>
+    <div class="login-version">Luminex Órdenes · v1.1.0</div>
   </div>
 </div>
 
@@ -189,13 +173,41 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </div>
 
 <div class="toast" id="toast-el"></div>
-<div class="version-chip">Luminex Órdenes · v1.0.0</div>
+<div class="version-chip">Luminex Órdenes · v1.1.0</div>
 
 <script>
 // CONFIG centralizada — valores en config.js
-const SB_URL    = CONFIG.SB_URL;
-const SB_KEY    = CONFIG.SB_KEY;
+const SB_URL     = CONFIG.SB_URL;
+const SB_KEY     = CONFIG.SB_KEY;
 const NEGOCIO_ID = CONFIG.NEGOCIO_ID;
+
+let sbAccessToken = null;
+
+async function supabaseLogin() {
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: CONFIG.SB_EMAIL, password: CONFIG.SB_PASSWORD })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      sbAccessToken = data.access_token || null;
+    }
+  } catch(e) {
+    console.warn('supabaseLogin fallback anon:', e);
+  }
+}
+
+function getHeaders(extra = {}) {
+  const token = sbAccessToken || SB_KEY;
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json',
+    ...extra
+  };
+}
 
 let state = { cajero: null, cajeros: [], ordenes: [] };
 let pinBuffer = '';
@@ -206,8 +218,7 @@ async function sbFetch(path, options = {}) {
   const res = await fetch(SB_URL + '/rest/v1/' + path, {
     ...options,
     headers: {
-      'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
+      ...getHeaders(),
       'Prefer': options.prefer || 'return=representation',
       ...(options.headers || {})
     }
@@ -286,7 +297,6 @@ async function cargarOrdenes() {
     const ordenes = await sbFetch(`ordenes?negocio_id=eq.${NEGOCIO_ID}&estado=eq.abierta&order=created_at.asc`);
     state.ordenes = ordenes;
 
-    // Cargar conteo de items por orden
     if (ordenes.length > 0) {
       const ids = ordenes.map(o => o.id).join(',');
       const items = await sbFetch(`orden_items?orden_id=in.(${ids})&select=orden_id`);
@@ -317,13 +327,13 @@ function renderOrdenes() {
   label.textContent = `Órdenes abiertas (${state.ordenes.length})`;
   list.innerHTML = state.ordenes.map(o => {
     const tiempo = calcTiempo(o.created_at);
-    const label = o.identificador || `Orden #${o.id.slice(-4).toUpperCase()}`;
+    const lbl = o.identificador || `Orden #${o.id.slice(-4).toUpperCase()}`;
     const itemTxt = o.itemCount === 1 ? '1 producto' : `${o.itemCount} productos`;
     return `
       <div class="orden-card" onclick="irAOrden('${o.id}')">
         <div class="orden-icon">🗒️</div>
         <div class="orden-info">
-          <div class="orden-identificador">${label}</div>
+          <div class="orden-identificador">${lbl}</div>
           <div class="orden-meta">Por ${state.cajero.nombre} · ${itemTxt}</div>
         </div>
         <div>
@@ -379,7 +389,6 @@ async function crearOrden() {
       })
     });
     cerrarModalNuevaOrden();
-    // Guardar cajero en sessionStorage para orden-detalle.html
     sessionStorage.setItem('lx_cajero', JSON.stringify(state.cajero));
     window.location.href = `orden-detalle.html?id=${orden.id}`;
   } catch(e) {
@@ -408,7 +417,9 @@ function toast(msg, type = 'ok') {
   clearTimeout(_tt); _tt = setTimeout(() => el.className = 'toast', 2500);
 }
 
-initLogin();
+document.addEventListener('DOMContentLoaded', () => {
+  supabaseLogin().then(() => initLogin());
+});
 </script>
 </body>
 </html>
