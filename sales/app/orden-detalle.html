@@ -375,13 +375,41 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </div>
 
 <div class="toast" id="toast-el"></div>
-<div class="version-chip">Luminex Órdenes · v1.0.0</div>
+<div class="version-chip">Luminex Órdenes · v1.1.0</div>
 
 <script>
 // CONFIG centralizada — valores en config.js
 const SB_URL     = CONFIG.SB_URL;
 const SB_KEY     = CONFIG.SB_KEY;
 const NEGOCIO_ID = CONFIG.NEGOCIO_ID;
+
+let sbAccessToken = null;
+
+async function supabaseLogin() {
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: CONFIG.SB_EMAIL, password: CONFIG.SB_PASSWORD })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      sbAccessToken = data.access_token || null;
+    }
+  } catch(e) {
+    console.warn('supabaseLogin fallback anon:', e);
+  }
+}
+
+function getHeaders(extra = {}) {
+  const token = sbAccessToken || SB_KEY;
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json',
+    ...extra
+  };
+}
 
 const CURRENCY = 'UYU';
 const IVA_RATE = 0.22;
@@ -419,8 +447,7 @@ async function sbFetch(path, options = {}) {
   const res = await fetch(SB_URL + '/rest/v1/' + path, {
     ...options,
     headers: {
-      'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
+      ...getHeaders(),
       'Prefer': options.prefer || 'return=representation',
       ...(options.headers || {})
     }
@@ -434,7 +461,6 @@ async function sbFetch(path, options = {}) {
 async function init() {
   if (!ORDEN_ID) return;
   try {
-    // Cargar orden, productos, categorías y negocio en paralelo
     const [ordenes, productos, categorias, negocios] = await Promise.all([
       sbFetch(`ordenes?id=eq.${ORDEN_ID}&negocio_id=eq.${NEGOCIO_ID}`),
       sbFetch(`productos?negocio_id=eq.${NEGOCIO_ID}&activo=eq.true&order=nombre.asc`),
@@ -457,11 +483,9 @@ async function init() {
     }));
     state.categories = ['todas', ...categorias.map(c => c.nombre)];
 
-    // Actualizar topbar
     const label = state.orden.identificador || `Orden #${state.orden.id.slice(-4).toUpperCase()}`;
     document.getElementById('tb-orden-id').textContent = label;
 
-    // Cargar items existentes de la orden → precargar carrito
     const items = await sbFetch(`orden_items?orden_id=eq.${ORDEN_ID}`);
     if (items && items.length) {
       items.forEach(item => {
@@ -476,7 +500,6 @@ async function init() {
     renderProducts();
     updateCartUI();
 
-    // Timer de tiempo transcurrido
     actualizarTiempo();
     timerInterval = setInterval(actualizarTiempo, 60000);
 
@@ -563,7 +586,6 @@ async function removeFromCart(key) {
     item.qty--;
     await syncItemToSupabase(item);
   } else {
-    // Eliminar de Supabase
     if (item.ordenItemId) {
       try { await sbFetch(`orden_items?id=eq.${item.ordenItemId}`, { method: 'DELETE', prefer: '' }); } catch(e) {}
     }
@@ -584,14 +606,12 @@ async function syncItemToSupabase(item) {
   const subtotal = item.product.precio * item.qty;
   try {
     if (item.ordenItemId) {
-      // Update existente
       await sbFetch(`orden_items?id=eq.${item.ordenItemId}`, {
         method: 'PATCH',
         prefer: 'return=minimal',
         body: JSON.stringify({ cantidad: item.qty, subtotal })
       });
     } else {
-      // Insert nuevo
       const [result] = await sbFetch('orden_items', {
         method: 'POST',
         body: JSON.stringify({
@@ -610,7 +630,6 @@ async function syncItemToSupabase(item) {
 }
 
 async function clearCart() {
-  // Eliminar todos los items de Supabase
   try {
     await sbFetch(`orden_items?orden_id=eq.${ORDEN_ID}`, { method: 'DELETE', prefer: '' });
   } catch(e) {}
@@ -757,7 +776,6 @@ async function confirmarVenta() {
   const tiempoAtencion = tiempoTexto();
 
   try {
-    // 1. Crear venta
     const [venta] = await sbFetch('ventas', {
       method: 'POST',
       body: JSON.stringify({
@@ -770,7 +788,6 @@ async function confirmarVenta() {
       })
     });
 
-    // 2. Crear venta_items
     await sbFetch('venta_items', {
       method: 'POST',
       body: JSON.stringify(state.cart.map(i => ({
@@ -783,7 +800,6 @@ async function confirmarVenta() {
       })))
     });
 
-    // 3. Marcar orden como cobrada
     await sbFetch(`ordenes?id=eq.${ORDEN_ID}`, {
       method: 'PATCH',
       prefer: 'return=minimal',
@@ -865,7 +881,9 @@ function toast(msg, type = 'ok') {
   clearTimeout(_tt); _tt = setTimeout(() => el.className = 'toast', 2500);
 }
 
-init();
+document.addEventListener('DOMContentLoaded', () => {
+  supabaseLogin().then(() => init());
+});
 </script>
 </body>
 </html>
