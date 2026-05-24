@@ -16,8 +16,6 @@
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
 .screen{display:none;position:fixed;inset:0;overflow:hidden}
 .screen.active{display:flex;flex-direction:column}
-
-/* TOPBAR */
 .topbar{height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;}
 .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1;}
 .back-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:all .12s;flex-shrink:0;}
@@ -32,8 +30,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .cart-badge{position:relative;}
 .cart-count{position:absolute;top:-5px;right:-5px;background:var(--accent);color:var(--bg);font-size:.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;display:none;}
 .cart-count.show{display:flex}
-
-/* SEARCH + CATS */
 .search-bar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
 .search-input-wrap{flex:1;position:relative;}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--text3);pointer-events:none;}
@@ -44,8 +40,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .cats::-webkit-scrollbar{display:none}
 .cat-btn{flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:.78rem;font-weight:600;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .12s;white-space:nowrap;}
 .cat-btn.active{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
-
-/* PRODUCTS */
 .products-area{flex:1;overflow-y:auto;padding:12px 16px;scrollbar-width:thin;scrollbar-color:var(--bg4) transparent;}
 .products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 .product-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 12px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
@@ -62,14 +56,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .empty-state{text-align:center;padding:40px 20px;color:var(--text3);}
 .empty-icon{font-size:2.5rem;margin-bottom:10px}
 .empty-text{font-size:.86rem}
-
-/* FAB */
 .fab-cart{position:fixed;bottom:20px;right:16px;width:54px;height:54px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;box-shadow:0 8px 24px rgba(0,230,118,.3);z-index:60;transition:all .15s;display:none;}
 .fab-cart.show{display:flex}
 .fab-cart:active{transform:scale(.93)}
 .fab-cart-count{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
-
-/* CART PANEL */
 .cart-panel{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;z-index:100;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:85vh;display:flex;flex-direction:column;}
 .cart-panel.open{transform:translateY(0)}
 .cart-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:10px auto 0;flex-shrink:0;}
@@ -105,8 +95,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-cobrar{width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:var(--r);font-family:var(--display);font-size:1rem;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.02em;}
 .btn-cobrar:active{background:var(--accent2);transform:scale(.98);}
 .btn-cobrar:disabled{opacity:.3;cursor:not-allowed;transform:none;}
-
-/* COBRO SCREEN */
 #screen-cobro{background:var(--bg);}
 .cobro-header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .cobro-title{font-family:var(--display);font-size:1.1rem;font-weight:800;}
@@ -119,7 +107,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .payment-section{margin-bottom:20px}
 .section-label{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
 .payment-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.pay-method{background:var(--bg2);border:2px solid var(--border);border-radius:var(--r);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15px;}
+.pay-method{background:var(--bg2);border:2px solid var(--border);border-radius:var(--r);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;}
 .pay-method.selected{border-color:var(--accentbord);background:var(--accentbg);}
 .pay-method:active{transform:scale(.95)}
 .pay-icon{font-size:1.4rem;margin-bottom:5px}
@@ -146,8 +134,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-confirmar{width:100%;padding:15px;background:var(--green);color:var(--bg);border:none;border-radius:var(--r);font-family:var(--display);font-size:1rem;font-weight:800;cursor:pointer;transition:all .15s;}
 .btn-confirmar:active{transform:scale(.98)}
 .btn-confirmar:disabled{opacity:.3;cursor:not-allowed;transform:none}
-
-/* TICKET SCREEN */
 #screen-ticket{background:var(--bg);align-items:center;justify-content:flex-start;}
 .ticket-wrap{width:100%;flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;align-items:center;}
 .ticket-success{text-align:center;margin-bottom:24px;}
@@ -182,8 +168,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-whatsapp{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);color:#25d366;}
 .btn-print{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);}
 .btn-volver-ordenes{background:var(--accent);border:none;color:var(--bg);font-family:var(--display);font-weight:800;}
-
-/* MODAL VARIANTE */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;align-items:flex-end;justify-content:center;padding:0;}
 .modal-overlay.open{display:flex}
 .modal-sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:20px 20px 0 0;width:100%;padding:20px 16px 32px;animation:slideUp .25s ease;}
@@ -198,15 +182,12 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-add-modal{width:100%;padding:13px;background:var(--accent);border:none;border-radius:var(--r);font-family:var(--display);font-size:.95rem;font-weight:800;color:var(--bg);cursor:pointer;transition:all .12s;}
 .btn-add-modal:active{transform:scale(.98)}
 .btn-add-modal:disabled{opacity:.3;cursor:not-allowed}
-
-/* MODAL CANCELAR */
 .modal-cancelar{background:var(--bg2);border:1px solid var(--redbord);border-radius:20px 20px 0 0;width:100%;padding:20px 16px 32px;animation:slideUp .25s ease;}
 .modal-cancelar-title{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--red);margin-bottom:6px;}
 .modal-cancelar-sub{font-size:.82rem;color:var(--text2);margin-bottom:20px;line-height:1.5;}
 .modal-cancelar-actions{display:flex;gap:10px;}
 .btn-cancel-no{flex:1;padding:13px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-family:var(--sans);font-size:.88rem;font-weight:600;cursor:pointer;}
 .btn-cancel-si{flex:1;padding:13px;background:var(--redbg);border:1px solid var(--redbord);border-radius:var(--r);color:var(--red);font-family:var(--display);font-size:.95rem;font-weight:800;cursor:pointer;}
-
 .toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:8px 18px;font-size:.82rem;white-space:nowrap;z-index:300;opacity:0;transition:all .2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{border-color:var(--greenbord);color:var(--green)}
@@ -216,7 +197,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </head>
 <body>
 
-<!-- PANTALLA PRINCIPAL: CATÁLOGO + CARRITO -->
 <div class="screen active" id="screen-app">
   <div class="topbar">
     <div class="topbar-left">
@@ -250,7 +230,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- CARRITO PANEL -->
 <div class="cart-panel" id="cart-panel">
   <div class="cart-handle"></div>
   <div class="cart-header">
@@ -268,14 +247,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="cart-totals">
       <div class="cart-total-row"><span>Subtotal</span><span class="val" id="subtotal-val">$0</span></div>
       <div class="cart-total-row" id="discount-row-disp" style="display:none"><span>Descuento</span><span class="val" style="color:var(--red)" id="discount-val">-$0</span></div>
-      <div class="cart-total-row"><span>IVA (22%)</span><span class="val" id="iva-val">$0</span></div>
+      <div id="iva-rows-container"></div>
       <div class="cart-total-row main"><span>Total</span><span class="val" id="total-val">$0</span></div>
     </div>
     <button class="btn-cobrar" id="btn-cobrar" onclick="irACobro()" disabled>Cobrar</button>
   </div>
 </div>
 
-<!-- COBRO SCREEN -->
 <div class="screen" id="screen-cobro">
   <div class="cobro-header">
     <div class="back-btn" onclick="volverAlCatalogo()">←</div>
@@ -317,7 +295,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- TICKET SCREEN -->
 <div class="screen" id="screen-ticket">
   <div class="ticket-wrap">
     <div class="ticket-success">
@@ -349,7 +326,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- MODAL VARIANTE -->
 <div class="modal-overlay" id="variant-modal" onclick="closeVariantModal(event)">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -361,7 +337,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- MODAL CANCELAR ORDEN -->
 <div class="modal-overlay" id="modal-cancelar" onclick="cerrarModalCancelarSiOverlay(event)">
   <div class="modal-cancelar">
     <div class="modal-handle"></div>
@@ -375,13 +350,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </div>
 
 <div class="toast" id="toast-el"></div>
-<div class="version-chip">Luminex Órdenes · v1.1.0</div>
+<div class="version-chip">Luminex Órdenes · v1.2.0</div>
 
 <script>
-// CONFIG centralizada — valores en config.js
 const SB_URL     = CONFIG.SB_URL;
 const SB_KEY     = CONFIG.SB_KEY;
 const NEGOCIO_ID = CONFIG.NEGOCIO_ID;
+const CURRENCY   = 'UYU';
 
 let sbAccessToken = null;
 
@@ -396,52 +371,57 @@ async function supabaseLogin() {
       const data = await res.json();
       sbAccessToken = data.access_token || null;
     }
-  } catch(e) {
-    console.warn('supabaseLogin fallback anon:', e);
-  }
+  } catch(e) { console.warn('supabaseLogin fallback anon:', e); }
 }
 
-function getHeaders(extra = {}) {
+function getHeaders() {
   const token = sbAccessToken || SB_KEY;
-  return {
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + token,
-    'Content-Type': 'application/json',
-    ...extra
-  };
+  return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
 }
 
-const CURRENCY = 'UYU';
-const IVA_RATE = 0.22;
+// ── IVA (mismo patrón que luminex-sales.html) ──
+function ivaDeItem(item, factorDesc) {
+  const tasa = item.product.tasa_iva ?? 0;
+  if (tasa === 0) return 0;
+  const subtotalItem = item.product.precio * item.qty * factorDesc;
+  return subtotalItem * tasa / (1 + tasa);
+}
+function calcIvaDesglose(cart, factorDesc) {
+  const mapa = new Map();
+  for (const item of cart) {
+    const tasa = item.product.tasa_iva ?? 0;
+    if (tasa === 0) continue;
+    const iva = ivaDeItem(item, factorDesc);
+    mapa.set(tasa, (mapa.get(tasa) || 0) + iva);
+  }
+  return mapa;
+}
+function calcIvaTotal(cart, factorDesc) {
+  let total = 0;
+  for (const item of cart) total += ivaDeItem(item, factorDesc);
+  return total;
+}
+function calcFactorDesc(subtotal, discAmt) {
+  if (subtotal === 0) return 1;
+  return (subtotal - discAmt) / subtotal;
+}
 
-// Leer params de URL
 const urlParams = new URLSearchParams(window.location.search);
 const ORDEN_ID = urlParams.get('id');
 
-// Cajero viene de sessionStorage (pasado desde ordenes.html)
 let cajeroData = null;
 try { cajeroData = JSON.parse(sessionStorage.getItem('lx_cajero')); } catch(e) {}
 
 let state = {
-  cajero: cajeroData,
-  orden: null,
-  cart: [],
-  discount: 0,
-  payMethod: 'efectivo',
-  lastSale: null,
-  catActive: 'todas',
-  products: [],
-  categories: [],
-  negocioNombre: ''
+  cajero: cajeroData, orden: null, cart: [], discount: 0,
+  payMethod: 'efectivo', lastSale: null, catActive: 'todas',
+  products: [], categories: [], negocioNombre: ''
 };
 let currentVariantProduct = null;
 let selectedVariant = null;
 let timerInterval = null;
 
-// Si no hay orden ID o cajero, volver a órdenes
-if (!ORDEN_ID || !cajeroData) {
-  window.location.href = 'ordenes.html';
-}
+if (!ORDEN_ID || !cajeroData) { window.location.href = 'ordenes.html'; }
 
 async function sbFetch(path, options = {}) {
   const res = await fetch(SB_URL + '/rest/v1/' + path, {
@@ -457,7 +437,6 @@ async function sbFetch(path, options = {}) {
   return text ? JSON.parse(text) : null;
 }
 
-// INIT
 async function init() {
   if (!ORDEN_ID) return;
   try {
@@ -467,25 +446,21 @@ async function init() {
       sbFetch(`categorias?negocio_id=eq.${NEGOCIO_ID}&activo=eq.true&order=nombre.asc`),
       sbFetch(`negocios?id=eq.${NEGOCIO_ID}&select=nombre`)
     ]);
-
     if (!ordenes || !ordenes.length) {
       toast('Orden no encontrada', 'err');
       setTimeout(() => window.location.href = 'ordenes.html', 1500);
       return;
     }
-
     state.orden = ordenes[0];
     state.negocioNombre = negocios?.[0]?.nombre || '';
     state.products = productos.map(p => ({
       ...p, stock: p.stock_actual ?? 0, emoji: p.emoji || '🛍️',
-      variantes: p.variantes || [],
+      variantes: p.variantes || [], tasa_iva: p.tasa_iva ?? 0,
       categoria: categorias.find(c => c.id === p.categoria_id)?.nombre || 'General'
     }));
     state.categories = ['todas', ...categorias.map(c => c.nombre)];
-
     const label = state.orden.identificador || `Orden #${state.orden.id.slice(-4).toUpperCase()}`;
     document.getElementById('tb-orden-id').textContent = label;
-
     const items = await sbFetch(`orden_items?orden_id=eq.${ORDEN_ID}`);
     if (items && items.length) {
       items.forEach(item => {
@@ -495,14 +470,9 @@ async function init() {
         state.cart.push({ key, product: producto, variant: item.variante || null, qty: item.cantidad, ordenItemId: item.id });
       });
     }
-
-    renderCats();
-    renderProducts();
-    updateCartUI();
-
+    renderCats(); renderProducts(); updateCartUI();
     actualizarTiempo();
     timerInterval = setInterval(actualizarTiempo, 60000);
-
   } catch(e) {
     document.getElementById('products-grid').innerHTML =
       '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><div class="empty-text">Error al cargar</div></div>';
@@ -518,7 +488,6 @@ function actualizarTiempo() {
   else { const h = Math.floor(diff / 3600); const m = Math.floor((diff % 3600) / 60); txt = m > 0 ? `${h}h ${m}m` : `${h}h`; }
   document.getElementById('tb-orden-tiempo').textContent = '🕐 ' + txt;
 }
-
 function tiempoTexto() {
   if (!state.orden) return '—';
   const diff = Math.floor((Date.now() - new Date(state.orden.created_at).getTime()) / 1000);
@@ -528,7 +497,6 @@ function tiempoTexto() {
   return m > 0 ? `${h}h ${m}m` : `${h}h`;
 }
 
-// CATÁLOGO
 function renderCats() {
   document.getElementById('cats-bar').innerHTML = state.categories.map(c =>
     `<div class="cat-btn ${c === state.catActive ? 'active' : ''}" onclick="setCategory('${c}')">${c === 'todas' ? 'Todas' : c}</div>`
@@ -556,99 +524,61 @@ function renderProducts(list = state.products) {
     </div>`).join('');
 }
 
-// CARRITO
 function addProduct(id) {
   const p = state.products.find(x => x.id === id);
   if (!p) return;
   if (p.variantes.length > 0) { openVariantModal(p); return; }
   addToCart(p, null);
 }
-
 async function addToCart(product, variant) {
   const key = product.id + (variant ? '-' + variant : '');
   const existing = state.cart.find(i => i.key === key);
-  if (existing) {
-    existing.qty++;
-    await syncItemToSupabase(existing);
-  } else {
-    const newItem = { key, product, variant, qty: 1, ordenItemId: null };
-    state.cart.push(newItem);
-    await syncItemToSupabase(newItem);
-  }
+  if (existing) { existing.qty++; await syncItemToSupabase(existing); }
+  else { const newItem = { key, product, variant, qty: 1, ordenItemId: null }; state.cart.push(newItem); await syncItemToSupabase(newItem); }
   updateCartUI();
   toast(`${product.nombre}${variant ? ' · ' + variant : ''} agregado`, 'ok');
 }
-
 async function removeFromCart(key) {
   const item = state.cart.find(i => i.key === key);
   if (!item) return;
-  if (item.qty > 1) {
-    item.qty--;
-    await syncItemToSupabase(item);
-  } else {
-    if (item.ordenItemId) {
-      try { await sbFetch(`orden_items?id=eq.${item.ordenItemId}`, { method: 'DELETE', prefer: '' }); } catch(e) {}
-    }
+  if (item.qty > 1) { item.qty--; await syncItemToSupabase(item); }
+  else {
+    if (item.ordenItemId) { try { await sbFetch(`orden_items?id=eq.${item.ordenItemId}`, { method: 'DELETE', prefer: '' }); } catch(e) {} }
     state.cart = state.cart.filter(i => i.key !== key);
   }
   updateCartUI();
 }
-
 async function addQty(key) {
   const item = state.cart.find(i => i.key === key);
   if (!item) return;
-  item.qty++;
-  await syncItemToSupabase(item);
-  updateCartUI();
+  item.qty++; await syncItemToSupabase(item); updateCartUI();
 }
-
 async function syncItemToSupabase(item) {
   const subtotal = item.product.precio * item.qty;
   try {
     if (item.ordenItemId) {
-      await sbFetch(`orden_items?id=eq.${item.ordenItemId}`, {
-        method: 'PATCH',
-        prefer: 'return=minimal',
-        body: JSON.stringify({ cantidad: item.qty, subtotal })
-      });
+      await sbFetch(`orden_items?id=eq.${item.ordenItemId}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ cantidad: item.qty, subtotal }) });
     } else {
-      const [result] = await sbFetch('orden_items', {
-        method: 'POST',
-        body: JSON.stringify({
-          orden_id: ORDEN_ID,
-          producto_id: item.product.id,
-          producto_nombre: item.product.nombre,
-          precio_unitario: item.product.precio,
-          cantidad: item.qty,
-          subtotal,
-          variante: item.variant || null
-        })
-      });
+      const [result] = await sbFetch('orden_items', { method: 'POST', body: JSON.stringify({ orden_id: ORDEN_ID, producto_id: item.product.id, producto_nombre: item.product.nombre, precio_unitario: item.product.precio, cantidad: item.qty, subtotal, variante: item.variant || null }) });
       item.ordenItemId = result.id;
     }
   } catch(e) { console.error('Error sync item:', e); }
 }
-
 async function clearCart() {
-  try {
-    await sbFetch(`orden_items?orden_id=eq.${ORDEN_ID}`, { method: 'DELETE', prefer: '' });
-  } catch(e) {}
+  try { await sbFetch(`orden_items?orden_id=eq.${ORDEN_ID}`, { method: 'DELETE', prefer: '' }); } catch(e) {}
   state.cart = [];
   document.getElementById('discount-input').value = 0;
   state.discount = 0;
   updateCartUI();
 }
-
 function updateCartUI() {
   const count = state.cart.reduce((s, i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = count;
   document.getElementById('cart-count').classList.toggle('show', count > 0);
   document.getElementById('fab-count').textContent = count;
   document.getElementById('fab-cart').classList.toggle('show', count > 0);
-  renderCartItems();
-  updateTotals();
+  renderCartItems(); updateTotals();
 }
-
 function renderCartItems() {
   const container = document.getElementById('cart-items');
   if (!state.cart.length) {
@@ -671,18 +601,15 @@ function renderCartItems() {
     </div>`).join('');
   document.getElementById('btn-cobrar').disabled = false;
 }
-
 function updateTotals() {
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   state.discount = parseFloat(document.getElementById('discount-input')?.value) || 0;
   const discAmt = subtotal * (state.discount / 100);
-  const afterDisc = subtotal - discAmt;
-  const iva = afterDisc * IVA_RATE;
-  const total = afterDisc + iva;
+  const factor = calcFactorDesc(subtotal, discAmt);
+  const total = subtotal - discAmt;
   document.getElementById('subtotal-val').textContent = fmt(subtotal);
-  document.getElementById('iva-val').textContent = fmt(iva);
   document.getElementById('total-val').textContent = fmt(total);
-  if (state.discount > 0) {
+  if (discAmt > 0) {
     document.getElementById('discount-row-disp').style.display = 'flex';
     document.getElementById('discount-val').textContent = '-' + fmt(discAmt);
     document.getElementById('discount-amount').textContent = '-' + fmt(discAmt);
@@ -690,11 +617,20 @@ function updateTotals() {
     document.getElementById('discount-row-disp').style.display = 'none';
     document.getElementById('discount-amount').textContent = '';
   }
+  const desglose = calcIvaDesglose(state.cart, factor);
+  let ivaHtml = '';
+  const tasas = [...desglose.keys()].sort((a, b) => b - a);
+  for (const tasa of tasas) {
+    ivaHtml += `<div class="cart-total-row"><span>IVA ${Math.round(tasa * 100)}%</span><span class="val">${fmt(desglose.get(tasa))}</span></div>`;
+  }
+  if (tasas.length === 0 && state.cart.length > 0) {
+    ivaHtml = `<div class="cart-total-row"><span>IVA</span><span class="val">${fmt(0)}</span></div>`;
+  }
+  document.getElementById('iva-rows-container').innerHTML = ivaHtml;
+  state.discount = discAmt;
 }
-
 function toggleCart() { document.getElementById('cart-panel').classList.toggle('open'); }
 
-// VARIANTES
 function openVariantModal(product) {
   currentVariantProduct = product; selectedVariant = null;
   document.getElementById('vm-name').textContent = product.nombre;
@@ -710,22 +646,14 @@ function selectVariant(v, el) {
   el.classList.add('selected');
   document.getElementById('vm-add').disabled = false;
 }
-function addVariantToCart() {
-  if (!currentVariantProduct || !selectedVariant) return;
-  addToCart(currentVariantProduct, selectedVariant);
-  closeVariantModal();
-}
-function closeVariantModal(e) {
-  if (e && e.target !== document.getElementById('variant-modal')) return;
-  document.getElementById('variant-modal').classList.remove('open');
-}
+function addVariantToCart() { if (!currentVariantProduct || !selectedVariant) return; addToCart(currentVariantProduct, selectedVariant); closeVariantModal(); }
+function closeVariantModal(e) { if (e && e.target !== document.getElementById('variant-modal')) return; document.getElementById('variant-modal').classList.remove('open'); }
 
-// COBRO
 function irACobro() {
   document.getElementById('cart-panel').classList.remove('open');
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   const discAmt = subtotal * (state.discount / 100);
-  const total = (subtotal - discAmt) * (1 + IVA_RATE);
+  const total = subtotal - discAmt;
   document.getElementById('cobro-total').textContent = fmt(total);
   const label = state.orden?.identificador || `Orden #${ORDEN_ID.slice(-4).toUpperCase()}`;
   document.getElementById('cobro-orden-badge').textContent = '🗒️ ' + label;
@@ -737,19 +665,16 @@ function irACobro() {
   document.getElementById('cambio-card').classList.remove('show');
   showScreen('screen-cobro');
 }
-
 function volverAlCatalogo() { showScreen('screen-app'); }
-
 function selectMethod(method) {
   state.payMethod = method;
   document.querySelectorAll('.pay-method').forEach(el => el.classList.toggle('selected', el.dataset.method === method));
   document.getElementById('efectivo-section').classList.toggle('show', method === 'efectivo');
 }
-
 function calcCambio() {
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   const discAmt = subtotal * (state.discount / 100);
-  const total = (subtotal - discAmt) * (1 + IVA_RATE);
+  const total = subtotal - discAmt;
   const monto = parseFloat(document.getElementById('monto-input').value) || 0;
   const cambio = monto - total;
   const card = document.getElementById('cambio-card');
@@ -769,47 +694,23 @@ async function confirmarVenta() {
   btn.disabled = true; btn.textContent = 'Procesando...';
   const subtotal = state.cart.reduce((s, i) => s + i.product.precio * i.qty, 0);
   const discAmt = subtotal * (state.discount / 100);
-  const afterDisc = subtotal - discAmt;
-  const iva = afterDisc * IVA_RATE;
-  const total = afterDisc + iva;
+  const factor = calcFactorDesc(subtotal, discAmt);
+  const total = subtotal - discAmt;
+  const ivaTotal = calcIvaTotal(state.cart, factor);
+  const ivaDesglose = calcIvaDesglose(state.cart, factor);
   const now = new Date();
   const tiempoAtencion = tiempoTexto();
-
   try {
     const [venta] = await sbFetch('ventas', {
       method: 'POST',
-      body: JSON.stringify({
-        negocio_id: NEGOCIO_ID,
-        cajero_id: state.cajero.id,
-        descuento: Math.round(discAmt),
-        total: Math.round(total),
-        metodo_pago: state.payMethod,
-        estado: 'completada'
-      })
+      body: JSON.stringify({ negocio_id: NEGOCIO_ID, cajero_id: state.cajero.id, descuento: Math.round(discAmt), total: Math.round(total), metodo_pago: state.payMethod, estado: 'completada' })
     });
-
     await sbFetch('venta_items', {
       method: 'POST',
-      body: JSON.stringify(state.cart.map(i => ({
-        venta_id: venta.id,
-        producto_id: i.product.id,
-        producto_nombre: i.product.nombre,
-        cantidad: i.qty,
-        precio_unitario: i.product.precio,
-        subtotal: i.product.precio * i.qty
-      })))
+      body: JSON.stringify(state.cart.map(i => ({ venta_id: venta.id, producto_id: i.product.id, producto_nombre: i.product.nombre, cantidad: i.qty, precio_unitario: i.product.precio, subtotal: i.product.precio * i.qty })))
     });
-
-    await sbFetch(`ordenes?id=eq.${ORDEN_ID}`, {
-      method: 'PATCH',
-      prefer: 'return=minimal',
-      body: JSON.stringify({ estado: 'cobrada', updated_at: new Date().toISOString() })
-    });
-
-    state.lastSale = {
-      id: venta.id, items: [...state.cart], subtotal, discAmt, iva, total,
-      payMethod: state.payMethod, cajero: state.cajero, fecha: now, tiempoAtencion
-    };
+    await sbFetch(`ordenes?id=eq.${ORDEN_ID}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ estado: 'cobrada', updated_at: new Date().toISOString() }) });
+    state.lastSale = { id: venta.id, items: [...state.cart], subtotal, discAmt, ivaTotal, ivaDesglose, total, payMethod: state.payMethod, cajero: state.cajero, fecha: now, tiempoAtencion };
     buildTicket(state.lastSale);
     clearInterval(timerInterval);
     showScreen('screen-ticket');
@@ -836,7 +737,11 @@ function buildTicket(sale) {
   ).join('');
   let totHtml = `<div class="ticket-total-row"><span>Subtotal</span><span>${fmt(sale.subtotal)}</span></div>`;
   if (sale.discAmt > 0) totHtml += `<div class="ticket-total-row"><span>Descuento</span><span>-${fmt(sale.discAmt)}</span></div>`;
-  totHtml += `<div class="ticket-total-row"><span>IVA 22%</span><span>${fmt(sale.iva)}</span></div>`;
+  const tasas = [...sale.ivaDesglose.keys()].sort((a, b) => b - a);
+  for (const tasa of tasas) {
+    totHtml += `<div class="ticket-total-row"><span>IVA ${Math.round(tasa * 100)}% incluido</span><span>${fmt(sale.ivaDesglose.get(tasa))}</span></div>`;
+  }
+  if (tasas.length === 0) totHtml += `<div class="ticket-total-row"><span>IVA incluido</span><span>${fmt(0)}</span></div>`;
   totHtml += `<div class="ticket-total-row big"><span>Total</span><span class="tval">${fmt(sale.total)}</span></div>`;
   totHtml += `<div class="ticket-payment"><span>Pago</span><span>${payLabels[sale.payMethod]}</span></div>`;
   document.getElementById('ticket-totals').innerHTML = totHtml;
@@ -848,28 +753,22 @@ function compartirWhatsApp() {
   const ordenLabel = state.orden?.identificador || `Orden #${ORDEN_ID.slice(-4).toUpperCase()}`;
   let msg = `🧾 *Ticket Luminex*\n🗒️ ${ordenLabel}\n📅 ${sale.fecha.toLocaleDateString('es-UY')} ${sale.fecha.toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'})}\n⏱️ Tiempo: ${sale.tiempoAtencion}\n\n`;
   sale.items.forEach(i => { msg += `• ${i.product.nombre}${i.variant ? ' ('+i.variant+')' : ''} x${i.qty} — ${fmt(i.product.precio * i.qty)}\n`; });
-  msg += `\n💰 *Total: ${fmt(sale.total)}*\n💳 ${payLabels[sale.payMethod]}\n\n_${sale.id}_`;
+  if (sale.discAmt > 0) msg += `\n🏷️ Descuento: -${fmt(sale.discAmt)}`;
+  msg += `\n\n💰 *Total: ${fmt(sale.total)}*\n💳 ${payLabels[sale.payMethod]}\n\n_${sale.id}_`;
   window.open('https://wa.me/?text=' + encodeURIComponent(msg));
 }
 function imprimirTicket() { window.print(); }
 
-// CANCELAR ORDEN
 function abrirModalCancelar() { document.getElementById('modal-cancelar').classList.add('open'); }
 function cerrarModalCancelar() { document.getElementById('modal-cancelar').classList.remove('open'); }
 function cerrarModalCancelarSiOverlay(e) { if (e.target === document.getElementById('modal-cancelar')) cerrarModalCancelar(); }
-
 async function cancelarOrden() {
   try {
-    await sbFetch(`ordenes?id=eq.${ORDEN_ID}`, {
-      method: 'PATCH',
-      prefer: 'return=minimal',
-      body: JSON.stringify({ estado: 'cancelada', updated_at: new Date().toISOString() })
-    });
+    await sbFetch(`ordenes?id=eq.${ORDEN_ID}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ estado: 'cancelada', updated_at: new Date().toISOString() }) });
     clearInterval(timerInterval);
     window.location.href = 'ordenes.html';
   } catch(e) { toast('Error al cancelar la orden', 'err'); }
 }
-
 function volverAOrdenes() { window.location.href = 'ordenes.html'; }
 
 function fmt(n) { return CURRENCY + ' ' + n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
