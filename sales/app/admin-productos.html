@@ -136,6 +136,26 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   cursor:pointer;font-size:1rem;transition:all .12s;text-decoration:none;color:var(--text);
 }
 .topbar-btn:active{background:var(--bg4);}
+.topbar-btn.active-tab{background:var(--accentbg);border-color:var(--accentbord);}
+
+/* TABS */
+.tabs-bar{
+  display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.tab-btn{
+  flex:1;padding:11px 8px;font-size:.8rem;font-weight:600;color:var(--text2);
+  background:transparent;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-family:var(--sans);
+}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-btn:active{background:var(--bg3);}
+
+/* PANEL PRODUCTOS */
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.panel.active{display:flex;}
 
 .toolbar{
   padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
@@ -216,6 +236,53 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .producto-badge.activo{background:var(--greenbg);color:var(--green);border:1px solid var(--greenbord);}
 .producto-badge.inactivo{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);}
 
+/* PANEL CAJEROS */
+.cajeros-toolbar{
+  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;gap:8px;align-items:center;flex-shrink:0;
+}
+.cajeros-toolbar-title{flex:1;font-size:.88rem;font-weight:600;color:var(--text2);}
+
+.cajeros-list{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.cajeros-list::-webkit-scrollbar{display:none;}
+
+.cajero-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 16px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:all .15s;
+}
+.cajero-card:active{background:var(--bg3);border-color:var(--border2);}
+.cajero-card.inactivo{opacity:.5;}
+.cajero-card-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--accentbg);border:1px solid var(--accentbord);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:700;color:var(--accent);flex-shrink:0;
+  font-family:var(--display);
+}
+.cajero-card-avatar.admin{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:var(--amber);}
+.cajero-card-info{flex:1;min-width:0;}
+.cajero-card-nombre{font-size:.92rem;font-weight:600;}
+.cajero-card-meta{display:flex;align-items:center;gap:8px;margin-top:3px;}
+.cajero-card-rol{
+  font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:2px 8px;border-radius:8px;
+}
+.cajero-card-rol.admin{background:var(--amberbg);color:var(--amber);border:1px solid var(--amberbord);}
+.cajero-card-rol.cajero{background:var(--bluebg);color:var(--blue);border:1px solid var(--bluebord);}
+.cajero-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.cajero-card-badge{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:8px;}
+.cajero-card-badge.activo{background:var(--greenbg);color:var(--green);border:1px solid var(--greenbord);}
+.cajero-card-badge.inactivo{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);}
+.cajero-card-pin{font-size:.72rem;color:var(--text3);font-family:var(--mono);margin-top:2px;}
+
+/* PIN FIELD */
+.pin-input-wrap{position:relative;}
+.pin-toggle{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--text2);cursor:pointer;font-size:.9rem;padding:4px;
+}
+
 .loading-overlay{
   position:fixed;inset:0;background:rgba(10,10,15,.8);backdrop-filter:blur(4px);
   display:flex;align-items:center;justify-content:center;z-index:200;
@@ -290,6 +357,17 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
 .iva-opt.selected{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .iva-opt:active{transform:scale(.97);}
 
+/* ROL OPTIONS */
+.rol-options{display:flex;gap:8px;}
+.rol-opt{
+  flex:1;padding:10px 8px;border-radius:var(--r2);border:1px solid var(--border2);
+  background:var(--bg3);color:var(--text2);font-size:.82rem;font-weight:600;
+  text-align:center;cursor:pointer;transition:all .12s;
+}
+.rol-opt.selected.cajero{background:var(--bluebg);border-color:var(--bluebord);color:var(--blue);}
+.rol-opt.selected.admin{background:var(--amberbg);border-color:var(--amberbord);color:var(--amber);}
+.rol-opt:active{transform:scale(.97);}
+
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;}
 .toggle-label{font-size:.9rem;font-weight:500;}
 .toggle-sub{font-size:.75rem;color:var(--text2);margin-top:2px;}
@@ -356,7 +434,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Admin v1.0.0</div>
+    <div class="login-version">Luminex Admin v1.1.0</div>
   </div>
 </div>
 
@@ -373,40 +451,58 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
     </div>
   </div>
 
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" id="search-input" type="text" placeholder="Buscar producto..." oninput="filtrar()">
-    </div>
-    <button class="btn-nuevo" onclick="abrirModalNuevo()">＋ Nuevo</button>
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" id="tab-productos" onclick="switchTab('productos')">📦 Productos</button>
+    <button class="tab-btn" id="tab-cajeros" onclick="switchTab('cajeros')">👤 Cajeros</button>
   </div>
 
-  <div class="filtros-bar" id="filtros-bar">
-    <div class="filtro-chip active" data-cat="todos" onclick="seleccionarCat(this,'todos')">Todos</div>
+  <!-- PANEL PRODUCTOS -->
+  <div class="panel active" id="panel-productos">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search-input" type="text" placeholder="Buscar producto..." oninput="filtrar()">
+      </div>
+      <button class="btn-nuevo" onclick="abrirModalNuevo()">＋ Nuevo</button>
+    </div>
+
+    <div class="filtros-bar" id="filtros-bar">
+      <div class="filtro-chip active" data-cat="todos" onclick="seleccionarCat(this,'todos')">Todos</div>
+    </div>
+
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-pill">
+        <div class="stat-pill-dot" style="background:var(--green)"></div>
+        <span class="stat-pill-num" id="stat-activos">0</span>
+        <span class="stat-pill-label">activos</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-dot" style="background:var(--red)"></div>
+        <span class="stat-pill-num" id="stat-inactivos">0</span>
+        <span class="stat-pill-label">inactivos</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-dot" style="background:var(--amber)"></div>
+        <span class="stat-pill-num" id="stat-stock-bajo">0</span>
+        <span class="stat-pill-label">stock bajo</span>
+      </div>
+    </div>
+
+    <div class="productos-list" id="productos-list"></div>
   </div>
 
-  <div class="stats-bar" id="stats-bar">
-    <div class="stat-pill">
-      <div class="stat-pill-dot" style="background:var(--green)"></div>
-      <span class="stat-pill-num" id="stat-activos">0</span>
-      <span class="stat-pill-label">activos</span>
+  <!-- PANEL CAJEROS -->
+  <div class="panel" id="panel-cajeros">
+    <div class="cajeros-toolbar">
+      <div class="cajeros-toolbar-title" id="cajeros-stats-label">Cajeros</div>
+      <button class="btn-nuevo" onclick="abrirModalNuevoCajero()">＋ Nuevo</button>
     </div>
-    <div class="stat-pill">
-      <div class="stat-pill-dot" style="background:var(--red)"></div>
-      <span class="stat-pill-num" id="stat-inactivos">0</span>
-      <span class="stat-pill-label">inactivos</span>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-pill-dot" style="background:var(--amber)"></div>
-      <span class="stat-pill-num" id="stat-stock-bajo">0</span>
-      <span class="stat-pill-label">stock bajo</span>
-    </div>
+    <div class="cajeros-list" id="cajeros-list"></div>
   </div>
-
-  <div class="productos-list" id="productos-list"></div>
 </div>
 
-<!-- MODAL CREAR/EDITAR -->
+<!-- MODAL CREAR/EDITAR PRODUCTO -->
 <div class="modal-overlay" id="modal-overlay" onclick="cerrarModalClick(event)">
   <div class="modal" id="modal">
     <div class="modal-handle"></div>
@@ -493,6 +589,53 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
   </div>
 </div>
 
+<!-- MODAL CREAR/EDITAR CAJERO -->
+<div class="modal-overlay" id="modal-cajero-overlay" onclick="cerrarModalCajeroClick(event)">
+  <div class="modal" id="modal-cajero">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="modal-cajero-titulo">Nuevo Cajero</div>
+      <div class="modal-close" onclick="cerrarModalCajero()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Nombre</label>
+        <input class="field-input" id="cajero-campo-nombre" type="text" placeholder="Ej: María González">
+      </div>
+      <div class="field">
+        <label class="field-label">PIN (4 dígitos)</label>
+        <div class="pin-input-wrap">
+          <input class="field-input" id="cajero-campo-pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" style="letter-spacing:.2em;padding-right:40px;">
+          <button class="pin-toggle" id="pin-toggle-btn" onclick="toggleVerPin()" type="button">👁</button>
+        </div>
+        <div class="field-hint">Solo números, exactamente 4 dígitos.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Rol</label>
+        <div class="rol-options">
+          <div class="rol-opt cajero selected" data-rol="cajero" onclick="seleccionarRol(this)">🧾 Cajero</div>
+          <div class="rol-opt admin" data-rol="administración" onclick="seleccionarRol(this)">👑 Admin</div>
+        </div>
+        <div class="field-hint">Los admins acceden al panel, historial y cierre de caja.</div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Cajero activo</div>
+          <div class="toggle-sub">Los inactivos no pueden iniciar sesión</div>
+        </div>
+        <div class="toggle-switch on" id="toggle-cajero-activo" onclick="toggleCajeroActivo()">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="btn-toggle-cajero-estado" onclick="toggleEstadoCajero()" style="display:none">Desactivar</button>
+      <button class="btn-secondary" onclick="cerrarModalCajero()">Cancelar</button>
+      <button class="btn-primary" onclick="guardarCajero()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── AUTH JWT ──────────────────────────────────────────────
 let sbAccessToken = null;
@@ -512,7 +655,7 @@ async function supabaseLogin() {
       sbAccessToken = data.access_token || null;
     }
   } catch(e) {
-    sbAccessToken = null; // degradación segura: usa anon key
+    sbAccessToken = null;
   }
 }
 
@@ -563,6 +706,22 @@ let productoEditando = null;
 let ivaSeleccionado = 0;
 let activoActual = true;
 let usuarioActual = null;
+
+// Estado cajeros panel
+let cajerosPanelList = [];
+let cajeroEditando = null;
+let rolSeleccionado = 'cajero';
+let cajeroActivoActual = true;
+let pinVisible = false;
+
+// ── TABS ──────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tab-productos').classList.toggle('active', tab === 'productos');
+  document.getElementById('tab-cajeros').classList.toggle('active', tab === 'cajeros');
+  document.getElementById('panel-productos').classList.toggle('active', tab === 'productos');
+  document.getElementById('panel-cajeros').classList.toggle('active', tab === 'cajeros');
+  if (tab === 'cajeros') cargarCajeros();
+}
 
 // ── LOGIN ─────────────────────────────────────────────────
 async function iniciarLogin() {
@@ -664,9 +823,15 @@ function logout() {
   pinActual = ''; cajeroSeleccionado = null; usuarioActual = null;
   document.querySelectorAll('.cajero-item').forEach(el => el.classList.remove('selected'));
   renderPinDisplay();
+  // reset tab a productos
+  switchTab('productos');
+  document.getElementById('tab-productos').classList.add('active');
+  document.getElementById('panel-productos').classList.add('active');
+  document.getElementById('tab-cajeros').classList.remove('active');
+  document.getElementById('panel-cajeros').classList.remove('active');
 }
 
-// ── DATOS ─────────────────────────────────────────────────
+// ── DATOS PRODUCTOS ───────────────────────────────────────
 async function cargarDatos() {
   mostrarLoading(true);
   try {
@@ -792,7 +957,7 @@ function actualizarEmoji() {
   document.getElementById('emoji-preview').textContent = v || '📦';
 }
 
-// ── MODAL ─────────────────────────────────────────────────
+// ── MODAL PRODUCTO ────────────────────────────────────────
 function abrirModalNuevo() {
   productoEditando = null;
   document.getElementById('modal-titulo').textContent = 'Nuevo Producto';
@@ -862,7 +1027,7 @@ function actualizarToggle() {
   document.getElementById('toggle-activo').classList.toggle('on', activoActual);
 }
 
-// ── GUARDAR ───────────────────────────────────────────────
+// ── GUARDAR PRODUCTO ──────────────────────────────────────
 async function guardarProducto() {
   const nombre = document.getElementById('campo-nombre').value.trim();
   if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
@@ -924,6 +1089,162 @@ function renderCatSelect() {
   const sel = document.getElementById('campo-categoria');
   sel.innerHTML = '<option value="">— Sin categoría —</option>' +
     categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+}
+
+// ── CAJEROS PANEL ─────────────────────────────────────────
+async function cargarCajeros() {
+  mostrarLoading(true);
+  try {
+    const data = await sbGet('cajeros', {
+      'negocio_id': `eq.${CONFIG.NEGOCIO_ID}`,
+      'select': '*',
+      'order': 'nombre.asc'
+    });
+    cajerosPanelList = data || [];
+    renderCajerosList();
+  } catch(e) {
+    showToast('Error cargando cajeros', 'err');
+  }
+  mostrarLoading(false);
+}
+
+function renderCajerosList() {
+  const el = document.getElementById('cajeros-list');
+  const total = cajerosPanelList.length;
+  const activos = cajerosPanelList.filter(c => c.activo).length;
+  document.getElementById('cajeros-stats-label').textContent = `${total} cajero${total !== 1 ? 's' : ''} · ${activos} activo${activos !== 1 ? 's' : ''}`;
+
+  if (!cajerosPanelList.length) {
+    el.innerHTML = `<div class="section-empty"><div style="font-size:2.5rem;opacity:.4">👤</div><div style="font-size:.9rem">Sin cajeros registrados</div></div>`;
+    return;
+  }
+  el.innerHTML = cajerosPanelList.map(c => {
+    const isAdmin = c.rol === 'administración';
+    return `
+      <div class="cajero-card ${c.activo ? '' : 'inactivo'}" onclick="abrirModalEditarCajero('${c.id}')">
+        <div class="cajero-card-avatar ${isAdmin ? 'admin' : ''}">${c.nombre.charAt(0).toUpperCase()}</div>
+        <div class="cajero-card-info">
+          <div class="cajero-card-nombre">${c.nombre}</div>
+          <div class="cajero-card-meta">
+            <span class="cajero-card-rol ${isAdmin ? 'admin' : 'cajero'}">${isAdmin ? '👑 Admin' : '🧾 Cajero'}</span>
+          </div>
+        </div>
+        <div class="cajero-card-right">
+          <div class="cajero-card-badge ${c.activo ? 'activo' : 'inactivo'}">${c.activo ? 'Activo' : 'Inactivo'}</div>
+          <div class="cajero-card-pin">PIN: ${'•'.repeat(String(c.pin).length)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── MODAL CAJERO ──────────────────────────────────────────
+function abrirModalNuevoCajero() {
+  cajeroEditando = null;
+  document.getElementById('modal-cajero-titulo').textContent = 'Nuevo Cajero';
+  document.getElementById('cajero-campo-nombre').value = '';
+  document.getElementById('cajero-campo-pin').value = '';
+  document.getElementById('cajero-campo-pin').type = 'password';
+  pinVisible = false;
+  rolSeleccionado = 'cajero';
+  cajeroActivoActual = true;
+  document.querySelectorAll('.rol-opt').forEach(o => o.classList.toggle('selected', o.dataset.rol === 'cajero'));
+  actualizarToggleCajero();
+  document.getElementById('btn-toggle-cajero-estado').style.display = 'none';
+  document.getElementById('modal-cajero-overlay').classList.add('show');
+}
+
+function abrirModalEditarCajero(id) {
+  const c = cajerosPanelList.find(x => x.id === id);
+  if (!c) return;
+  cajeroEditando = c;
+  document.getElementById('modal-cajero-titulo').textContent = 'Editar Cajero';
+  document.getElementById('cajero-campo-nombre').value = c.nombre || '';
+  document.getElementById('cajero-campo-pin').value = c.pin || '';
+  document.getElementById('cajero-campo-pin').type = 'password';
+  pinVisible = false;
+  rolSeleccionado = c.rol === 'administración' ? 'administración' : 'cajero';
+  cajeroActivoActual = c.activo !== false;
+  document.querySelectorAll('.rol-opt').forEach(o => o.classList.toggle('selected', o.dataset.rol === rolSeleccionado));
+  actualizarToggleCajero();
+  const btnEstado = document.getElementById('btn-toggle-cajero-estado');
+  btnEstado.style.display = '';
+  btnEstado.textContent = c.activo ? 'Desactivar' : 'Activar';
+  btnEstado.style.background = c.activo ? 'var(--redbg)' : 'var(--greenbg)';
+  btnEstado.style.color = c.activo ? 'var(--red)' : 'var(--green)';
+  btnEstado.style.borderColor = c.activo ? 'var(--redbord)' : 'var(--greenbord)';
+  document.getElementById('modal-cajero-overlay').classList.add('show');
+}
+
+function cerrarModalCajero() {
+  document.getElementById('modal-cajero-overlay').classList.remove('show');
+}
+function cerrarModalCajeroClick(e) {
+  if (e.target === document.getElementById('modal-cajero-overlay')) cerrarModalCajero();
+}
+
+function seleccionarRol(el) {
+  rolSeleccionado = el.dataset.rol;
+  document.querySelectorAll('.rol-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleCajeroActivo() { cajeroActivoActual = !cajeroActivoActual; actualizarToggleCajero(); }
+function actualizarToggleCajero() {
+  document.getElementById('toggle-cajero-activo').classList.toggle('on', cajeroActivoActual);
+}
+
+function toggleVerPin() {
+  pinVisible = !pinVisible;
+  document.getElementById('cajero-campo-pin').type = pinVisible ? 'text' : 'password';
+}
+
+// ── GUARDAR CAJERO ────────────────────────────────────────
+async function guardarCajero() {
+  const nombre = document.getElementById('cajero-campo-nombre').value.trim();
+  if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
+
+  const pinVal = document.getElementById('cajero-campo-pin').value.trim();
+  if (!/^\d{4}$/.test(pinVal)) { showToast('El PIN debe ser exactamente 4 dígitos', 'err'); return; }
+
+  const body = {
+    negocio_id: CONFIG.NEGOCIO_ID,
+    nombre,
+    pin: pinVal,
+    rol: rolSeleccionado,
+    activo: cajeroActivoActual
+  };
+
+  mostrarLoading(true);
+  try {
+    if (cajeroEditando) {
+      await sbPatch('cajeros', cajeroEditando.id, body);
+      showToast('Cajero actualizado ✓', 'ok');
+    } else {
+      await sbPost('cajeros', body);
+      showToast('Cajero creado ✓', 'ok');
+    }
+    cerrarModalCajero();
+    await cargarCajeros();
+  } catch(e) {
+    showToast('Error guardando: ' + e.message, 'err');
+  }
+  mostrarLoading(false);
+}
+
+async function toggleEstadoCajero() {
+  if (!cajeroEditando) return;
+  const nuevoEstado = !cajeroEditando.activo;
+  mostrarLoading(true);
+  try {
+    await sbPatch('cajeros', cajeroEditando.id, { activo: nuevoEstado });
+    showToast(nuevoEstado ? 'Cajero activado ✓' : 'Cajero desactivado', nuevoEstado ? 'ok' : '');
+    cerrarModalCajero();
+    await cargarCajeros();
+  } catch(e) {
+    showToast('Error: ' + e.message, 'err');
+  }
+  mostrarLoading(false);
 }
 
 // ── UI HELPERS ────────────────────────────────────────────
