@@ -12,65 +12,25 @@
 <script src="config.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-
 :root{
-  --bg:#0a0a0f;
-  --bg2:#111118;
-  --bg3:#1a1a24;
-  --bg4:#22222e;
-  --border:rgba(255,255,255,.06);
-  --border2:rgba(255,255,255,.12);
-  --text:#f0f0f8;
-  --text2:#8888aa;
-  --text3:#44445a;
-  --accent:#00E676;
-  --accent2:#7DFF00;
-  --accentbg:rgba(0,230,118,.10);
-  --accentbord:rgba(0,230,118,.25);
-  --green:#3dd68c;
-  --greenbg:rgba(61,214,140,.10);
-  --greenbord:rgba(61,214,140,.25);
-  --red:#ff5757;
-  --redbg:rgba(255,87,87,.10);
-  --redbord:rgba(255,87,87,.25);
-  --blue:#5b8dee;
-  --bluebg:rgba(91,141,238,.10);
-  --bluebord:rgba(91,141,238,.25);
-  --amber:#f59e0b;
-  --amberbg:rgba(245,158,11,.10);
-  --amberbord:rgba(245,158,11,.25);
-  --r:14px;
-  --r2:10px;
-  --mono:'DM Mono',monospace;
-  --sans:'DM Sans',sans-serif;
-  --display:'Syne',sans-serif;
+  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--bg4:#22222e;
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);
+  --text:#f0f0f8;--text2:#8888aa;--text3:#44445a;
+  --accent:#00E676;--accent2:#7DFF00;
+  --accentbg:rgba(0,230,118,.10);--accentbord:rgba(0,230,118,.25);
+  --green:#3dd68c;--greenbg:rgba(61,214,140,.10);--greenbord:rgba(61,214,140,.25);
+  --red:#ff5757;--redbg:rgba(255,87,87,.10);--redbord:rgba(255,87,87,.25);
+  --blue:#5b8dee;--bluebg:rgba(91,141,238,.10);--bluebord:rgba(91,141,238,.25);
+  --amber:#f59e0b;--amberbg:rgba(245,158,11,.10);--amberbord:rgba(245,158,11,.25);
+  --r:14px;--r2:10px;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
 }
-
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
-
 .screen{display:none;position:fixed;inset:0;overflow:hidden}
 .screen.active{display:flex;flex-direction:column}
-
-#screen-login{
-  background:var(--bg);
-  align-items:center;justify-content:center;
-  padding:24px;
-}
-#screen-login::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(11,60,93,.18),transparent),
-             radial-gradient(ellipse 50% 40% at 80% 100%,rgba(61,214,140,.06),transparent);
-  pointer-events:none;
-}
-.login-card{
-  width:100%;max-width:360px;
-  background:var(--bg2);
-  border:1px solid var(--border2);
-  border-radius:24px;
-  padding:36px 28px;
-  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,230,118,.06);
-  position:relative;z-index:1;
-}
+#screen-login{background:var(--bg);align-items:center;justify-content:center;padding:24px;}
+#screen-login::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(11,60,93,.18),transparent),radial-gradient(ellipse 50% 40% at 80% 100%,rgba(61,214,140,.06),transparent);pointer-events:none;}
+.login-card{width:100%;max-width:360px;background:var(--bg2);border:1px solid var(--border2);border-radius:24px;padding:36px 28px;box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,230,118,.06);position:relative;z-index:1;}
 .login-brand{text-align:center;margin-bottom:32px;}
 .login-brand-name{font-family:var(--display);font-size:1.8rem;font-weight:700;letter-spacing:-.01em;color:#0B3C5D;text-shadow:0 0 40px rgba(0,230,118,.15);}
 .login-brand-name .eco{color:#00E676;font-weight:300;letter-spacing:.12em;font-size:1.1rem;display:block;margin-top:-2px;text-transform:uppercase;}
@@ -82,144 +42,59 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .pin-dot.error{background:var(--red);border-color:var(--red);animation:shake .3s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
-.pin-btn{
-  aspect-ratio:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
-  font-family:var(--display);font-size:1.4rem;font-weight:700;color:var(--text);
-  cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;
-  user-select:none;-webkit-user-select:none;
-}
+.pin-btn{aspect-ratio:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);font-family:var(--display);font-size:1.4rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;}
 .pin-btn:active{background:var(--bg4);transform:scale(.94);border-color:var(--border2);}
 .pin-btn.del{font-size:1rem;color:var(--text2);}
 .pin-btn.confirm{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);font-size:.85rem;font-weight:700;letter-spacing:.03em;}
 .pin-btn.confirm:active{background:var(--accent);color:var(--bg);}
 .cajero-list{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
-.cajero-item{
-  display:flex;align-items:center;gap:10px;padding:9px 12px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
-  cursor:pointer;transition:all .12s;
-}
+.cajero-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all .12s;}
 .cajero-item:active,.cajero-item.selected{border-color:var(--accentbord);background:var(--accentbg);}
-.cajero-avatar{
-  width:30px;height:30px;border-radius:50%;background:var(--accentbg);border:1px solid var(--accentbord);
-  display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--accent);flex-shrink:0;
-}
+.cajero-avatar{width:30px;height:30px;border-radius:50%;background:var(--accentbg);border:1px solid var(--accentbord);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--accent);flex-shrink:0;}
 .cajero-name{font-size:.86rem;font-weight:500}
 .cajero-role{font-size:.72rem;color:var(--text2)}
 .login-version{text-align:center;font-size:.68rem;color:var(--text3);margin-top:20px;font-family:var(--mono);}
-.login-error{
-  display:none;text-align:center;font-size:.8rem;color:var(--red);
-  background:var(--redbg);border:1px solid var(--redbord);
-  border-radius:8px;padding:8px 12px;margin-bottom:12px;
-}
+.login-error{display:none;text-align:center;font-size:.8rem;color:var(--red);background:var(--redbg);border:1px solid var(--redbord);border-radius:8px;padding:8px 12px;margin-bottom:12px;}
 .login-error.show{display:block;}
-
 #screen-app{background:var(--bg);}
-
-.topbar{
-  height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;z-index:50;
-}
+.topbar{height:52px;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;}
 .topbar-left{display:flex;align-items:center;gap:10px;}
 .topbar-logo{font-family:var(--display);font-size:.95rem;font-weight:700;color:#0B3C5D;}
 .topbar-logo .eco{color:#00E676;font-weight:300;letter-spacing:.1em;font-size:.78rem;}
-.topbar-section{
-  font-size:.7rem;color:var(--text2);
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:20px;padding:3px 10px;letter-spacing:.04em;
-}
+.topbar-section{font-size:.7rem;color:var(--text2);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 10px;letter-spacing:.04em;}
 .topbar-right{display:flex;align-items:center;gap:8px;}
-.topbar-btn{
-  width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:9px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:1rem;transition:all .12s;text-decoration:none;color:var(--text);
-}
+.topbar-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .12s;text-decoration:none;color:var(--text);}
 .topbar-btn:active{background:var(--bg4);}
-.topbar-btn.active-tab{background:var(--accentbg);border-color:var(--accentbord);}
-
-/* TABS */
-.tabs-bar{
-  display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-.tab-btn{
-  flex:1;padding:11px 8px;font-size:.8rem;font-weight:600;color:var(--text2);
-  background:transparent;border:none;cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .15s;
-  display:flex;align-items:center;justify-content:center;gap:5px;
-  font-family:var(--sans);
-}
+.tabs-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tab-btn{flex:1;padding:11px 8px;font-size:.8rem;font-weight:600;color:var(--text2);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--sans);}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
 .tab-btn:active{background:var(--bg3);}
-
-/* PANEL PRODUCTOS */
 .panel{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .panel.active{display:flex;}
-
-.toolbar{
-  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;gap:8px;flex-shrink:0;
-}
+.toolbar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
 .search-wrap{flex:1;position:relative;}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--text3);pointer-events:none;}
-.search-input{
-  width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
-  padding:9px 12px 9px 34px;color:var(--text);font-family:var(--sans);font-size:.88rem;
-  outline:none;transition:border-color .15s;
-}
+.search-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:9px 12px 9px 34px;color:var(--text);font-family:var(--sans);font-size:.88rem;outline:none;transition:border-color .15s;}
 .search-input:focus{border-color:var(--accentbord);}
 .search-input::placeholder{color:var(--text3);}
-.btn-nuevo{
-  background:var(--accent);color:var(--bg);border:none;border-radius:var(--r2);
-  padding:0 16px;font-family:var(--display);font-size:.82rem;font-weight:700;
-  cursor:pointer;white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px;
-}
+.btn-nuevo{background:var(--accent);color:var(--bg);border:none;border-radius:var(--r2);padding:0 16px;font-family:var(--display);font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px;}
 .btn-nuevo:active{opacity:.85;transform:scale(.97);}
-
-.filtros-bar{
-  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;gap:8px;overflow-x:auto;flex-shrink:0;
-}
+.filtros-bar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:8px;overflow-x:auto;flex-shrink:0;}
 .filtros-bar::-webkit-scrollbar{display:none;}
-.filtro-chip{
-  padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:500;
-  border:1px solid var(--border2);background:var(--bg3);color:var(--text2);
-  cursor:pointer;white-space:nowrap;transition:all .12s;flex-shrink:0;
-}
+.filtro-chip{padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .12s;flex-shrink:0;}
 .filtro-chip.active{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .filtro-chip:active{transform:scale(.95);}
-
-.stats-bar{
-  padding:10px 16px;display:flex;gap:10px;flex-shrink:0;
-  border-bottom:1px solid var(--border);background:var(--bg);
-}
-.stat-pill{
-  display:flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:20px;border:1px solid var(--border);
-  background:var(--bg2);font-size:.75rem;
-}
+.stats-bar{padding:10px 16px;display:flex;gap:10px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--bg);}
+.stat-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);font-size:.75rem;}
 .stat-pill-dot{width:7px;height:7px;border-radius:50%;}
 .stat-pill-num{font-family:var(--mono);font-weight:500;color:var(--text);}
 .stat-pill-label{color:var(--text2);}
-
 .productos-list{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
 .productos-list::-webkit-scrollbar{display:none;}
-
-.producto-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
-  padding:12px 14px;display:flex;align-items:center;gap:12px;
-  cursor:pointer;transition:all .15s;
-  -webkit-tap-highlight-color:transparent;
-}
+.producto-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
 .producto-card:active{background:var(--bg3);border-color:var(--border2);}
 .producto-card.inactivo{opacity:.5;}
-.producto-emoji{
-  width:44px;height:44px;border-radius:12px;
-  background:var(--bg3);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;flex-shrink:0;
-}
+.producto-emoji{width:44px;height:44px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
 .producto-info{flex:1;min-width:0;}
 .producto-nombre{font-size:.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .producto-meta{display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap;}
@@ -235,39 +110,19 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .producto-badge{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:8px;}
 .producto-badge.activo{background:var(--greenbg);color:var(--green);border:1px solid var(--greenbord);}
 .producto-badge.inactivo{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);}
-
-/* PANEL CAJEROS */
-.cajeros-toolbar{
-  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;gap:8px;align-items:center;flex-shrink:0;
-}
+.cajeros-toolbar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0;}
 .cajeros-toolbar-title{flex:1;font-size:.88rem;font-weight:600;color:var(--text2);}
-
 .cajeros-list{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
 .cajeros-list::-webkit-scrollbar{display:none;}
-
-.cajero-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px 16px;display:flex;align-items:center;gap:12px;
-  cursor:pointer;transition:all .15s;
-}
+.cajero-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;}
 .cajero-card:active{background:var(--bg3);border-color:var(--border2);}
 .cajero-card.inactivo{opacity:.5;}
-.cajero-card-avatar{
-  width:44px;height:44px;border-radius:50%;
-  background:var(--accentbg);border:1px solid var(--accentbord);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;font-weight:700;color:var(--accent);flex-shrink:0;
-  font-family:var(--display);
-}
+.cajero-card-avatar{width:44px;height:44px;border-radius:50%;background:var(--accentbg);border:1px solid var(--accentbord);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:var(--accent);flex-shrink:0;font-family:var(--display);}
 .cajero-card-avatar.admin{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:var(--amber);}
 .cajero-card-info{flex:1;min-width:0;}
 .cajero-card-nombre{font-size:.92rem;font-weight:600;}
 .cajero-card-meta{display:flex;align-items:center;gap:8px;margin-top:3px;}
-.cajero-card-rol{
-  font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  padding:2px 8px;border-radius:8px;
-}
+.cajero-card-rol{font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:8px;}
 .cajero-card-rol.admin{background:var(--amberbg);color:var(--amber);border:1px solid var(--amberbord);}
 .cajero-card-rol.cajero{background:var(--bluebg);color:var(--blue);border:1px solid var(--bluebord);}
 .cajero-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
@@ -275,35 +130,15 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .cajero-card-badge.activo{background:var(--greenbg);color:var(--green);border:1px solid var(--greenbord);}
 .cajero-card-badge.inactivo{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);}
 .cajero-card-pin{font-size:.72rem;color:var(--text3);font-family:var(--mono);margin-top:2px;}
-
-/* PIN FIELD */
 .pin-input-wrap{position:relative;}
-.pin-toggle{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:var(--text2);cursor:pointer;font-size:.9rem;padding:4px;
-}
-
-.loading-overlay{
-  position:fixed;inset:0;background:rgba(10,10,15,.8);backdrop-filter:blur(4px);
-  display:flex;align-items:center;justify-content:center;z-index:200;
-  display:none;
-}
+.pin-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text2);cursor:pointer;font-size:.9rem;padding:4px;}
+.loading-overlay{position:fixed;inset:0;background:rgba(10,10,15,.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:200;display:none;}
 .loading-overlay.show{display:flex;}
 .spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
-  z-index:100;display:none;align-items:flex-end;justify-content:center;
-}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:100;display:none;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
-.modal{
-  width:100%;max-width:480px;
-  background:var(--bg2);border:1px solid var(--border2);
-  border-radius:24px 24px 0 0;
-  max-height:92vh;display:flex;flex-direction:column;
-  animation:slideUp .25s ease;
-}
+.modal{width:100%;max-width:480px;background:var(--bg2);border:1px solid var(--border2);border-radius:24px 24px 0 0;max-height:92vh;display:flex;flex-direction:column;animation:slideUp .25s ease;}
 @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-handle{width:40px;height:4px;border-radius:2px;background:var(--border2);margin:12px auto 0;flex-shrink:0;}
 .modal-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
@@ -313,61 +148,31 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .modal-body{flex:1;overflow-y:auto;padding:16px 20px;}
 .modal-body::-webkit-scrollbar{display:none;}
 .modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;}
-
 .field{margin-bottom:14px;}
 .field-label{font-size:.72rem;font-weight:600;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:block;}
-.field-input{
-  width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
-  padding:10px 12px;color:var(--text);font-family:var(--sans);font-size:.9rem;
-  outline:none;transition:border-color .15s;
-}
+.field-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 12px;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .15s;}
 .field-input:focus{border-color:var(--accentbord);}
 .field-input::placeholder{color:var(--text3);}
-select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888aa' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
-}
+select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888aa' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .field-hint{font-size:.7rem;color:var(--text3);margin-top:4px;}
-
 .emoji-field{display:flex;gap:8px;align-items:center;}
-.emoji-preview{
-  width:52px;height:52px;border-radius:12px;background:var(--bg3);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
-  flex-shrink:0;cursor:pointer;transition:border-color .15s;
-}
+.emoji-preview{width:52px;height:52px;border-radius:12px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;cursor:pointer;transition:border-color .15s;}
 .emoji-preview:active{border-color:var(--accentbord);}
 .emoji-input{flex:1;}
-.emoji-grid{
-  display:grid;grid-template-columns:repeat(8,1fr);gap:6px;
-  max-height:160px;overflow-y:auto;margin-top:8px;
-  padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
-  display:none;
-}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-height:160px;overflow-y:auto;margin-top:8px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);display:none;}
 .emoji-grid.show{display:grid;}
 .emoji-opt{font-size:1.3rem;text-align:center;cursor:pointer;padding:4px;border-radius:8px;transition:all .1s;}
 .emoji-opt:active{background:var(--accentbg);transform:scale(1.2);}
-
 .iva-options{display:flex;gap:8px;}
-.iva-opt{
-  flex:1;padding:9px 6px;border-radius:var(--r2);border:1px solid var(--border2);
-  background:var(--bg3);color:var(--text2);font-size:.82rem;font-weight:600;
-  text-align:center;cursor:pointer;transition:all .12s;
-}
+.iva-opt{flex:1;padding:9px 6px;border-radius:var(--r2);border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;transition:all .12s;}
 .iva-opt.selected{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .iva-opt:active{transform:scale(.97);}
-
-/* ROL OPTIONS */
 .rol-options{display:flex;gap:8px;}
-.rol-opt{
-  flex:1;padding:10px 8px;border-radius:var(--r2);border:1px solid var(--border2);
-  background:var(--bg3);color:var(--text2);font-size:.82rem;font-weight:600;
-  text-align:center;cursor:pointer;transition:all .12s;
-}
+.rol-opt{flex:1;padding:10px 8px;border-radius:var(--r2);border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;transition:all .12s;}
 .rol-opt.selected.cajero{background:var(--bluebg);border-color:var(--bluebord);color:var(--blue);}
 .rol-opt.selected.admin{background:var(--amberbg);border-color:var(--amberbord);color:var(--amber);}
 .rol-opt:active{transform:scale(.97);}
-
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;}
 .toggle-label{font-size:.9rem;font-weight:500;}
 .toggle-sub{font-size:.75rem;color:var(--text2);margin-top:2px;}
@@ -375,35 +180,21 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
 .toggle-switch.on{background:var(--green);border-color:var(--greenbord);}
 .toggle-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--text2);transition:all .2s;}
 .toggle-switch.on .toggle-knob{left:25px;background:#fff;}
-
 .btn-primary{flex:1;background:var(--accent);color:var(--bg);border:none;border-radius:var(--r2);padding:13px;font-family:var(--display);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .12s;}
 .btn-primary:active{opacity:.85;}
 .btn-secondary{flex:1;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:var(--r2);padding:13px;font-family:var(--sans);font-size:.88rem;font-weight:500;cursor:pointer;transition:all .12s;}
 .btn-secondary:active{background:var(--bg4);}
 .btn-danger{background:var(--redbg);color:var(--red);border:1px solid var(--redbord);border-radius:var(--r2);padding:13px 20px;font-family:var(--sans);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .12s;}
 .btn-danger:active{opacity:.75;}
-
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--bg3);border:1px solid var(--border2);border-radius:12px;
-  padding:10px 18px;font-size:.85rem;font-weight:500;
-  display:flex;align-items:center;gap:8px;
-  z-index:300;transition:transform .25s ease,opacity .25s;opacity:0;
-  white-space:nowrap;box-shadow:0 12px 40px rgba(0,0,0,.5);
-}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:.85rem;font-weight:500;display:flex;align-items:center;gap:8px;z-index:300;transition:transform .25s ease,opacity .25s;opacity:0;white-space:nowrap;box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .toast.ok{border-color:var(--greenbord);color:var(--green);}
 .toast.err{border-color:var(--redbord);color:var(--red);}
-
 .section-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;color:var(--text3);gap:10px;}
 </style>
 </head>
 <body>
-
-<!-- LOADING -->
 <div class="loading-overlay" id="loading"><div class="spinner"></div></div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- SCREEN LOGIN -->
@@ -434,7 +225,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Admin v1.1.0</div>
+    <div class="login-version">Luminex Admin v1.2.0</div>
   </div>
 </div>
 
@@ -450,14 +241,10 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
       <div class="topbar-btn" onclick="logout()" title="Salir">🚪</div>
     </div>
   </div>
-
-  <!-- TABS -->
   <div class="tabs-bar">
     <button class="tab-btn active" id="tab-productos" onclick="switchTab('productos')">📦 Productos</button>
     <button class="tab-btn" id="tab-cajeros" onclick="switchTab('cajeros')">👤 Cajeros</button>
   </div>
-
-  <!-- PANEL PRODUCTOS -->
   <div class="panel active" id="panel-productos">
     <div class="toolbar">
       <div class="search-wrap">
@@ -466,11 +253,9 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
       </div>
       <button class="btn-nuevo" onclick="abrirModalNuevo()">＋ Nuevo</button>
     </div>
-
     <div class="filtros-bar" id="filtros-bar">
       <div class="filtro-chip active" data-cat="todos" onclick="seleccionarCat(this,'todos')">Todos</div>
     </div>
-
     <div class="stats-bar" id="stats-bar">
       <div class="stat-pill">
         <div class="stat-pill-dot" style="background:var(--green)"></div>
@@ -488,11 +273,8 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
         <span class="stat-pill-label">stock bajo</span>
       </div>
     </div>
-
     <div class="productos-list" id="productos-list"></div>
   </div>
-
-  <!-- PANEL CAJEROS -->
   <div class="panel" id="panel-cajeros">
     <div class="cajeros-toolbar">
       <div class="cajeros-toolbar-title" id="cajeros-stats-label">Cajeros</div>
@@ -502,7 +284,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
   </div>
 </div>
 
-<!-- MODAL CREAR/EDITAR PRODUCTO -->
+<!-- MODAL PRODUCTO -->
 <div class="modal-overlay" id="modal-overlay" onclick="cerrarModalClick(event)">
   <div class="modal" id="modal">
     <div class="modal-handle"></div>
@@ -589,7 +371,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
   </div>
 </div>
 
-<!-- MODAL CREAR/EDITAR CAJERO -->
+<!-- MODAL CAJERO -->
 <div class="modal-overlay" id="modal-cajero-overlay" onclick="cerrarModalCajeroClick(event)">
   <div class="modal" id="modal-cajero">
     <div class="modal-handle"></div>
@@ -608,7 +390,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;
           <input class="field-input" id="cajero-campo-pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" style="letter-spacing:.2em;padding-right:40px;">
           <button class="pin-toggle" id="pin-toggle-btn" onclick="toggleVerPin()" type="button">👁</button>
         </div>
-        <div class="field-hint">Solo números, exactamente 4 dígitos.</div>
+        <div class="field-hint" id="pin-hint">Solo números, exactamente 4 dígitos.</div>
       </div>
       <div class="field">
         <label class="field-label">Rol</label>
@@ -644,19 +426,11 @@ async function supabaseLogin() {
   try {
     const r = await fetch(`${CONFIG.SB_URL}/auth/v1/token?grant_type=password`, {
       method: 'POST',
-      headers: {
-        'apikey': CONFIG.SB_KEY,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'apikey': CONFIG.SB_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: CONFIG.SB_EMAIL, password: CONFIG.SB_PASSWORD })
     });
-    if (r.ok) {
-      const data = await r.json();
-      sbAccessToken = data.access_token || null;
-    }
-  } catch(e) {
-    sbAccessToken = null;
-  }
+    if (r.ok) { const d = await r.json(); sbAccessToken = d.access_token || null; }
+  } catch(e) { sbAccessToken = null; }
 }
 
 function getHeaders() {
@@ -693,6 +467,15 @@ async function sbPatch(tabla, id, body) {
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
+async function sbRpc(fn, params) {
+  const r = await fetch(`${CONFIG.SB_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(params)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
 
 // ── ESTADO ────────────────────────────────────────────────
 let cajeros = [];
@@ -706,8 +489,6 @@ let productoEditando = null;
 let ivaSeleccionado = 0;
 let activoActual = true;
 let usuarioActual = null;
-
-// Estado cajeros panel
 let cajerosPanelList = [];
 let cajeroEditando = null;
 let rolSeleccionado = 'cajero';
@@ -735,9 +516,7 @@ async function iniciarLogin() {
     cajeros = data || [];
     renderCajeros();
     renderPinDisplay();
-  } catch(e) {
-    showToast('Error cargando usuarios', 'err');
-  }
+  } catch(e) { showToast('Error cargando usuarios', 'err'); }
   mostrarLoading(false);
 }
 
@@ -787,7 +566,8 @@ function pinDel() {
   pinActual = pinActual.slice(0, -1);
   renderPinDisplay();
 }
-function pinConfirm() {
+
+async function pinConfirm() {
   if (!cajeroSeleccionado) { showToast('Seleccioná un usuario primero', 'err'); return; }
   if (cajeroSeleccionado.rol !== 'administración') {
     pinError();
@@ -795,15 +575,29 @@ function pinConfirm() {
     document.getElementById('login-error').classList.add('show');
     return;
   }
-  if (String(cajeroSeleccionado.pin) === pinActual) {
-    usuarioActual = cajeroSeleccionado;
-    entrarApp();
-  } else {
+  mostrarLoading(true);
+  try {
+    const ok = await sbRpc('verificar_pin', {
+      pin_ingresado: pinActual,
+      pin_hash: cajeroSeleccionado.pin
+    });
+    mostrarLoading(false);
+    if (ok === true) {
+      usuarioActual = cajeroSeleccionado;
+      entrarApp();
+    } else {
+      pinError();
+      document.getElementById('login-error').textContent = 'PIN incorrecto. Intentá de nuevo.';
+      document.getElementById('login-error').classList.add('show');
+    }
+  } catch(e) {
+    mostrarLoading(false);
     pinError();
-    document.getElementById('login-error').textContent = 'PIN incorrecto. Intentá de nuevo.';
+    document.getElementById('login-error').textContent = 'Error verificando PIN.';
     document.getElementById('login-error').classList.add('show');
   }
 }
+
 function pinError() {
   pinActual = '';
   document.querySelectorAll('.pin-dot').forEach(d => {
@@ -823,7 +617,6 @@ function logout() {
   pinActual = ''; cajeroSeleccionado = null; usuarioActual = null;
   document.querySelectorAll('.cajero-item').forEach(el => el.classList.remove('selected'));
   renderPinDisplay();
-  // reset tab a productos
   switchTab('productos');
   document.getElementById('tab-productos').classList.add('active');
   document.getElementById('panel-productos').classList.add('active');
@@ -845,9 +638,7 @@ async function cargarDatos() {
     renderStats();
     renderProductos();
     renderCatSelect();
-  } catch(e) {
-    showToast('Error cargando datos', 'err');
-  }
+  } catch(e) { showToast('Error cargando datos', 'err'); }
   mostrarLoading(false);
 }
 
@@ -1033,10 +824,8 @@ async function guardarProducto() {
   if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
   const precio = parseFloat(document.getElementById('campo-precio').value);
   if (isNaN(precio) || precio < 0) { showToast('Precio inválido', 'err'); return; }
-
   let codigo = document.getElementById('campo-codigo').value.trim();
   if (!codigo) codigo = generarCodigoLMX();
-
   const body = {
     negocio_id: CONFIG.NEGOCIO_ID,
     nombre,
@@ -1051,7 +840,6 @@ async function guardarProducto() {
     activo: activoActual,
     updated_at: new Date().toISOString()
   };
-
   mostrarLoading(true);
   try {
     if (productoEditando) {
@@ -1064,9 +852,7 @@ async function guardarProducto() {
     }
     cerrarModal();
     await cargarDatos();
-  } catch(e) {
-    showToast('Error guardando: ' + e.message, 'err');
-  }
+  } catch(e) { showToast('Error guardando: ' + e.message, 'err'); }
   mostrarLoading(false);
 }
 
@@ -1079,9 +865,7 @@ async function toggleEstadoProducto() {
     showToast(nuevoEstado ? 'Producto activado ✓' : 'Producto desactivado', nuevoEstado ? 'ok' : '');
     cerrarModal();
     await cargarDatos();
-  } catch(e) {
-    showToast('Error: ' + e.message, 'err');
-  }
+  } catch(e) { showToast('Error: ' + e.message, 'err'); }
   mostrarLoading(false);
 }
 
@@ -1097,14 +881,12 @@ async function cargarCajeros() {
   try {
     const data = await sbGet('cajeros', {
       'negocio_id': `eq.${CONFIG.NEGOCIO_ID}`,
-      'select': '*',
+      'select': 'id,nombre,rol,activo',
       'order': 'nombre.asc'
     });
     cajerosPanelList = data || [];
     renderCajerosList();
-  } catch(e) {
-    showToast('Error cargando cajeros', 'err');
-  }
+  } catch(e) { showToast('Error cargando cajeros', 'err'); }
   mostrarLoading(false);
 }
 
@@ -1113,7 +895,6 @@ function renderCajerosList() {
   const total = cajerosPanelList.length;
   const activos = cajerosPanelList.filter(c => c.activo).length;
   document.getElementById('cajeros-stats-label').textContent = `${total} cajero${total !== 1 ? 's' : ''} · ${activos} activo${activos !== 1 ? 's' : ''}`;
-
   if (!cajerosPanelList.length) {
     el.innerHTML = `<div class="section-empty"><div style="font-size:2.5rem;opacity:.4">👤</div><div style="font-size:.9rem">Sin cajeros registrados</div></div>`;
     return;
@@ -1131,7 +912,7 @@ function renderCajerosList() {
         </div>
         <div class="cajero-card-right">
           <div class="cajero-card-badge ${c.activo ? 'activo' : 'inactivo'}">${c.activo ? 'Activo' : 'Inactivo'}</div>
-          <div class="cajero-card-pin">PIN: ${'•'.repeat(String(c.pin).length)}</div>
+          <div class="cajero-card-pin">PIN: ••••</div>
         </div>
       </div>
     `;
@@ -1145,6 +926,7 @@ function abrirModalNuevoCajero() {
   document.getElementById('cajero-campo-nombre').value = '';
   document.getElementById('cajero-campo-pin').value = '';
   document.getElementById('cajero-campo-pin').type = 'password';
+  document.getElementById('pin-hint').textContent = 'Solo números, exactamente 4 dígitos.';
   pinVisible = false;
   rolSeleccionado = 'cajero';
   cajeroActivoActual = true;
@@ -1155,13 +937,15 @@ function abrirModalNuevoCajero() {
 }
 
 function abrirModalEditarCajero(id) {
+  // Buscamos sin el pin (no se carga en el campo)
   const c = cajerosPanelList.find(x => x.id === id);
   if (!c) return;
   cajeroEditando = c;
   document.getElementById('modal-cajero-titulo').textContent = 'Editar Cajero';
   document.getElementById('cajero-campo-nombre').value = c.nombre || '';
-  document.getElementById('cajero-campo-pin').value = c.pin || '';
+  document.getElementById('cajero-campo-pin').value = '';
   document.getElementById('cajero-campo-pin').type = 'password';
+  document.getElementById('pin-hint').textContent = 'Dejá vacío para no cambiar el PIN actual.';
   pinVisible = false;
   rolSeleccionado = c.rol === 'administración' ? 'administración' : 'cajero';
   cajeroActivoActual = c.activo !== false;
@@ -1182,18 +966,15 @@ function cerrarModalCajero() {
 function cerrarModalCajeroClick(e) {
   if (e.target === document.getElementById('modal-cajero-overlay')) cerrarModalCajero();
 }
-
 function seleccionarRol(el) {
   rolSeleccionado = el.dataset.rol;
   document.querySelectorAll('.rol-opt').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
 }
-
 function toggleCajeroActivo() { cajeroActivoActual = !cajeroActivoActual; actualizarToggleCajero(); }
 function actualizarToggleCajero() {
   document.getElementById('toggle-cajero-activo').classList.toggle('on', cajeroActivoActual);
 }
-
 function toggleVerPin() {
   pinVisible = !pinVisible;
   document.getElementById('cajero-campo-pin').type = pinVisible ? 'text' : 'password';
@@ -1205,18 +986,31 @@ async function guardarCajero() {
   if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
 
   const pinVal = document.getElementById('cajero-campo-pin').value.trim();
-  if (!/^\d{4}$/.test(pinVal)) { showToast('El PIN debe ser exactamente 4 dígitos', 'err'); return; }
+  const cambiandoPin = pinVal.length > 0;
 
-  const body = {
-    negocio_id: CONFIG.NEGOCIO_ID,
-    nombre,
-    pin: pinVal,
-    rol: rolSeleccionado,
-    activo: cajeroActivoActual
-  };
+  // Si es nuevo cajero, el PIN es obligatorio
+  if (!cajeroEditando && !cambiandoPin) {
+    showToast('El PIN es obligatorio para un nuevo cajero', 'err'); return;
+  }
+  if (cambiandoPin && !/^\d{4}$/.test(pinVal)) {
+    showToast('El PIN debe ser exactamente 4 dígitos', 'err'); return;
+  }
 
   mostrarLoading(true);
   try {
+    let pinHasheado = null;
+    if (cambiandoPin) {
+      pinHasheado = await sbRpc('hashear_pin', { pin_texto: pinVal });
+    }
+
+    const body = {
+      negocio_id: CONFIG.NEGOCIO_ID,
+      nombre,
+      rol: rolSeleccionado,
+      activo: cajeroActivoActual
+    };
+    if (pinHasheado) body.pin = pinHasheado;
+
     if (cajeroEditando) {
       await sbPatch('cajeros', cajeroEditando.id, body);
       showToast('Cajero actualizado ✓', 'ok');
@@ -1226,9 +1020,7 @@ async function guardarCajero() {
     }
     cerrarModalCajero();
     await cargarCajeros();
-  } catch(e) {
-    showToast('Error guardando: ' + e.message, 'err');
-  }
+  } catch(e) { showToast('Error guardando: ' + e.message, 'err'); }
   mostrarLoading(false);
 }
 
@@ -1241,9 +1033,7 @@ async function toggleEstadoCajero() {
     showToast(nuevoEstado ? 'Cajero activado ✓' : 'Cajero desactivado', nuevoEstado ? 'ok' : '');
     cerrarModalCajero();
     await cargarCajeros();
-  } catch(e) {
-    showToast('Error: ' + e.message, 'err');
-  }
+  } catch(e) { showToast('Error: ' + e.message, 'err'); }
   mostrarLoading(false);
 }
 
