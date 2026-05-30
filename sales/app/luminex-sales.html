@@ -272,7 +272,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Sales · v1.5.0</div>
+    <div class="login-version">Luminex Sales · v1.6.0</div>
   </div>
 </div>
 
@@ -434,7 +434,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </div>
 
 <div class="toast" id="toast-el"></div>
-<div class="version-chip">Luminex Sales · v1.5.0</div>
+<div class="version-chip">Luminex Sales · v1.6.0</div>
 
 <script>
 // ══════════════════════════════════════════
@@ -447,7 +447,7 @@ const CURRENCY   = 'UYU';
 
 let discountType = 'pct';
 let propinaAmt   = 0;
-let sbAccessToken = null; // JWT del usuario autenticado
+let sbAccessToken = null;
 
 let state = {
   cajero: null, cart: [], discount: 0, payMethod: 'efectivo',
@@ -477,16 +477,21 @@ async function supabaseLogin() {
 }
 
 // ══════════════════════════════════════════
-//  SUPABASE
+//  SUPABASE HELPERS
 // ══════════════════════════════════════════
+function getHeaders() {
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + (sbAccessToken || SB_KEY),
+    'Content-Type': 'application/json'
+  };
+}
+
 async function sbFetch(path, options = {}) {
-  const token = sbAccessToken || SB_KEY;
   const res = await fetch(SB_URL + '/rest/v1/' + path, {
     ...options,
     headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + token,
-      'Content-Type': 'application/json',
+      ...getHeaders(),
       'Prefer': options.prefer || 'return=representation',
       ...(options.headers || {})
     }
@@ -494,6 +499,16 @@ async function sbFetch(path, options = {}) {
   if (!res.ok) { const err = await res.text(); throw new Error(err); }
   const text = await res.text();
   return text ? JSON.parse(text) : null;
+}
+
+async function sbRpc(fn, params) {
+  const res = await fetch(SB_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(params)
+  });
+  if (!res.ok) { const err = await res.text(); throw new Error(err); }
+  return res.json();
 }
 
 // ══════════════════════════════════════════
@@ -565,18 +580,33 @@ function updatePinDisplay() {
     dot.classList.remove('error');
   }
 }
-function pinConfirm() {
+
+// ══════════════════════════════════════════
+//  PIN CONFIRM — verifica via bcrypt (sbRpc)
+// ══════════════════════════════════════════
+async function pinConfirm() {
   if (!selectedCajeroId) return;
   const cajero = state.cajeros.find(c => c.id === selectedCajeroId);
   if (!cajero) return;
-  if (pinBuffer === cajero.pin) {
-    state.cajero = cajero; initApp(); showScreen('screen-app');
-  } else {
+  try {
+    const ok = await sbRpc('verificar_pin', {
+      pin_ingresado: pinBuffer,
+      pin_hash: cajero.pin
+    });
+    if (ok === true) {
+      state.cajero = cajero; initApp(); showScreen('screen-app');
+    } else {
+      for (let i = 0; i < 4; i++) document.getElementById('pd' + i).classList.add('error');
+      setTimeout(() => { pinBuffer = ''; updatePinDisplay(); }, 600);
+      toast('PIN incorrecto', 'err');
+    }
+  } catch(e) {
     for (let i = 0; i < 4; i++) document.getElementById('pd' + i).classList.add('error');
     setTimeout(() => { pinBuffer = ''; updatePinDisplay(); }, 600);
-    toast('PIN incorrecto', 'err');
+    toast('Error verificando PIN', 'err');
   }
 }
+
 function logout() {
   state.cajero = null; state.cart = []; selectedCajeroId = null; pinBuffer = '';
   updatePinDisplay();
