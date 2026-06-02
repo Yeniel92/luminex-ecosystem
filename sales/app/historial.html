@@ -157,7 +157,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Historial v1.0.0</div>
+    <div class="login-version">Historial v1.1.0</div>
   </div>
 </div>
 
@@ -214,7 +214,7 @@ async function supabaseLogin() {
       sbAccessToken = data.access_token || null;
     }
   } catch(e) {
-    sbAccessToken = null; // degradación segura: usa anon key
+    sbAccessToken = null;
   }
 }
 
@@ -226,10 +226,20 @@ function getHeaders() {
   };
 }
 
-// ── SUPABASE HELPER ───────────────────────────────────────
+// ── SUPABASE HELPERS ──────────────────────────────────────
 async function sbGet(path) {
   const r = await fetch(CONFIG.SB_URL + '/rest/v1/' + path, { headers: getHeaders() });
   if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbRpc(fn, params) {
+  const r = await fetch(CONFIG.SB_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(params)
+  });
+  if (!r.ok) { const err = await r.text(); throw new Error(err); }
   return r.json();
 }
 
@@ -274,13 +284,30 @@ function pinPress(d) {
 }
 function pinDel(){pinVal=pinVal.slice(0,-1);updatePinDots();}
 function updatePinDots(){for(let i=0;i<4;i++){document.getElementById('d'+i).classList.toggle('filled',i<pinVal.length);document.getElementById('d'+i).classList.remove('error');}}
-function pinConfirm(){
-  if(!selectedCajero)return;
-  if(selectedCajero.rol!=='administración'){pinError('Solo los admin pueden acceder');return;}
-  if(String(selectedCajero.pin)!==pinVal){pinError('PIN incorrecto');return;}
-  sessionStorage.setItem('hist_cajero',JSON.stringify(selectedCajero));
-  showScreen('screen-app'); irHoy();
+
+async function pinConfirm() {
+  if(!selectedCajero) return;
+  if(selectedCajero.rol !== 'administración') {
+    pinError('Solo los admin pueden acceder');
+    return;
+  }
+  try {
+    const ok = await sbRpc('verificar_pin', {
+      pin_ingresado: pinVal,
+      pin_hash: selectedCajero.pin
+    });
+    if(ok === true) {
+      sessionStorage.setItem('hist_cajero', JSON.stringify(selectedCajero));
+      showScreen('screen-app');
+      irHoy();
+    } else {
+      pinError('PIN incorrecto');
+    }
+  } catch(e) {
+    pinError('Error verificando PIN');
+  }
 }
+
 function pinError(msg){
   for(let i=0;i<4;i++)document.getElementById('d'+i).classList.add('error');
   document.getElementById('login-error').textContent=msg;
