@@ -81,7 +81,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-nuevo:active{opacity:.85;transform:scale(.97);}
 .filtros-bar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:8px;overflow-x:auto;flex-shrink:0;}
 .filtros-bar::-webkit-scrollbar{display:none;}
-.filtro-chip{padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .12s;flex-shrink:0;}
+.filtro-chip{padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .12px;flex-shrink:0;}
 .filtro-chip.active{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .filtro-chip:active{transform:scale(.95);}
 .stats-bar{padding:10px 16px;display:flex;gap:10px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--bg);}
@@ -225,7 +225,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;backgr
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Admin v1.2.0</div>
+    <div class="login-version">Luminex Admin v1.2.1</div>
   </div>
 </div>
 
@@ -818,19 +818,24 @@ function actualizarToggle() {
   document.getElementById('toggle-activo').classList.toggle('on', activoActual);
 }
 
-// ── GUARDAR PRODUCTO ──────────────────────────────────────
+// ── GUARDAR PRODUCTO (v1.2.1 — fix precio vacío) ──────────
 async function guardarProducto() {
   const nombre = document.getElementById('campo-nombre').value.trim();
   if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
-  const precio = parseFloat(document.getElementById('campo-precio').value);
+
+  // FIX: validar precio como string antes de parsear
+  const precioRaw = document.getElementById('campo-precio').value.trim();
+  if (precioRaw === '') { showToast('El precio es obligatorio', 'err'); return; }
+  const precio = parseFloat(precioRaw);
   if (isNaN(precio) || precio < 0) { showToast('Precio inválido', 'err'); return; }
+
   let codigo = document.getElementById('campo-codigo').value.trim();
   if (!codigo) codigo = generarCodigoLMX();
   const body = {
     negocio_id: CONFIG.NEGOCIO_ID,
     nombre,
     emoji: document.getElementById('campo-emoji').value.trim() || '📦',
-    precio,
+    precio: precio,
     tasa_iva: ivaSeleccionado,
     categoria_id: document.getElementById('campo-categoria').value || null,
     unidad: document.getElementById('campo-unidad').value,
@@ -937,7 +942,6 @@ function abrirModalNuevoCajero() {
 }
 
 function abrirModalEditarCajero(id) {
-  // Buscamos sin el pin (no se carga en el campo)
   const c = cajerosPanelList.find(x => x.id === id);
   if (!c) return;
   cajeroEditando = c;
@@ -988,7 +992,6 @@ async function guardarCajero() {
   const pinVal = document.getElementById('cajero-campo-pin').value.trim();
   const cambiandoPin = pinVal.length > 0;
 
-  // Si es nuevo cajero, el PIN es obligatorio
   if (!cajeroEditando && !cambiandoPin) {
     showToast('El PIN es obligatorio para un nuevo cajero', 'err'); return;
   }
