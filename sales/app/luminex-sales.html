@@ -14,6 +14,7 @@
 <link rel="icon" type="image/png" href="icons/ChatGPT%20Image%2021%20abr%202026%2C%2005_25_14%20p.m..png">
 <link rel="manifest" href="manifest.json">
 <script src="config.js"></script>
+<script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -222,7 +223,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .variants-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
 .variant-chip{padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--bg3);font-size:.82rem;cursor:pointer;transition:all .12px;}
 .variant-chip.selected{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
-.btn-add-modal{width:100%;padding:13px;background:var(--accent);border:none;border-radius:var(--r);font-family:var(--display);font-size:.95rem;font-weight:800;color:var(--bg);cursor:pointer;transition:all .12s;}
+.btn-add-modal{width:100%;padding:13px;background:var(--accent);border:none;border-radius:var(--r);font-family:var(--display);font-size:.95rem;font-weight:800;color:var(--bg);cursor:pointer;transition:all .12s}
 .btn-add-modal:active{transform:scale(.98)}
 .btn-add-modal:disabled{opacity:.3;cursor:not-allowed}
 .toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:8px 18px;font-size:.82rem;white-space:nowrap;z-index:300;opacity:0;transition:all .2s;pointer-events:none;}
@@ -237,6 +238,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .fab-cart:active{transform:scale(.93)}
 .fab-cart-count{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
 .version-chip{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.62rem;color:var(--text3);z-index:10;pointer-events:none;}
+
+/* ── SCANNER MODAL ──────────────────────────────────── */
+.scanner-overlay{display:none;position:fixed;inset:0;background:#000;z-index:400;flex-direction:column;}
+.scanner-overlay.open{display:flex}
+.scanner-header{padding:16px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,15,.9);z-index:2;}
+.scanner-title{font-family:var(--display);font-weight:800;font-size:1rem;color:#fff;}
+.scanner-close{width:36px;height:36px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;cursor:pointer;}
+.scanner-video-wrap{flex:1;position:relative;overflow:hidden;}
+.scanner-video-wrap video{width:100%;height:100%;object-fit:cover;}
+.scanner-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:78%;max-width:320px;aspect-ratio:1.6;border:3px solid var(--accent);border-radius:16px;box-shadow:0 0 0 2000px rgba(0,0,0,.45);pointer-events:none;}
+.scanner-hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#fff;font-size:.82rem;background:rgba(0,0,0,.4);padding:8px 16px;}
+.scanner-error{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text2);text-align:center;padding:24px;}
 </style>
 </head>
 <body>
@@ -272,7 +285,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Sales · v1.6.0</div>
+    <div class="login-version">Luminex Sales · v1.7.0</div>
   </div>
 </div>
 
@@ -296,7 +309,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <span class="search-icon">🔍</span>
       <input class="search-input" id="search-input" placeholder="Buscar producto..." oninput="filterProducts()">
     </div>
-    <div class="scan-btn" onclick="toast('Scanner próximamente','ok')">📷</div>
+    <div class="scan-btn" onclick="abrirScanner()">📷</div>
   </div>
   <div class="cats" id="cats-bar"></div>
   <div class="products-area">
@@ -433,8 +446,25 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
+<!-- SCANNER MODAL -->
+<div class="scanner-overlay" id="scanner-overlay">
+  <div class="scanner-header">
+    <div class="scanner-title">📷 Escanear código</div>
+    <div class="scanner-close" onclick="cerrarScanner()">✕</div>
+  </div>
+  <div class="scanner-video-wrap">
+    <video id="scanner-video" muted playsinline></video>
+    <div class="scanner-frame"></div>
+    <div class="scanner-hint">Apuntá al código de barras del producto</div>
+    <div class="scanner-error" id="scanner-error" style="display:none">
+      <div style="font-size:2rem">⚠️</div>
+      <div id="scanner-error-text">No se pudo acceder a la cámara</div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast-el"></div>
-<div class="version-chip">Luminex Sales · v1.6.0</div>
+<div class="version-chip">Luminex Sales · v1.7.0</div>
 
 <script>
 // ══════════════════════════════════════════
@@ -787,6 +817,85 @@ function selectVariant(v, el) {
 }
 function addVariantToCart() { if (!currentVariantProduct || !selectedVariant) return; addToCart(currentVariantProduct, selectedVariant); closeVariantModal(); }
 function closeVariantModal(e) { if (e && e.target !== document.getElementById('variant-modal')) return; document.getElementById('variant-modal').classList.remove('open'); }
+
+// ══════════════════════════════════════════
+//  SCANNER (ZXing) — v1.7.0
+// ══════════════════════════════════════════
+let zxingReader = null;
+let scannerBusy = false;
+
+async function abrirScanner() {
+  const overlay = document.getElementById('scanner-overlay');
+  const video = document.getElementById('scanner-video');
+  const errEl = document.getElementById('scanner-error');
+  errEl.style.display = 'none';
+  video.style.display = '';
+  overlay.classList.add('open');
+  scannerBusy = false;
+
+  if (typeof ZXing === 'undefined') {
+    mostrarErrorScanner('No se pudo cargar el lector. Revisá tu conexión.');
+    return;
+  }
+
+  try {
+    if (!zxingReader) zxingReader = new ZXing.BrowserMultiFormatReader();
+
+    const constraints = {
+      video: { facingMode: { ideal: 'environment' } },
+      audio: false
+    };
+
+    await zxingReader.decodeFromConstraints(constraints, video, (result, err) => {
+      if (scannerBusy) return;
+      if (result) {
+        scannerBusy = true;
+        onScanResult(result.getText());
+      }
+    });
+  } catch (e) {
+    console.error('Scanner error:', e);
+    mostrarErrorScanner('No se pudo acceder a la cámara. Revisá los permisos.');
+  }
+}
+
+function mostrarErrorScanner(msg) {
+  document.getElementById('scanner-error-text').textContent = msg;
+  document.getElementById('scanner-error').style.display = 'flex';
+  document.getElementById('scanner-video').style.display = 'none';
+}
+
+function cerrarScanner() {
+  const overlay = document.getElementById('scanner-overlay');
+  overlay.classList.remove('open');
+  scannerBusy = false;
+  try {
+    if (zxingReader) zxingReader.reset();
+  } catch(e) {}
+  const video = document.getElementById('scanner-video');
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
+  }
+}
+
+function onScanResult(codigo) {
+  const p = state.products.find(x => (x.codigo_barras || '').trim() === codigo.trim());
+  if (p) {
+    if (p.stock === 0) {
+      toast('Sin stock: ' + p.nombre, 'err');
+    } else if (p.variantes && p.variantes.length > 0) {
+      cerrarScanner();
+      openVariantModal(p);
+      return;
+    } else {
+      addToCart(p, null);
+    }
+  } else {
+    toast('Producto no encontrado: ' + codigo, 'err');
+  }
+  cerrarScanner();
+}
 
 // ══════════════════════════════════════════
 //  PROPINA
