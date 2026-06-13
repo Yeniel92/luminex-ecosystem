@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.6/JsBarcode.all.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -81,7 +82,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-nuevo:active{opacity:.85;transform:scale(.97);}
 .filtros-bar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:8px;overflow-x:auto;flex-shrink:0;}
 .filtros-bar::-webkit-scrollbar{display:none;}
-.filtro-chip{padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .12px;flex-shrink:0;}
+.filtro-chip{padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .12s;flex-shrink:0;}
 .filtro-chip.active{background:var(--accentbg);border-color:var(--accentbord);color:var(--accent);}
 .filtro-chip:active{transform:scale(.95);}
 .stats-bar{padding:10px 16px;display:flex;gap:10px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--bg);}
@@ -191,6 +192,26 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;backgr
 .toast.ok{border-color:var(--greenbord);color:var(--green);}
 .toast.err{border-color:var(--redbord);color:var(--red);}
 .section-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;color:var(--text3);gap:10px;}
+
+/* ── CODIGO DE BARRAS ── */
+.codigo-row{display:flex;gap:8px;align-items:flex-start;}
+.codigo-row .field-input{flex:1;}
+.btn-codigo-gen{flex-shrink:0;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 12px;font-size:.8rem;font-weight:600;color:var(--accent);cursor:pointer;transition:all .12s;white-space:nowrap;font-family:var(--sans);}
+.btn-codigo-gen:active{background:var(--accentbg);border-color:var(--accentbord);}
+.btn-codigo-ver{margin-top:8px;width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-codigo-ver:active{background:var(--bg4);}
+.btn-codigo-ver:disabled{opacity:.35;cursor:not-allowed;}
+
+/* ── MODAL BARCODE ── */
+#modal-barcode-overlay .modal{max-width:380px;}
+.barcode-preview{background:#fff;border-radius:var(--r2);padding:16px;display:flex;flex-direction:column;align-items:center;margin-bottom:14px;}
+.barcode-preview svg{max-width:100%;}
+.barcode-preview .bp-nombre{font-family:var(--sans);font-weight:700;color:#111;font-size:.9rem;margin-bottom:6px;text-align:center;}
+@media print{
+  body *{visibility:hidden;}
+  #print-area, #print-area *{visibility:visible;}
+  #print-area{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;}
+}
 </style>
 </head>
 <body>
@@ -225,7 +246,7 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;backgr
         <button class="pin-btn confirm" onclick="pinConfirm()">OK</button>
       </div>
     </div>
-    <div class="login-version">Luminex Admin v1.2.1</div>
+    <div class="login-version">Luminex Admin v1.3.0</div>
   </div>
 </div>
 
@@ -350,8 +371,12 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;backgr
       </div>
       <div class="field">
         <label class="field-label">Código de barras</label>
-        <input class="field-input" id="campo-codigo" type="text" inputmode="numeric" placeholder="Dejar vacío para generar LMX-XXXX">
-        <div class="field-hint" id="codigo-hint">Se generará un código interno automático.</div>
+        <div class="codigo-row">
+          <input class="field-input" id="campo-codigo" type="text" inputmode="numeric" placeholder="Se genera automático (EAN-13)" readonly>
+          <button type="button" class="btn-codigo-gen" onclick="regenerarCodigo()">🔄 Regenerar</button>
+        </div>
+        <div class="field-hint" id="codigo-hint">Se generará un código EAN-13 interno automático.</div>
+        <button type="button" class="btn-codigo-ver" id="btn-ver-codigo" onclick="abrirModalBarcode()">🏷️ Ver / Imprimir código de barras</button>
       </div>
       <div class="toggle-row">
         <div>
@@ -367,6 +392,28 @@ select.field-input{cursor:pointer;-webkit-appearance:none;appearance:none;backgr
       <button class="btn-danger" id="btn-toggle-estado" onclick="toggleEstadoProducto()" style="display:none">Desactivar</button>
       <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
       <button class="btn-primary" onclick="guardarProducto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BARCODE (ver/imprimir) -->
+<div class="modal-overlay" id="modal-barcode-overlay" onclick="cerrarModalBarcodeClick(event)">
+  <div class="modal" id="modal-barcode">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">Código de barras</div>
+      <div class="modal-close" onclick="cerrarModalBarcode()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="barcode-preview" id="print-area">
+        <div class="bp-nombre" id="bp-nombre">Producto</div>
+        <svg id="barcode-svg"></svg>
+      </div>
+      <div class="field-hint" style="text-align:center">Código interno EAN-13 (uso exclusivo Luminex)</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="cerrarModalBarcode()">Cerrar</button>
+      <button class="btn-primary" onclick="imprimirBarcode()">🖨️ Imprimir</button>
     </div>
   </div>
 </div>
@@ -721,16 +768,6 @@ function renderProductos() {
 }
 
 // ── EMOJI ─────────────────────────────────────────────────
-function generarCodigoLMX() {
-  const nums = productos.map(p => {
-    if (!p.codigo_barras) return 0;
-    const m = p.codigo_barras.match(/^LMX-(\d+)$/);
-    return m ? parseInt(m[1]) : 0;
-  });
-  const max = nums.length ? Math.max(...nums) : 0;
-  return 'LMX-' + String(max + 1).padStart(4, '0');
-}
-
 const EMOJIS_RAPIDOS = ['📦','🛒','🍕','🥤','🍺','🥩','🍞','🧃','🫙','🧂','🥚','🧈','🍫','🍬','🧁','🍰','☕','🫖','🧴','🪥','🧼','📱','💡','🔋','🖊️','📋','🎮','🧸','👗','👟','🌿','🌱','🪴','🐟','🥦','🍎','🫐','🥕','🧅','🍋','🌽','🧆','🥗','🍜','🌮','🥙','🧇','🥞','🍳'];
 
 function renderEmojiGrid() {
@@ -748,6 +785,76 @@ function actualizarEmoji() {
   document.getElementById('emoji-preview').textContent = v || '📦';
 }
 
+// ── CODIGO DE BARRAS EAN-13 (v1.3.0) ──────────────────────
+// Prefijo 20-29 reservado por GS1 para uso interno/local — nunca choca con productos reales.
+function calcularDigitoVerificadorEAN13(doce) {
+  let suma = 0;
+  for (let i = 0; i < 12; i++) {
+    const d = parseInt(doce[i]);
+    suma += (i % 2 === 0) ? d : d * 3;
+  }
+  const resto = suma % 10;
+  return resto === 0 ? 0 : 10 - resto;
+}
+
+function generarCodigoEAN13() {
+  // Set de códigos ya usados para evitar colisiones
+  const existentes = new Set(productos.map(p => (p.codigo_barras || '').trim()));
+  let intento;
+  do {
+    // Prefijo interno 20 + 9 dígitos aleatorios = 11 dígitos + 1 dígito relleno = 12
+    let cuerpo = '20';
+    for (let i = 0; i < 10; i++) cuerpo += Math.floor(Math.random() * 10);
+    const dv = calcularDigitoVerificadorEAN13(cuerpo);
+    intento = cuerpo + dv;
+  } while (existentes.has(intento));
+  return intento;
+}
+
+function regenerarCodigo() {
+  const nuevo = generarCodigoEAN13();
+  document.getElementById('campo-codigo').value = nuevo;
+  document.getElementById('codigo-hint').textContent = 'Código EAN-13 interno generado.';
+  actualizarBotonVerCodigo();
+}
+
+function actualizarBotonVerCodigo() {
+  const val = document.getElementById('campo-codigo').value.trim();
+  document.getElementById('btn-ver-codigo').disabled = !val;
+}
+
+// ── MODAL BARCODE ──────────────────────────────────────────
+function abrirModalBarcode() {
+  const codigo = document.getElementById('campo-codigo').value.trim();
+  if (!codigo) { showToast('No hay código generado todavía', 'err'); return; }
+  const nombre = document.getElementById('campo-nombre').value.trim() || 'Producto';
+  document.getElementById('bp-nombre').textContent = nombre;
+  try {
+    JsBarcode('#barcode-svg', codigo, {
+      format: 'EAN13',
+      width: 2,
+      height: 80,
+      fontSize: 16,
+      margin: 8,
+      background: '#ffffff',
+      lineColor: '#000000'
+    });
+  } catch(e) {
+    showToast('No se pudo generar el código de barras', 'err');
+    return;
+  }
+  document.getElementById('modal-barcode-overlay').classList.add('show');
+}
+function cerrarModalBarcode() {
+  document.getElementById('modal-barcode-overlay').classList.remove('show');
+}
+function cerrarModalBarcodeClick(e) {
+  if (e.target === document.getElementById('modal-barcode-overlay')) cerrarModalBarcode();
+}
+function imprimirBarcode() {
+  window.print();
+}
+
 // ── MODAL PRODUCTO ────────────────────────────────────────
 function abrirModalNuevo() {
   productoEditando = null;
@@ -758,16 +865,19 @@ function abrirModalNuevo() {
   document.getElementById('campo-precio').value = '';
   document.getElementById('campo-stock-actual').value = '';
   document.getElementById('campo-stock-minimo').value = '';
-  document.getElementById('campo-codigo').value = '';
   document.getElementById('campo-categoria').value = '';
   document.getElementById('campo-unidad').value = 'unidad';
-  document.getElementById('codigo-hint').textContent = 'Se generará un código interno automático.';
   ivaSeleccionado = 0;
   activoActual = true;
   document.querySelectorAll('.iva-opt').forEach(o => o.classList.toggle('selected', o.dataset.iva === '0'));
   actualizarToggle();
   document.getElementById('btn-toggle-estado').style.display = 'none';
   document.getElementById('emoji-grid').classList.remove('show');
+  // Generar código EAN-13 automático para el nuevo producto
+  const codigo = generarCodigoEAN13();
+  document.getElementById('campo-codigo').value = codigo;
+  document.getElementById('codigo-hint').textContent = 'Código EAN-13 interno generado automáticamente.';
+  actualizarBotonVerCodigo();
   document.getElementById('modal-overlay').classList.add('show');
 }
 
@@ -782,10 +892,8 @@ function abrirModalEditar(id) {
   document.getElementById('campo-precio').value = p.precio || '';
   document.getElementById('campo-stock-actual').value = p.stock_actual ?? '';
   document.getElementById('campo-stock-minimo').value = p.stock_minimo ?? '';
-  document.getElementById('campo-codigo').value = p.codigo_barras || '';
   document.getElementById('campo-categoria').value = p.categoria_id || '';
   document.getElementById('campo-unidad').value = p.unidad || 'unidad';
-  document.getElementById('codigo-hint').textContent = '';
   ivaSeleccionado = normalizaTasa(p.tasa_iva);
   activoActual = p.activo !== false;
   const ivaStr = String(ivaSeleccionado);
@@ -798,6 +906,16 @@ function abrirModalEditar(id) {
   btnEstado.style.color = p.activo ? 'var(--red)' : 'var(--green)';
   btnEstado.style.borderColor = p.activo ? 'var(--redbord)' : 'var(--greenbord)';
   document.getElementById('emoji-grid').classList.remove('show');
+  // Código existente o generar uno si el producto no tenía
+  let codigo = (p.codigo_barras || '').trim();
+  if (!codigo) {
+    codigo = generarCodigoEAN13();
+    document.getElementById('codigo-hint').textContent = 'Código EAN-13 generado (este producto no tenía).';
+  } else {
+    document.getElementById('codigo-hint').textContent = 'Código EAN-13 interno.';
+  }
+  document.getElementById('campo-codigo').value = codigo;
+  actualizarBotonVerCodigo();
   document.getElementById('modal-overlay').classList.add('show');
 }
 
@@ -818,19 +936,20 @@ function actualizarToggle() {
   document.getElementById('toggle-activo').classList.toggle('on', activoActual);
 }
 
-// ── GUARDAR PRODUCTO (v1.2.1 — fix precio vacío) ──────────
+// ── GUARDAR PRODUCTO (v1.2.1 fix precio + v1.3.0 EAN-13) ──
 async function guardarProducto() {
   const nombre = document.getElementById('campo-nombre').value.trim();
   if (!nombre) { showToast('El nombre es obligatorio', 'err'); return; }
 
-  // FIX: validar precio como string antes de parsear
+  // FIX v1.2.1: validar precio como string antes de parsear
   const precioRaw = document.getElementById('campo-precio').value.trim();
   if (precioRaw === '') { showToast('El precio es obligatorio', 'err'); return; }
   const precio = parseFloat(precioRaw);
   if (isNaN(precio) || precio < 0) { showToast('Precio inválido', 'err'); return; }
 
   let codigo = document.getElementById('campo-codigo').value.trim();
-  if (!codigo) codigo = generarCodigoLMX();
+  if (!codigo) codigo = generarCodigoEAN13();
+
   const body = {
     negocio_id: CONFIG.NEGOCIO_ID,
     nombre,
@@ -942,6 +1061,7 @@ function abrirModalNuevoCajero() {
 }
 
 function abrirModalEditarCajero(id) {
+  // Buscamos sin el pin (no se carga en el campo)
   const c = cajerosPanelList.find(x => x.id === id);
   if (!c) return;
   cajeroEditando = c;
@@ -992,6 +1112,7 @@ async function guardarCajero() {
   const pinVal = document.getElementById('cajero-campo-pin').value.trim();
   const cambiandoPin = pinVal.length > 0;
 
+  // Si es nuevo cajero, el PIN es obligatorio
   if (!cajeroEditando && !cambiandoPin) {
     showToast('El PIN es obligatorio para un nuevo cajero', 'err'); return;
   }
