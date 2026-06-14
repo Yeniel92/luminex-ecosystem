@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.6/JsBarcode.all.min.js"></script>
+<script src="https://unpkg.com/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -791,10 +791,17 @@ function calcularDigitoVerificadorEAN13(doce) {
   let suma = 0;
   for (let i = 0; i < 12; i++) {
     const d = parseInt(doce[i]);
-    suma += (i % 2 === 0) ? d : d * 3;
+    suma += (i % 2 === 0) ? d * 1 : d * 3;
   }
   const resto = suma % 10;
   return resto === 0 ? 0 : 10 - resto;
+}
+
+function validarEAN13(codigo) {
+  if (!/^\d{13}$/.test(codigo)) return false;
+  const doce = codigo.slice(0, 12);
+  const dv = calcularDigitoVerificadorEAN13(doce);
+  return dv === parseInt(codigo[12]);
 }
 
 function generarCodigoEAN13() {
@@ -827,6 +834,10 @@ function actualizarBotonVerCodigo() {
 function abrirModalBarcode() {
   const codigo = document.getElementById('campo-codigo').value.trim();
   if (!codigo) { showToast('No hay código generado todavía', 'err'); return; }
+  if (typeof JsBarcode === 'undefined') {
+    showToast('No se pudo cargar el generador. Revisá tu conexión.', 'err');
+    return;
+  }
   const nombre = document.getElementById('campo-nombre').value.trim() || 'Producto';
   document.getElementById('bp-nombre').textContent = nombre;
   try {
@@ -840,7 +851,8 @@ function abrirModalBarcode() {
       lineColor: '#000000'
     });
   } catch(e) {
-    showToast('No se pudo generar el código de barras', 'err');
+    console.error('JsBarcode error:', e);
+    showToast('Código inválido para EAN-13', 'err');
     return;
   }
   document.getElementById('modal-barcode-overlay').classList.add('show');
